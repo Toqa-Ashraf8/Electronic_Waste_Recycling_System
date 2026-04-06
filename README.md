@@ -30,7 +30,7 @@ The system implements a secure multi-user environment where each role (Admin vs.
 * **Wallet Management:** Real-time points balance and transaction history in the User Dashboard.
 
 ### 6. Business Analytics & Reporting
-* **Performance Charts:**Visualizing daily recycling requests, sales volume, and user growth using **Chart.js**.
+* **Performance Charts:** Visualizing daily recycling requests, sales volume, and user growth using **Chart.js**.
 * **Order History:** Comprehensive logs for managers to track every sale and recycling deal.
 
 ##  Tech Stack
