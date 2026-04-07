@@ -1,6 +1,7 @@
 ﻿using BCrypt.Net;
 using ElectronicWasteAPI.EF;
 using ElectronicWasteAPI.Models;
+using ElectronicWasteAPI.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,20 @@ namespace ElectronicWasteAPI.Controllers
             _context= dataContext;
             conn = new SqlConnection(_context.Database.GetConnectionString());
         }
+        [Route("UploadUserImage")]
+        [HttpPost]
+        public IActionResult UploadUserImage([FromForm] UserImages image)
+        {
+            if (image.file == null) return BadRequest("No file uploaded");
+            var postedFile = image.file;
+            string fileName = postedFile.FileName;
+            var physicalPath = _env.ContentRootPath + "/user_Images/" + fileName;
+            using (var stream = new FileStream(physicalPath, FileMode.Create))
+            {
+               postedFile.CopyTo(stream);
+            }
+            return Ok (fileName);
+        }
         [Route("Register")]
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] Register user)
@@ -42,6 +57,7 @@ namespace ElectronicWasteAPI.Controllers
             }
 
             hashedPassword = BCrypt.Net.BCrypt.EnhancedHashPassword(user.Password);
+            user.Password = hashedPassword;
             _context.Register.Add(user);
             await _context.SaveChangesAsync();
 

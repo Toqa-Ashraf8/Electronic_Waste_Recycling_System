@@ -2,6 +2,7 @@ using ElectronicWasteAPI.EF;
 using ElectronicWasteAPI.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using System.Text;
@@ -65,6 +66,12 @@ if (app.Environment.IsDevelopment())
 }
 app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "user_Images")),
+    RequestPath = "/user_Images"
+});
 
 app.UseHttpsRedirection();
 

@@ -1,14 +1,15 @@
 import React from 'react'
 import logo from './logo3.png'
 import './Header.css'
+import{Link} from 'react-router-dom'
 const Header = () => {
   return (
     <div>
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+  <nav className="navbar navbar-expand-lg navbar-light ">
   <div className="container-fluid">
-    <a className="navbar-brand" href="#">
+    <Link className="navbar-brand" to="#">
       <img src={logo} alt="" width={50} height={50} />
-    </a>
+    </Link>
     <button
       className="navbar-toggler"
       type="button"
@@ -23,80 +24,80 @@ const Header = () => {
     <div className="collapse navbar-collapse" id="navbarNavDropdown">
       <ul className="navbar-nav">
          <li className="nav-item">
-          <a className="nav-link active" aria-current="page" href="#">
+          <Link className="nav-link active" aria-current="page" to="#">
             Login
-          </a>
+          </Link>
         </li>
          <li className="nav-item">
-          <a className="nav-link active" aria-current="page" href="#">
+          <Link className="nav-link active" aria-current="page" to="/register">
             Register
-          </a>
+          </Link>
         </li>
          <li className="nav-item">
-          <a className="nav-link active" aria-current="page" href="#">
+          <Link className="nav-link active" aria-current="page" to="#">
             Dashboard
-          </a>
+          </Link>
         </li>
         <li className="nav-item">
-          <a className="nav-link active" aria-current="page" href="#">
+          <Link className="nav-link active" aria-current="page" to="/home">
             Home
-          </a>
+        </Link>
         </li>
         <li className="nav-item">
-          <a className="nav-link" href="#">
+          <Link className="nav-link" to="#">
              Profile
-          </a>
+        </Link>
         </li>
         <li className="nav-item">
-          <a className="nav-link" href="#">
+          <Link className="nav-link" to="#">
             Sell Device
-          </a>
+        </Link>
         </li>
           <li className="nav-item">
-          <a className="nav-link" href="#">
+          <Link className="nav-link" to="#">
             Tech Store
-          </a>
+        </Link>
         </li>
          <li>
-          <a className="nav-link" href="#">
+          <Link className="nav-link" to="#">
               Points
-          </a>
+          </Link>
         </li>
          <li className="nav-item">
-          <a className="nav-link" href="#">
+          <Link className="nav-link" to="#">
             Find Us
-          </a>
+          </Link>
         </li>
          <li className="nav-item">
-          <a className="nav-link" href="#">
+          <Link className="nav-link" to="#">
             Contact Us
-          </a>
+          </Link>
         </li>
         <li className="nav-item dropdown">
-          <a
+          <Link
             className="nav-link dropdown-toggle"
-            href="#"
+            to="#"
             id="navbarDropdownMenuLink"
             role="button"
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
             Definitions
-          </a>
+          </Link>
           <ul
             className="dropdown-menu"
             aria-labelledby="navbarDropdownMenuLink"
           >
             <li>
-              <a className="dropdown-item" href="#">
+              <Link className="dropdown-item" to="#">
                Cart Items
-              </a>
+              </Link>
             </li>
            
              <li>
-              <a className="dropdown-item" href="#">
+              <Link className="dropdown-item" to="#">
                 Orders
-              </a>
+              </Link>
             </li>
            
           </ul>
