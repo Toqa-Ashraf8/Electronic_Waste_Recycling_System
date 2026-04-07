@@ -1,0 +1,39 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700&family=Poppins:wght@400;500;600&family=Fira+Code:wght@500&display=swap');
+
+:root {
+
+  --bg-main: #f4f7f6; 
+  --primary-color: #55a690; 
+  --primary-hover: #438a76;
+  --text-dark: #334155; 
+  --text-light: #64748b; 
+  --border-soft: #e2e8f0;
+  --main-font: 'Poppins', sans-serif;
+  --heading-font: 'Exo 2', sans-serif;
+}
+
+
+* {
+  box-sizing: border-box;
+  font-family: var(--main-font) !important;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  direction: ltr !important; 
+  text-align: left !important;
+  background-color: var(--bg-main) !important;
+  color: var(--text-dark);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+
+h1, h2, h3, h4, h5, h6, .navbar-brand {
+  font-family: var(--heading-font) !important;
+  color: var(--text-dark);
+}
+
+a { text-decoration: none; transition: 0.3s; }

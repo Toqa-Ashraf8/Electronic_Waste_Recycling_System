@@ -1,5 +1,6 @@
 import React from 'react'
 import logo from './logo3.png'
+import './Header.css'
 const Header = () => {
   return (
     <div>
@@ -21,6 +22,21 @@ const Header = () => {
     </button>
     <div className="collapse navbar-collapse" id="navbarNavDropdown">
       <ul className="navbar-nav">
+         <li className="nav-item">
+          <a className="nav-link active" aria-current="page" href="#">
+            Login
+          </a>
+        </li>
+         <li className="nav-item">
+          <a className="nav-link active" aria-current="page" href="#">
+            Register
+          </a>
+        </li>
+         <li className="nav-item">
+          <a className="nav-link active" aria-current="page" href="#">
+            Dashboard
+          </a>
+        </li>
         <li className="nav-item">
           <a className="nav-link active" aria-current="page" href="#">
             Home
@@ -28,12 +44,32 @@ const Header = () => {
         </li>
         <li className="nav-item">
           <a className="nav-link" href="#">
-            Features
+             Profile
           </a>
         </li>
         <li className="nav-item">
           <a className="nav-link" href="#">
-            Pricing
+            Sell Device
+          </a>
+        </li>
+          <li className="nav-item">
+          <a className="nav-link" href="#">
+            Tech Store
+          </a>
+        </li>
+         <li>
+          <a className="nav-link" href="#">
+              Points
+          </a>
+        </li>
+         <li className="nav-item">
+          <a className="nav-link" href="#">
+            Find Us
+          </a>
+        </li>
+         <li className="nav-item">
+          <a className="nav-link" href="#">
+            Contact Us
           </a>
         </li>
         <li className="nav-item dropdown">
@@ -45,7 +81,7 @@ const Header = () => {
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            Dropdown link
+            Definitions
           </a>
           <ul
             className="dropdown-menu"
@@ -53,19 +89,16 @@ const Header = () => {
           >
             <li>
               <a className="dropdown-item" href="#">
-                Action
+               Cart Items
               </a>
             </li>
-            <li>
+           
+             <li>
               <a className="dropdown-item" href="#">
-                Another action
+                Orders
               </a>
             </li>
-            <li>
-              <a className="dropdown-item" href="#">
-                Something else here
-              </a>
-            </li>
+           
           </ul>
         </li>
       </ul>

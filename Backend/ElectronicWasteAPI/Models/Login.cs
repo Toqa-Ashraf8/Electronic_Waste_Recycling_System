@@ -10,8 +10,5 @@ namespace ElectronicWasteAPI.Models
         public string? Password { get; set; }
 
 
-
-
-
     }
 }
