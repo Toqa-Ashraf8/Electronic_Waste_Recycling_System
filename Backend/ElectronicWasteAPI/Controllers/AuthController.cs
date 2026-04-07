@@ -46,11 +46,11 @@ namespace ElectronicWasteAPI.Controllers
         }
         [Route("Register")]
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody] Register user)
+        public async Task<IActionResult> Register([FromBody] User user)
         {
             bool userExisted = false;
             string hashedPassword;
-            var searchUser = await _context.Register.AnyAsync(u => u.Email == user.Email);
+            var searchUser = await _context.Users.AnyAsync(u => u.Email == user.Email);
             if (searchUser)
             {
                 return BadRequest(new { userExisted = true });
@@ -58,7 +58,7 @@ namespace ElectronicWasteAPI.Controllers
 
             hashedPassword = BCrypt.Net.BCrypt.EnhancedHashPassword(user.Password);
             user.Password = hashedPassword;
-            _context.Register.Add(user);
+            _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
 
@@ -83,7 +83,50 @@ namespace ElectronicWasteAPI.Controllers
             return Ok(data);    
             
         }
-       
 
+        [Route("Login")]
+        [HttpPost]
+        public async Task<IActionResult> Login([FromBody] userData user)
+        {
+            bool isNull = false;
+            string savedPassword="";
+            if (user == null) return BadRequest(new { isNull = true });
+            string sqls = @"select * from Users where Email=@Email";
+            SqlCommand cmd = new SqlCommand(sqls, conn);
+            if (conn.State == ConnectionState.Closed) conn.Open();
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("@Email", user.Email);
+            DataTable dt = new DataTable();
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            da.Fill(dt);
+            if (dt.Rows.Count > 0)
+            {
+                savedPassword = dt.Rows[0]["Password"].ToString();
+            }
+            bool isPasswordValid = BCrypt.Net.BCrypt.EnhancedVerify(user.Password, savedPassword);
+            if (!isPasswordValid)
+            {
+                return BadRequest("user not valid");
+            }
+            var claims = new[]
+            {
+                    new Claim(ClaimTypes.Name, dt.Rows[0]["UserName"].ToString()),
+                    new Claim(ClaimTypes.Role, dt.Rows[0]["Role"].ToString()),
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.SecretKey));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: "MyEWasteApi",
+                audience: "MyReactApp",
+                claims: claims,
+                expires: DateTime.Now.AddHours(3),
+                signingCredentials: creds
+            );
+            var data = new{ token = new JwtSecurityTokenHandler().WriteToken(token)};
+            return Ok(data);
+               
+        }
     }
 }

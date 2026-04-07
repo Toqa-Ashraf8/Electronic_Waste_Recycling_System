@@ -7,8 +7,7 @@ namespace ElectronicWasteAPI.EF
     {
         public DataContext(DbContextOptions<DataContext>options) : base(options) { }
 
-             public DbSet<Login>Login { get; set; }
-             public DbSet<Register>Register { get; set; }
+             public DbSet<User>Users { get; set; }
 
     }
 }

@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import { options } from 'toastr';
 const Register = () => {
   const {user,userImgPath,token}=useSelector((state)=>state.auth);
+  const {isLoading}=useSelector((state)=>state.ui);
   const dispatch=useDispatch();
   const navigate=useNavigate();
 
@@ -145,6 +146,7 @@ console.log("token",token)
                         <button 
                         className="btn btn-register"
                         onClick={()=>registerUser()}
+                        disabled={isLoading}
                         >
                             Register 
                         </button>

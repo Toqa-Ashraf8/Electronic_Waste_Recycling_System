@@ -1,0 +1,13 @@
+
+.Toastify__toast-container {
+    width: auto !important; 
+    min-width: 450px !important; 
+    max-width: 600px !important; 
+}
+
+.Toastify__toast {
+    white-space: nowrap !important; 
+    padding: 15px 25px !important;
+    display: inline-flex !important; 
+    min-width: 100% !important;
+}

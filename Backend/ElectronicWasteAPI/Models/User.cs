@@ -2,7 +2,7 @@
 
 namespace ElectronicWasteAPI.Models
 {
-    public class Register
+    public class User
     {
         [Key]
         public int UserID { get; set; }

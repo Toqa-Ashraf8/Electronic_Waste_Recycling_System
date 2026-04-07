@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { newUserRegister, saveImagePath } from "../../services/authService";
+import { loginUser, newUserRegister, saveImagePath } from "../../services/authService";
 
 const initialState={
     user:{},
@@ -30,7 +30,13 @@ const authSlice=createSlice({
             sessionStorage.setItem('role',action.payload.role);
             state.role=action.payload.role;
         })
-        
+        .addCase(loginUser.fulfilled,(state,action)=>{
+            if(action.payload.token){
+                sessionStorage.setItem('token',action.payload.token);
+                state.token=action.payload.token;
+            }
+           
+        })
     }
 })
 export const {setUserValues}=authSlice.actions;

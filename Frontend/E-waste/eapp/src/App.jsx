@@ -8,6 +8,7 @@ import { clearGlobalError } from './redux/global/uiSlice';
 import { toast, ToastContainer } from 'react-toastify';
 import Home from './features/home/Home';
 import ProtectedRoute from './components/ProtectedRoute';
+import Login from './features/auth/Login';
 function App() {
  const {globalError,globalMessage}=useSelector((state)=>state.ui);
  const {token}=useSelector((state)=>state.auth);
@@ -36,9 +37,9 @@ useEffect(() => {
       />
       {token && <Header />}
     <Routes>
-       <Route path="/" element={<Navigate to="/register" replace />} />  
+       <Route path="/" element={<Navigate to="/login" replace />} />  
        <Route path='/register'element={<Register/>}/>
-    
+       <Route path='/login'element={<Login/>}/>
       <Route path='/home' 
       element={
         <ProtectedRoute>
