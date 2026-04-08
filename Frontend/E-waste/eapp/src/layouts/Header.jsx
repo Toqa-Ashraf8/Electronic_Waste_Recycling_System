@@ -75,6 +75,11 @@ const Header = () => {
             className="dropdown-menu"
             aria-labelledby="navbarDropdownMenuLink"
           >
+             <li>
+              <Link className="nav-link" to="/add-categories">
+               Categories
+              </Link>
+            </li>
             <li>
               <Link className="nav-link" to="#">
                Cart Items

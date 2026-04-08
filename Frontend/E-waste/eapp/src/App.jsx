@@ -11,6 +11,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Login from './features/auth/Login';
 import UserProfile from './features/userProfile/userProfile';
 import SellDevice from './features/selldevice/SellDevice';
+import Categories from './features/categories/Categories';
 function App() {
  const {globalError,globalMessage}=useSelector((state)=>state.ui);
  const {token}=useSelector((state)=>state.auth);
@@ -58,6 +59,12 @@ useEffect(() => {
        element={
         <ProtectedRoute>
            <SellDevice/>
+        </ProtectedRoute>
+      }/>
+       <Route path='/add-categories' 
+       element={
+        <ProtectedRoute>
+           <Categories/>
         </ProtectedRoute>
       }/>
     </Routes>

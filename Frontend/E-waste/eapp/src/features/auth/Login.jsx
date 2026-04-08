@@ -26,7 +26,7 @@ const handleLogin = async () => {
             const {token}=result;
             if (token) {
                 sessionStorage.setItem('token',token);
-                toast.success("Welcome back to E-VIVE! 🌿",{
+                toast.success("Welcome back to E-VIVE!",{
                     theme:"colored",
                     position:"top-right"
                 });
@@ -34,7 +34,7 @@ const handleLogin = async () => {
             }
         } catch (error) {}
 };
-console.log("token",token);
+
     return (
         <div className="login-modern-page">
             <div className="login-modern-card">
