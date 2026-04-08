@@ -26,7 +26,10 @@ const handleLogin = async () => {
             const {token}=result;
             if (token) {
                 sessionStorage.setItem('token',token);
-                toast.success("Welcome back to E-VIVE! 🌿");
+                toast.success("Welcome back to E-VIVE! 🌿",{
+                    theme:"colored",
+                    position:"top-right"
+                });
                  navigate('/home');
             }
         } catch (error) {}

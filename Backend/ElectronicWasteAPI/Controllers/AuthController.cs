@@ -124,7 +124,7 @@ namespace ElectronicWasteAPI.Controllers
                 expires: DateTime.Now.AddHours(3),
                 signingCredentials: creds
             );
-            var data = new{ token = new JwtSecurityTokenHandler().WriteToken(token)};
+            var data = new{ token = new JwtSecurityTokenHandler().WriteToken(token),usertbl= dt };
             return Ok(data);
                
         }

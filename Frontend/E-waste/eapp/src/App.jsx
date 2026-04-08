@@ -9,6 +9,8 @@ import { toast, ToastContainer } from 'react-toastify';
 import Home from './features/home/Home';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './features/auth/Login';
+import UserProfile from './features/userProfile/userProfile';
+import SellDevice from './features/selldevice/SellDevice';
 function App() {
  const {globalError,globalMessage}=useSelector((state)=>state.ui);
  const {token}=useSelector((state)=>state.auth);
@@ -44,6 +46,18 @@ useEffect(() => {
       element={
         <ProtectedRoute>
            <Home/>
+        </ProtectedRoute>
+      }/>
+       <Route path='/userprofile' 
+      element={
+        <ProtectedRoute>
+           <UserProfile/>
+        </ProtectedRoute>
+      }/>  
+       <Route path='/sell-your-device' 
+       element={
+        <ProtectedRoute>
+           <SellDevice/>
         </ProtectedRoute>
       }/>
     </Routes>

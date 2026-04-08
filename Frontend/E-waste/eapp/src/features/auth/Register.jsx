@@ -20,7 +20,8 @@ const confirmingPassword=(confirmPassword)=>{
             theme:"colored",
             position:"top-right"
         })
-        return confirmPassRef.current.focus();
+        confirmPassRef.current.focus();
+        return ; 
      }
     }
 }

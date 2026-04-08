@@ -1,0 +1,130 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+
+.profile-dashboard-layout {
+    background-color: #f8fcfb;
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    font-family: 'Outfit', sans-serif;
+    box-sizing: border-box;
+}
+
+.wide-profile-card {
+    background: #ffffff;
+    width: 100%;
+    max-width: 1400px;
+    border-radius: 40px;
+    padding: 50px;
+    box-shadow: 0 25px 80px rgba(0,0,0,0.06);
+    border: 1px solid #e0f2f1;
+}
+
+/* Header */
+.profile-top-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 50px;
+    border-bottom: 2px solid #f0fdfa;
+    padding-bottom: 30px;
+}
+
+.header-identity { display: flex; align-items: center; gap: 20px; }
+.header-identity .main-icon { font-size: 50px; color: #55a690; }
+.header-identity h1 { font-weight: 800; color: #1b4332; margin: 0; font-size: 32px; letter-spacing: 1px; }
+.header-identity p { color: #55a690; margin: 0; font-size: 16px; }
+
+.eco-badge { background: #1b4332; color: #fff; padding: 12px 25px; border-radius: 50px; font-weight: 700; font-size: 13px; display: flex; align-items: center; gap: 10px; }
+
+/* Flex Layout */
+.profile-main-flex-container {
+    display: flex;
+    gap: 60px;
+}
+
+/* Left Section */
+.profile-left-sidebar {
+    flex: 0 0 300px;
+    text-align: center;
+}
+
+.avatar-wrapper { display: inline-block;
+    width: 180px; 
+    height: 180px; 
+    border-radius: 50%; 
+    overflow: hidden; 
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); 
+    border: 5px solid #ffffff; }
+.user-img { width: 220px; height: 220px; border-radius: 50%; object-fit: cover; border: 6px solid #f0fdfa; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+.img-overlay-btn { position: absolute; bottom: 10px; right: 10px; background: #55a690; color: white; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 4px solid #fff; }
+
+.sidebar-buttons { display: flex; flex-direction: column; gap: 12px; }
+.btn-mint-outline { background: transparent; border: 1px solid #d1fae5; color: #1b4332; padding: 12px; border-radius: 12px; font-weight: 600; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.btn-mint-outline:hover { background: #f0fdfa; border-color: #55a690; }
+
+/* Right Section */
+.profile-right-content { flex: 1; }
+.welcome-message h2 { font-size: 40px; font-weight: 800; color: #1b4332; margin-bottom: 30px; }
+.name-highlight { color: #55a690; }
+
+/* Info Nodes */
+.info-horizontal-bar { display: flex; gap: 25px; margin-bottom: 40px; }
+.info-node { flex: 1; background: #fbfdfc; padding: 20px; border-radius: 20px; border: 1px solid #edf7f5; display: flex; align-items: center; gap: 15px; }
+.node-icon { color: #55a690; font-size: 22px; }
+.info-node label { display: block; font-size: 11px; color: #9ca3af; text-transform: uppercase; font-weight: 700; margin: 0; }
+.info-node p { margin: 0; color: #1b4332; font-weight: 600; font-size: 15px; }
+
+/* Points Section */
+.points-display-box { background: #f0fdfa; padding: 35px; border-radius: 30px; margin-bottom: 40px; border: 1px solid #e0f2f1; }
+.points-meta { display: flex; justify-content: space-between; margin-bottom: 15px; font-weight: 700; color: #1b4332; }
+.custom-progress-mint { height: 12px !important; border-radius: 10px; background: #fff !important; }
+.custom-progress-mint .progress-bar { background-color: #55a690 !important; }
+.points-hint { margin-top: 15px; color: #55a690; font-size: 14px; font-weight: 500; }
+
+/* Stats Grid */
+.stats-quad-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.stat-unit { background: white; border: 1px solid #edf7f5; padding: 25px 10px; border-radius: 20px; text-align: center; transition: 0.3s; }
+.highlight-unit { background: #1b4332; border: none; }
+.highlight-unit .unit-val, .highlight-unit .unit-label { color: #fff !important; }
+.unit-val { display: block; font-size: 30px; font-weight: 800; color: #1b4332; }
+.unit-label { font-size: 11px; color: #55a690; font-weight: 700; text-transform: uppercase; }
+
+/* Footer */
+.profile-card-footer { margin-top: 50px; display: flex; justify-content: flex-end; border-top: 2px solid #f0fdfa; padding-top: 30px; }
+.btn-save-main { background: #55a690; color: white; border: none; padding: 15px 50px; border-radius: 15px; font-weight: 800; font-size: 16px; transition: 0.3s; }
+.btn-save-main:hover { background: #1b4332; transform: translateY(-3px); }
+
+/* إطار الصورة المربع */
+.t-avatar-frame {
+    width: 200px; /* العرض */
+    height: 200px; /* الطول */
+    margin: 0 auto 25px; /* سنترة ومسافة تحتها */
+    border: 4px solid #55a690; /* البوردر بلون المينت اللي بتحبيه */
+    border-radius: 20px; /* حدود ناعمة للمربع وليس دائرة */
+    overflow: hidden; /* عشان الصورة متطلعش بره الإطار */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* الشادو */
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* الصورة نفسها داخل الإطار */
+.t-square-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* عشان الصورة متتمطش */
+    display: block;
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+    .profile-main-flex-container { flex-direction: column; }
+    .profile-left-sidebar { flex: 1; border-right: none; }
+    .info-horizontal-bar { flex-direction: column; }
+    .stats-quad-grid { grid-template-columns: repeat(2, 1fr); }
+}

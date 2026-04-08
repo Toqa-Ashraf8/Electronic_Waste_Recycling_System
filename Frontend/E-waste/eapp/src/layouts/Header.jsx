@@ -23,16 +23,7 @@ const Header = () => {
     </button>
     <div className="collapse navbar-collapse" id="navbarNavDropdown">
       <ul className="navbar-nav">
-         <li className="nav-item">
-          <Link className="nav-link active" aria-current="page" to="/login">
-            Login
-          </Link>
-        </li>
-         <li className="nav-item">
-          <Link className="nav-link active" aria-current="page" to="/register">
-            Register
-          </Link>
-        </li>
+      
          <li className="nav-item">
           <Link className="nav-link active" aria-current="page" to="#">
             Dashboard
@@ -44,12 +35,12 @@ const Header = () => {
         </Link>
         </li>
         <li className="nav-item">
-          <Link className="nav-link" to="#">
+          <Link className="nav-link" to="/userprofile">
              Profile
         </Link>
         </li>
         <li className="nav-item">
-          <Link className="nav-link" to="#">
+          <Link className="nav-link" to="/sell-your-device">
             Sell Device
         </Link>
         </li>
@@ -58,11 +49,7 @@ const Header = () => {
             Tech Store
         </Link>
         </li>
-         <li>
-          <Link className="nav-link" to="#">
-              Points
-          </Link>
-        </li>
+       
          <li className="nav-item">
           <Link className="nav-link" to="#">
             Find Us
@@ -89,16 +76,21 @@ const Header = () => {
             aria-labelledby="navbarDropdownMenuLink"
           >
             <li>
-              <Link className="dropdown-item" to="#">
+              <Link className="nav-link" to="#">
                Cart Items
               </Link>
             </li>
            
              <li>
-              <Link className="dropdown-item" to="#">
+              <Link className="nav-link" to="#">
                 Orders
               </Link>
             </li>
+              <li>
+          <Link className="nav-link" to="#">
+              Points
+          </Link>
+        </li>
            
           </ul>
         </li>
