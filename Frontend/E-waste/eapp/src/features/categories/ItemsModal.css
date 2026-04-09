@@ -1,0 +1,65 @@
+.modalI{
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+    padding-top: 70px;
+   
+}
+.modalcnt{
+    width: 50%;
+    height: 520px;
+    margin: auto;
+    border: 1px solid grey;
+    box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+    background-color: #d0d0d0;
+    font-weight: 400; 
+    animation-name: zzoom;
+    animation-duration: 0.7s;
+}
+@keyframes zzoom {
+    from{
+        transform: scale(0);
+    }
+    to{
+        transform: scale(1);
+    }
+}
+.headerI{
+    display: flex;
+    justify-content: space-between;
+    color: #fff;
+}
+.headerI,.footerI{
+    height: 70px;
+    background-color: teal;
+    padding: 10px 25px;
+}
+.bodyI{
+    height: 380px;
+    padding: 50px 60px!important;
+}
+.btn_close{
+    font-size: 35px;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+}
+.btn_close:hover{
+    color: red;
+    transition: 0.5s all;
+}
+.mdlData{
+    display: flex;
+    margin-bottom:17px;
+   
+}
+.inpMdl{
+    width: 300px!important;
+}
+.lblMdl{
+    width: 140px;
+}

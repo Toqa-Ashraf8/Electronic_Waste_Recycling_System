@@ -86,3 +86,9 @@
     gap: 20px;
     margin-bottom: 30px;
 }
+.empty-msg{
+    background-color: #f3f1f1;
+    padding: 10px;
+    color: #b4b8b6;
+    text-align: center;
+}

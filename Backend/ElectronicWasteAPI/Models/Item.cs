@@ -7,6 +7,7 @@ namespace ElectronicWasteAPI.Models
     {
         [Key]
         public int ItemID { get; set; }
+        public int? serial { get; set; }
         public int ItemName { get; set; }
         public string? BrandName { get; set; }
         public string? Quality { get; set; }

@@ -1,13 +1,118 @@
-import React from 'react'
-
+import React, { useEffect, useRef } from 'react'
+import './ItemsModal.css'
+import { useDispatch, useSelector } from 'react-redux'
+import { setItemValues, toggleCategoryModal } from '../../redux/categories/categorySlice';
 const ItemsModal = () => {
+  const {item}=useSelector((state)=>state.category);
+  const dispatch=useDispatch();
+  const nameRef=useRef(); 
+  const handleChange=(e)=>{
+    const {name,value}=e.target;
+    dispatch(setItemValues({[name]:value}));
+  }
+  useEffect(()=>{
+    if(nameRef){
+      nameRef.current.focus();
+    }
+  },[])
+console.log("item",item);
   return (
     <div>
-        
-
-
-
-
+        <div className="modalI">
+            <div className="modalcnt">
+                <div className="headerI">
+                  <h2>Add Category</h2>
+                  <span 
+                  className='btn_close'
+                  onClick={()=>dispatch(toggleCategoryModal(false))}
+                  >&times;</span>
+                </div>
+                <div className="bodyI">
+                  <div className="mdlData">
+                    <label htmlFor="" className='form-label lblMdl'>serial</label>
+                    <input 
+                    type="text" 
+                    className="form-control inpMdl"
+                    autoComplete='off'
+                    name='serial'
+                    value={item.serial}
+                    onChange={handleChange}
+                    disabled
+                    />
+                  </div>
+                    <div className="mdlData">
+                    <label htmlFor="" className='form-label lblMdl'>Item Name</label>
+                    <input 
+                    type="text" 
+                    className="form-control inpMdl"
+                    name='ItemName'
+                    autoComplete='off'
+                    value={item.ItemName || ""}
+                    onChange={handleChange}
+                    ref={nameRef}
+                    />
+                  </div>
+                    <div className="mdlData">
+                    <label htmlFor="" className='form-label lblMdl'>Brand</label>
+                    <input 
+                    type="text" 
+                    className="form-control inpMdl"
+                    name='BrandName'
+                    autoComplete='off'
+                    value={item.BrandName || ""}
+                    onChange={handleChange}
+                    />
+                  </div>
+                    <div className="mdlData">
+                    <label htmlFor="" className='form-label lblMdl'>Condition</label>
+                    <select 
+                    className="form-select inpMdl"
+                    name='Condition'
+                    autoComplete='off'
+                    value={item.Condition || ""} 
+                    onChange={handleChange}
+                    >
+                      <option value="-1">- select condition -</option>
+                      <option value="Scrap/Bad">Scrap/Bad</option>
+                      <option value="Fair">Fair</option>
+                      <option value="Good">Good</option>
+                      <option value="Excellent">Excellent</option>
+                    </select>
+                  </div> 
+                    <div className="mdlData">
+                    <label htmlFor="" className='form-label lblMdl'>Quality</label>
+                    <input 
+                    type="text"
+                    className="form-control inpMdl"
+                    name='Quality'
+                    autoComplete='off'
+                    value={item.Quality || ""}
+                    onChange={handleChange}
+                    />
+                  </div>
+                   
+                  <div className="mdlData">
+                    <label htmlFor="" className='form-label lblMdl'>Estimated Price</label>
+                    <input 
+                    type="text" 
+                    className="form-control inpMdl"
+                    name='EstimatedPrice'
+                    autoComplete='off'
+                    value={item.EstimatedPrice || ""}
+                    onChange={handleChange}
+                    />
+                  </div>
+                </div>
+                <div className="footerI">
+                  <div 
+                  style={{display:'flex',justifyContent:'space-between',marginTop:'8px'}}>
+                     <button className='btn btn-primary' style={{color:'#fff'}}>Add</button>
+                     <button className='btn btn-danger'>Close</button>  
+                  </div>
+                
+                </div>
+            </div>
+        </div>
     </div>
   )
 }
