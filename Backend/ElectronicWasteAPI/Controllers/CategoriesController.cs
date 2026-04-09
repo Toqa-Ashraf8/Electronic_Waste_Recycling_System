@@ -42,8 +42,8 @@ namespace ElectronicWasteAPI.Controllers
                     }
                     if (conn.State == ConnectionState.Open) conn.Close();
                 }
-                catch {return BadRequest(new { saved = false });}
-               
+                catch { return BadRequest(new { saved = false }); }
+
             }
             else
             {
@@ -56,7 +56,7 @@ namespace ElectronicWasteAPI.Controllers
                     {
                         cmd.Parameters.AddWithValue("@CategoryName", cat.CategoryName);
                         cmd.Parameters.AddWithValue("@CategoryID", id);
-                        cmd.ExecuteNonQuery();       
+                        cmd.ExecuteNonQuery();
                         updated = true;
                     }
                     if (conn.State == ConnectionState.Open) conn.Close();
@@ -91,12 +91,12 @@ namespace ElectronicWasteAPI.Controllers
                             cmd.Parameters.AddWithValue("@CategoryID", id);
                         }
                         cmd.ExecuteScalar();
-                        saved = true;
+
                     }
-                   
+
                 }
                 catch { return BadRequest(new { saved = false }); }
-                finally{ if (conn.State == ConnectionState.Open) conn.Close();}
+                finally { if (conn.State == ConnectionState.Open) conn.Close(); }
             }
             var data = new
             {
@@ -106,5 +106,77 @@ namespace ElectronicWasteAPI.Controllers
             };
             return Ok(data);
         }
+
+        [Route("GetAllCategories")]
+        [HttpGet]
+        public IActionResult GetAllCategories()
+        {
+            DataTable dt = new DataTable();
+            string get = "select * from Categories";
+            SqlDataAdapter da = new SqlDataAdapter(get, conn);
+            da.Fill(dt);
+            return Ok(dt);
+        }
+
+        [Route("GetItemsByCategory")]
+        [HttpPost]
+        public IActionResult GetItemsByCategory(int id)
+        {
+            DataTable dt = new DataTable();
+            string sqlg = @"select * from Items where CategoryID=@CategoryID";
+            if (conn.State == ConnectionState.Closed) conn.Open();
+            using (SqlCommand cmd = new SqlCommand(sqlg, conn))
+            {
+                cmd.Parameters.AddWithValue("@CategoryID", id);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+            }
+            if (conn.State == ConnectionState.Open) conn.Close();
+            return Ok(dt);
+        }
+
+
+        [Route("DeleteCategory")]
+        [HttpDelete]
+        public IActionResult DeleteCategory(int id) 
+        {
+            bool deleted = false;
+            if (id == 0) return BadRequest("id not found");
+            if (id > 0)
+            {
+                try
+                {
+                    string deleteItem = @"delete Items where CategoryID=@CategoryID";
+                    if (conn.State == ConnectionState.Closed) conn.Open();
+                    using(SqlCommand cmd=new SqlCommand(deleteItem, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@CategoryID", id);
+                        cmd.ExecuteNonQuery();
+                        deleted = true;
+                    }
+                    if (deleted == true)
+                    {
+                        string deleteCat = @"delete Categories where CategoryID=@CategoryID";
+                        if (conn.State == ConnectionState.Closed) conn.Open();
+                        using (SqlCommand cmd = new SqlCommand(deleteCat, conn))
+                        {
+                            cmd.Parameters.AddWithValue("@CategoryID", id);
+                            cmd.ExecuteNonQuery();
+                            deleted = true;
+                        }
+                    }
+
+                }
+                catch { return BadRequest(new { deleted = false }); }
+                finally
+                {
+                    if (conn.State == ConnectionState.Open) conn.Close();
+                }
+               
+            }
+            var data = new { deleted = deleted };
+            return Ok(data);
+        }
+
     }
 }

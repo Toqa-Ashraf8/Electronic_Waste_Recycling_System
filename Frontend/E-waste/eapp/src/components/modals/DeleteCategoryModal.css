@@ -1,0 +1,79 @@
+.mini-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 4000;
+}
+
+.mini-modal-card {
+    background: white;
+    width: 380px; 
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    animation: zzomm 0.5s;
+}
+@keyframes zzomm {
+    from{
+        transform: scale(0);
+    }
+    to{
+        transform: scale(1);
+    }
+}
+.warning-icon-small {
+    font-size: 28px;
+    color: #ff4d4f;
+    margin-bottom: 10px;
+}
+
+.mini-modal-body p {
+    font-size: 1rem;
+    color: #333;
+    margin: 5px 0;
+    font-weight: 500;
+}
+
+.mini-modal-body span {
+    font-size: 0.8rem;
+    color: #999;
+}
+
+.mini-modal-footer {
+    display: flex;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+.mini-modal-footer button {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-no {
+    background: #f0f0f0;
+    color: #666;
+}
+
+.btn-no:hover { background: #e8e8e8; }
+
+.btn-yes {
+    background: #ff4d4f;
+    color: white;
+}
+
+.btn-yes:hover {
+    background: #d9363e;
+}

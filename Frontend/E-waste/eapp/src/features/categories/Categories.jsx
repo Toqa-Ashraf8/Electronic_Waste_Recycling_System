@@ -1,20 +1,24 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { FiPlus, FiTrash2, FiEdit } from "react-icons/fi";
 import { Save, BrushCleaning ,Search ,Trash } from 'lucide-react';
 import './Categories.css'
 import {useSelector,useDispatch} from 'react-redux'
-import { addNewItem, resetCategoryForm, setCategoryValues, setEditItem, setItemIndex, toggleCategoryModal } from "../../redux/categories/categorySlice";
+import { addNewItem, resetCategoryForm, setCategoryValues, setEditItem, setItemIndex, toggleCategoryModal, toggleDeleteCatModal, toggleSearchModal } from "../../redux/categories/categorySlice";
 import ItemsModal from "./ItemsModal";
 import DeleteItemModal from "../../components/modals/DeleteItemModal";
 import { saveAllData } from "../../services/categoryService";
 import { toast } from "react-toastify";
+import CategorySearchModal from "../../components/modals/CategorySearchModal";
+import DeleteCategoryModal from "../../components/modals/DeleteCategoryModal";
 function Categories() {
 const {
   category,
   isCategoryModalOpen,
   itemsList,
   item,
-  isDeleteItemModalOpen
+  isDeleteItemModalOpen,
+  isSearchCatModalOpen,
+  isDeleteCatModalOpen
 }=useSelector((state)=>state.category);
 const dispatch=useDispatch();
 const catIdRef=useRef();
@@ -50,12 +54,17 @@ const saveCategory = async () => {
       });
     } 
   } catch (error) {} 
-  console.log("parms",params);
 };
+useEffect(()=>{
+  catNameRef.current.focus();
+},[])
+
   return (
     <div className="container">
       {isCategoryModalOpen && <ItemsModal/>}
       {isDeleteItemModalOpen && <DeleteItemModal/>}
+      {isSearchCatModalOpen && <CategorySearchModal/>}
+      {isDeleteCatModalOpen && <DeleteCategoryModal/>}
         <h5 className="black-bold-title"> CATEGORY MANAGEMENT</h5>
       <div className="sell-waste-card-hud animate__animated animate__fadeIn">
          <div className="btns-container col">
@@ -65,9 +74,21 @@ const saveCategory = async () => {
                 >
                   <BrushCleaning size={20} color="black"/>
                 </button>
-                <button className="btn btn-cat" onClick={()=>saveCategory()}><Save size={20} color="green"/></button>
-                 <button className="btn btn-cat"><Trash size={20} color="red"/></button>
-                <button className="btn btn-cat"><Search size={20} color="blue"/></button>
+                <button 
+                className="btn btn-cat" 
+                onClick={()=>saveCategory()}>
+                  <Save size={20} color="green"/>
+                </button>
+                <button className="btn btn-cat"
+                onClick={()=>dispatch(toggleDeleteCatModal(true))}
+                 >
+                  <Trash size={20} color="red"/>
+                </button>
+                <button className="btn btn-cat"
+                onClick={()=>dispatch(toggleSearchModal(true))}
+                >
+                  <Search size={20} color="blue"/>
+                </button>
             </div>
         <div className="master-add-section">  
           <div className="inputs-inline-row">

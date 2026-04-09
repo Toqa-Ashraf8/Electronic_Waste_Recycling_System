@@ -1,13 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { saveAllData } from "../../services/categoryService";
+import { deleteCategory, fetchCategories, fetchItems, saveAllData } from "../../services/categoryService";
 
 const initialState={
     category:{CategoryID:0,CategoryName:""},
+    categories:[],
     item:{},
     itemsList:[],
     isCategoryModalOpen:false,
     rowIndex:-1,
     isDeleteItemModalOpen:false,
+    isSearchCatModalOpen:false,
+    deletedSuccessfully:false,
+    isDeleteCatModalOpen:false,
 }
 const categorySlice=createSlice({
     name:'category',
@@ -45,7 +49,7 @@ const categorySlice=createSlice({
             state.isCategoryModalOpen=true;
             state.rowIndex=action.payload;
             if(action.payload!==-1){
-                    state.item=state.itemsList[state.rowIndex];
+                 state.item=state.itemsList[state.rowIndex];
             }
         },
         toggleDeleteItemModal:(state,action)=>{
@@ -58,12 +62,31 @@ const categorySlice=createSlice({
         deleteItem:(state,action)=>{
             state.itemsList=state.itemsList.filter((item,index)=>index!==state.rowIndex);
             state.isDeleteItemModalOpen=false;
+        },
+        toggleSearchModal:(state,action)=>{
+            state.isSearchCatModalOpen=action.payload;
+        },
+        fillCategoryForm:(state,action)=>{
+            state.category=state.categories[action.payload];
+            state.isSearchCatModalOpen=false;
+        },
+        toggleDeleteCatModal:(state,action)=>{
+            state.isDeleteCatModalOpen=action.payload;
         }
     },
     extraReducers:(builder)=>{
         builder
         .addCase(saveAllData.fulfilled,(state,action)=>{
             state.category.CategoryID=action.payload.id;
+        })
+        .addCase(fetchCategories.fulfilled,(state,action)=>{
+            state.categories=action.payload;
+        }) 
+        .addCase(fetchItems.fulfilled,(state,action)=>{
+            state.itemsList=action.payload;
+        }) 
+        .addCase(deleteCategory.fulfilled,(state,action)=>{
+            state.deletedSuccessfully=action.payload;
         })
     }
 })
@@ -77,7 +100,10 @@ export const {
     setEditItem,
     toggleDeleteItemModal,
     setItemIndex,
-    deleteItem
+    deleteItem,
+    toggleSearchModal,
+    fillCategoryForm,
+    toggleDeleteCatModal
 }=categorySlice.actions;
 const catReducer=categorySlice.reducer;
 export default catReducer;
