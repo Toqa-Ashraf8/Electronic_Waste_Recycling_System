@@ -1,27 +1,30 @@
 import React, { useEffect, useRef } from 'react'
 import './ItemsModal.css'
 import { useDispatch, useSelector } from 'react-redux'
-import { setItemValues, toggleCategoryModal } from '../../redux/categories/categorySlice';
+import { setFormMode, setItemValues, toggleCategoryModal } from '../../redux/categories/categorySlice';
 const ItemsModal = () => {
-  const {item}=useSelector((state)=>state.category);
+  const {item,rowIndex}=useSelector((state)=>state.category);
   const dispatch=useDispatch();
   const nameRef=useRef(); 
   const handleChange=(e)=>{
     const {name,value}=e.target;
     dispatch(setItemValues({[name]:value}));
   }
+  const addToTable=()=>{
+    dispatch(setFormMode());
+  }
   useEffect(()=>{
     if(nameRef){
       nameRef.current.focus();
     }
   },[])
-console.log("item",item);
+
   return (
     <div>
         <div className="modalI">
             <div className="modalcnt">
                 <div className="headerI">
-                  <h2>Add Category</h2>
+                  <h3 style={{marginLeft:'40%',marginTop:'10px'}}>Add Item</h3>
                   <span 
                   className='btn_close'
                   onClick={()=>dispatch(toggleCategoryModal(false))}
@@ -106,7 +109,11 @@ console.log("item",item);
                 <div className="footerI">
                   <div 
                   style={{display:'flex',justifyContent:'space-between',marginTop:'8px'}}>
-                     <button className='btn btn-primary' style={{color:'#fff'}}>Add</button>
+                     <button 
+                     className='btn' 
+                     style={{color:'#fff',backgroundColor:'#03071e'}}
+                     onClick={()=>addToTable()}
+                     >Add</button>
                      <button className='btn btn-danger'>Close</button>  
                   </div>
                 

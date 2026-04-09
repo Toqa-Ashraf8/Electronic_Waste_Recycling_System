@@ -3,13 +3,18 @@ import { FiPlus, FiTrash2, FiEdit } from "react-icons/fi";
 import { Save, BrushCleaning ,Search ,Trash } from 'lucide-react';
 import './Categories.css'
 import {useSelector,useDispatch} from 'react-redux'
-import { addNewItem, resetCategoryForm, setCategoryValues, toggleCategoryModal } from "../../redux/categories/categorySlice";
+import { addNewItem, resetCategoryForm, setCategoryValues, setEditItem, setItemIndex, toggleCategoryModal } from "../../redux/categories/categorySlice";
 import ItemsModal from "./ItemsModal";
+import DeleteItemModal from "../../components/modals/DeleteItemModal";
+import { saveAllData } from "../../services/categoryService";
+import { toast } from "react-toastify";
 function Categories() {
 const {
   category,
   isCategoryModalOpen,
-  itemsList
+  itemsList,
+  item,
+  isDeleteItemModalOpen
 }=useSelector((state)=>state.category);
 const dispatch=useDispatch();
 const catIdRef=useRef();
@@ -28,10 +33,29 @@ const addNew=()=>{
   dispatch(addNewItem(itemsList.length + 1));
   dispatch(toggleCategoryModal(true));
 }
-
+const saveCategory = async () => { 
+  const params = { ...category, items: itemsList };
+  try {
+    const result = await dispatch(saveAllData(params)).unwrap(); 
+    if (result.saved) {
+      toast.success("Category added successfully!", {
+        theme: 'colored',
+        position: 'top-right'
+      });
+    } 
+    else if (result.updated) {
+      toast.success("Category details updated!", {
+        theme: 'colored',
+        position: 'top-right'
+      });
+    } 
+  } catch (error) {} 
+  console.log("parms",params);
+};
   return (
     <div className="container">
       {isCategoryModalOpen && <ItemsModal/>}
+      {isDeleteItemModalOpen && <DeleteItemModal/>}
         <h5 className="black-bold-title"> CATEGORY MANAGEMENT</h5>
       <div className="sell-waste-card-hud animate__animated animate__fadeIn">
          <div className="btns-container col">
@@ -41,7 +65,7 @@ const addNew=()=>{
                 >
                   <BrushCleaning size={20} color="black"/>
                 </button>
-                <button className="btn btn-cat"><Save size={20} color="green"/></button>
+                <button className="btn btn-cat" onClick={()=>saveCategory()}><Save size={20} color="green"/></button>
                  <button className="btn btn-cat"><Trash size={20} color="red"/></button>
                 <button className="btn btn-cat"><Search size={20} color="blue"/></button>
             </div>
@@ -83,7 +107,7 @@ const addNew=()=>{
           </button>
         </div>
         <div className="table-responsive">
-          <table className="table">
+          <table className="table table-bordered">
             <thead className="custom-table-header">
               <tr>
                 <th>Serial</th>
@@ -95,26 +119,34 @@ const addNew=()=>{
                 <th>Actions</th>
               </tr>
             </thead>
-            {itemsList && itemsList.length>0 ? 
-            itemsList.map((item,index)=>{
-            <tbody>
-              <tr>
-                <td>{item.serial}</td>
-                <td>{item.ItemName}</td>
-                <td>{item.BrandName}</td>
-                <td>{item.Condition}</td>
-                <td>{item.Quality}</td>
-                <td>{item.EstimatedPrice}</td>
-                <td className="text-center">
-                  <FiEdit className="action-icon edit" />
-                  <FiTrash2 className="action-icon delete" />
-                </td>
-              </tr>
-             </tbody>  
-             })
-            : 
-             <td colSpan={7} className="empty-msg">No Items Added Yet</td>
-            }
+           {itemsList.length > 0 ? (
+                <tbody>
+                  {itemsList.map((item, index) => (
+                    <tr key={index}>
+                      <td>{item.serial}</td>
+                      <td>{item.ItemName}</td>
+                      <td>{item.BrandName}</td>
+                      <td>{item.Condition}</td>
+                      <td>{item.Quality}</td>
+                      <td>{item.EstimatedPrice}</td>
+                      <td className="text-center">
+                        <FiEdit className="action-icon edit" 
+                        onClick={()=>dispatch(setEditItem(index))} />
+                        <FiTrash2 className="action-icon delete" 
+                        onClick={()=>dispatch(setItemIndex(index))} />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+                 ) : (
+                <tbody>
+                  <tr>
+                    <td colSpan={7} className="empty-msg">
+                      No Items Added Yet
+                    </td>
+                  </tr>
+                </tbody>
+              )}
           </table>
         </div>
       </div>

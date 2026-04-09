@@ -87,8 +87,17 @@
     margin-bottom: 30px;
 }
 .empty-msg{
-    background-color: #f3f1f1;
+    background-color: #f3f1f1!important;
     padding: 10px;
-    color: #b4b8b6;
+    color: #b4b8b6!important;
     text-align: center;
 }
+
+table td, table th {
+    text-align: center;
+   font-size: 13px;
+}
+tbody td {
+    padding: 15px!important;
+}
+
