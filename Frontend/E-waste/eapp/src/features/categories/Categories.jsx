@@ -3,7 +3,16 @@ import { FiPlus, FiTrash2, FiEdit } from "react-icons/fi";
 import { Save, BrushCleaning ,Search ,Trash } from 'lucide-react';
 import './Categories.css'
 import {useSelector,useDispatch} from 'react-redux'
-import { addNewItem, resetCategoryForm, setCategoryValues, setEditItem, setItemIndex, toggleCategoryModal, toggleDeleteCatModal, toggleSearchModal } from "../../redux/categories/categorySlice";
+import { 
+  addNewItem, 
+  resetCategoryForm, 
+  setCategoryValues, 
+  setEditItem, 
+  setItemIndex, 
+  toggleCategoryModal, 
+  toggleDeleteCatModal, 
+  toggleSearchModal 
+} from "../../redux/categories/categorySlice";
 import ItemsModal from "./ItemsModal";
 import DeleteItemModal from "../../components/modals/DeleteItemModal";
 import { saveAllData } from "../../services/categoryService";

@@ -1,14 +1,19 @@
 import React, { useEffect, useRef } from 'react'
 import './ItemsModal.css'
 import { useDispatch, useSelector } from 'react-redux'
-import { setFormMode, setItemValues, toggleCategoryModal } from '../../redux/categories/categorySlice';
+import { setFormMode, setItemValues, setQualityAutomatically, toggleCategoryModal } from '../../redux/categories/categorySlice';
 const ItemsModal = () => {
   const {item,rowIndex}=useSelector((state)=>state.category);
   const dispatch=useDispatch();
   const nameRef=useRef(); 
+  const priceRef=useRef();
   const handleChange=(e)=>{
     const {name,value}=e.target;
     dispatch(setItemValues({[name]:value}));
+    if(e.target.name==='Condition'){
+      dispatch(setQualityAutomatically(e.target.value));
+      priceRef.current.focus();
+    }
   }
   const addToTable=()=>{
     dispatch(setFormMode());
@@ -100,6 +105,7 @@ const ItemsModal = () => {
                     type="text" 
                     className="form-control inpMdl"
                     name='EstimatedPrice'
+                    ref={priceRef}
                     autoComplete='off'
                     value={item.EstimatedPrice || ""}
                     onChange={handleChange}

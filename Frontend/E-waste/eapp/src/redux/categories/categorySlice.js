@@ -35,7 +35,7 @@ const categorySlice=createSlice({
             state.item={} 
             state.item.serial=action.payload;
         },
-        //Edit Item (1) or Add New Item (-1)
+        //Edit Item (rowIndex=> index) or Add New Item (rowIndex=-1)
         setFormMode:(state,action)=>{
             if(state.rowIndex===-1){
                state.itemsList = [...state.itemsList, state.item];
@@ -72,6 +72,20 @@ const categorySlice=createSlice({
         },
         toggleDeleteCatModal:(state,action)=>{
             state.isDeleteCatModalOpen=action.payload;
+        },
+        setQualityAutomatically:(state,action)=>{
+            if(action.payload==='Scrap/Bad'){
+                state.item.Quality='20%';
+            }
+            else if(action.payload==='Fair'){
+                state.item.Quality='50%';
+            }
+            else if(action.payload==='Good'){
+                state.item.Quality='80%';
+            }
+            else if(action.payload==='Excellent'){
+                state.item.Quality='100%';
+            }
         }
     },
     extraReducers:(builder)=>{
@@ -103,7 +117,8 @@ export const {
     deleteItem,
     toggleSearchModal,
     fillCategoryForm,
-    toggleDeleteCatModal
+    toggleDeleteCatModal,
+    setQualityAutomatically
 }=categorySlice.actions;
 const catReducer=categorySlice.reducer;
 export default catReducer;
