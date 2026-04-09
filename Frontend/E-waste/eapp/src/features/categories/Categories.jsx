@@ -48,7 +48,8 @@ const addNew=()=>{
 }
 const saveCategory = async () => { 
   const params = { ...category, items: itemsList };
-  try {
+  console.log("params",params);
+   try {
     const result = await dispatch(saveAllData(params)).unwrap(); 
     if (result.saved) {
       toast.success("Category added successfully!", {
@@ -98,7 +99,7 @@ useEffect(()=>{
                 >
                   <Search size={20} color="blue"/>
                 </button>
-            </div>
+          </div>
         <div className="master-add-section">  
           <div className="inputs-inline-row">
             <div className="form-Data">
@@ -158,7 +159,7 @@ useEffect(()=>{
                       <td>{item.BrandName}</td>
                       <td>{item.Condition}</td>
                       <td>{item.Quality}</td>
-                      <td>{item.EstimatedPrice}</td>
+                      <td>{item.EstimatedPrice}EGP</td>
                       <td className="text-center">
                         <FiEdit className="action-icon edit" 
                         onClick={()=>dispatch(setEditItem(index))} />

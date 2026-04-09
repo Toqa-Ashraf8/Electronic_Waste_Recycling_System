@@ -449,7 +449,6 @@
     border-radius: 15px;
     background: #f0fdfa;
 }
-
 .custom-table-header th {
     background-color: #55a690 !important; 
     color: #000 !important;             
@@ -461,15 +460,32 @@
     border: none !important;
     text-align: center;
 }
-
-
 .table-striped tbody tr:nth-of-type(odd) {
     background-color: rgba(85, 166, 144, 0.03); 
 }
-
 .table-bordered td {
     border: 1px solid #edf7f5 !important; 
     vertical-align: middle;
     font-weight: 600;
     color: #1b4332;
+}
+.btns-container-sell{
+    background-color: #fff;
+    border-radius:10px;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    left:10px;
+    float: left;
+    top: 20%;
+    width: 50px;
+    height:120px;
+}
+.btn-sell{
+    margin-top: 3px;
+    margin-bottom: 13px;
+    transition: 0.2s;
+}
+.btn-sell:hover{
+    transform: scale(1.1);
 }

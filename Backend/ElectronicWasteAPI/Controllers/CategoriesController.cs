@@ -27,84 +27,81 @@ namespace ElectronicWasteAPI.Controllers
             int id = Convert.ToInt32(cat.CategoryID);
             bool saved = false;
             bool updated = false;
-            if (id == 0)
+            if (conn.State == ConnectionState.Closed) conn.Open();
+            using (SqlTransaction transaction = conn.BeginTransaction())
             {
                 try
                 {
-                    string insert = @"insert into Categories (CategoryName) values(@CategoryName)
-                                      Select SCOPE_IDENTITY()";
-                    if (conn.State == ConnectionState.Closed) conn.Open();
-                    using (SqlCommand cmd = new SqlCommand(insert, conn))
+                    if (id == 0)
                     {
-                        cmd.Parameters.AddWithValue("@CategoryName", cat.CategoryName);
-                        id = Convert.ToInt32(cmd.ExecuteScalar());
-                        saved = true;
-                    }
-                    if (conn.State == ConnectionState.Open) conn.Close();
-                }
-                catch { return BadRequest(new { saved = false }); }
-
-            }
-            else
-            {
-                try
-                {
-                    string update = @"update Categories set CategoryName=@CategoryName
-                                      where CategoryID=@CategoryID";
-                    if (conn.State == ConnectionState.Closed) conn.Open();
-                    using (SqlCommand cmd = new SqlCommand(update, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@CategoryName", cat.CategoryName);
-                        cmd.Parameters.AddWithValue("@CategoryID", id);
-                        cmd.ExecuteNonQuery();
-                        updated = true;
-                    }
-                    if (conn.State == ConnectionState.Open) conn.Close();
-                }
-                catch { return BadRequest(new { updated = false }); }
-
-            }
-            if (cat.items.Count > 0)
-            {
-                try
-                {
-                    string del = @"delete Items where CategoryID=@CategoryID";
-                    if (conn.State == ConnectionState.Closed) conn.Open();
-                    using (SqlCommand cmd = new SqlCommand(del, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@CategoryID", id);
-                        cmd.ExecuteNonQuery();
-                    }
-                    string sqli = @"insert into Items 
-                              (serial,ItemName,BrandName,Quality,Condition,EstimatedPrice,CategoryID)
-                              values(@serial,@ItemName,@BrandName,@Quality,@Condition,@EstimatedPrice,@CategoryID)";
-                    using (SqlCommand cmd = new SqlCommand(sqli, conn))
-                    {
-                        foreach (var item in cat.items)
+                        string insert = @"insert into Categories (CategoryName) values(@CategoryName);
+                              Select SCOPE_IDENTITY();";
+                        using (SqlCommand cmd = new SqlCommand(insert, conn, transaction))
                         {
-                            cmd.Parameters.AddWithValue("@serial", item.serial);
-                            cmd.Parameters.AddWithValue("@ItemName", item.ItemName);
-                            cmd.Parameters.AddWithValue("@BrandName", item.BrandName);
-                            cmd.Parameters.AddWithValue("@Quality", item.Quality);
-                            cmd.Parameters.AddWithValue("@Condition", item.Condition);
-                            cmd.Parameters.AddWithValue("@EstimatedPrice", item.EstimatedPrice);
-                            cmd.Parameters.AddWithValue("@CategoryID", id);
+                            cmd.Parameters.AddWithValue("@CategoryName", cat.CategoryName);
+                            id = Convert.ToInt32(cmd.ExecuteScalar());
+                            saved = true;
                         }
-                        cmd.ExecuteScalar();
-
+                    }
+                    else
+                    {
+                        string update = @"update Categories set CategoryName=@CategoryName
+                              where CategoryID=@CategoryID";
+                        using (SqlCommand cmd = new SqlCommand(update, conn, transaction))
+                        {
+                            cmd.Parameters.AddWithValue("@CategoryName", cat.CategoryName);
+                            cmd.Parameters.AddWithValue("@CategoryID", id);
+                            cmd.ExecuteNonQuery();
+                            updated = true;
+                        }
                     }
 
+                   
+                    if (cat.items != null && cat.items.Count > 0)
+                    {
+                        
+                        string del = @"delete from Items where CategoryID=@CategoryID";
+                        using (SqlCommand cmd = new SqlCommand(del, conn, transaction))
+                        {
+                            cmd.Parameters.AddWithValue("@CategoryID", id);
+                            cmd.ExecuteNonQuery();
+                        }
+
+                        
+                        string sqli = @"insert into Items (serial,ItemName,BrandName,Quality,Condition,EstimatedPrice,CategoryID)
+                            values(@serial,@ItemName,@BrandName,@Quality,@Condition,@EstimatedPrice,@CategoryID)";
+
+                        using (SqlCommand cmd = new SqlCommand(sqli, conn, transaction))
+                        {
+                            foreach (var item in cat.items)
+                            {
+                                cmd.Parameters.Clear(); 
+                                cmd.Parameters.AddWithValue("@serial", item.serial);
+                                cmd.Parameters.AddWithValue("@ItemName", item.ItemName);
+                                cmd.Parameters.AddWithValue("@BrandName", item.BrandName);
+                                cmd.Parameters.AddWithValue("@Quality", item.Quality);
+                                cmd.Parameters.AddWithValue("@Condition", item.Condition);
+                                cmd.Parameters.AddWithValue("@EstimatedPrice", item.EstimatedPrice);
+                                cmd.Parameters.AddWithValue("@CategoryID", id);
+                                cmd.ExecuteNonQuery();
+                            }
+                        }
+                    }
+
+                    transaction.Commit();
+                    var data = new { saved = saved, updated = updated, id = id };
+                    return Ok(data);
                 }
-                catch { return BadRequest(new { saved = false }); }
-                finally { if (conn.State == ConnectionState.Open) conn.Close(); }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return BadRequest(new { error = ex.Message, saved = false });
+                }
+                finally
+                {
+                    if (conn.State == ConnectionState.Open) conn.Close();
+                }
             }
-            var data = new
-            {
-                saved = saved,
-                updated = updated,
-                id = id
-            };
-            return Ok(data);
         }
 
         [Route("GetAllCategories")]
