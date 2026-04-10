@@ -12,3 +12,8 @@ export const fetchPriceEstimation=createAsyncThunk("fetchPriceEstimation/selldev
     .then((res)=>res.data);
     return resp;
 })
+export const saveDeviceImagePath=createAsyncThunk("saveDeviceImagePath/selldevice",async(img)=>{
+    const resp=await axios.post(variables.SELLREQUESTS_API+"UploadDeviceImage",img)
+    .then((res)=>res.data);
+    return resp;
+})

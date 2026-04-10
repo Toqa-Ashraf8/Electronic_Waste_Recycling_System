@@ -21,6 +21,21 @@ namespace ElectronicWasteAPI.Controllers
             _context = context;
             conn = new SqlConnection(_context.Database.GetConnectionString());
         }
+        [Route("UploadDeviceImage")]
+        [HttpPost]
+        public IActionResult UploadDeviceImage([FromForm] DeviceImages image)
+        {
+            if (image.deviceFile == null) return BadRequest("No file uploaded");
+            var postedFile = image.deviceFile;
+            string fileName = postedFile.FileName;
+            var physicalPath = _env.ContentRootPath + "/Devices_Images/" + fileName;
+            using (var stream = new FileStream(physicalPath, FileMode.Create))
+            {
+                postedFile.CopyTo(stream);
+            }
+            return Ok(fileName);
+        }
+
         [Route("GetBrandByItem")]
         [HttpPost]
         public IActionResult GetBrandByItem(int id)

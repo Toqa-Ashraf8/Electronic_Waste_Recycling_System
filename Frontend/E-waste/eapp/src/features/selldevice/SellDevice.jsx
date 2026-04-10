@@ -18,11 +18,17 @@ import { motion } from "framer-motion";
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchCategories, fetchItems } from "../../services/categoryService";
 import { setRequestValues } from "../../redux/selldevice/sellingSlice";
-import { fetchBrands, fetchPriceEstimation } from "../../services/sellingService";
+import { fetchBrands, fetchPriceEstimation, saveDeviceImagePath } from "../../services/sellingService";
+import { variables } from "../../components/variables";
 
 function SellDevice() {
   const { categories, itemsList } = useSelector((state) => state.category);
-  const { request, brands ,priceEstimation} = useSelector((state) => state.selldevice);
+  const { 
+    request, 
+    brands ,
+    priceEstimation,
+    deviceImgPath
+  } = useSelector((state) => state.selldevice);
   const dispatch = useDispatch();
   const [activeMethod, setActiveMethod] = useState("");
 
@@ -43,8 +49,18 @@ function SellDevice() {
       handleQualityAnimation(value);
       await dispatch(fetchPriceEstimation(params));
     }
-   
   };
+
+  const handleImageUpload=async(e)=>{
+    const { name } = e.target;
+    if (!e.target.files || e.target.files.length === 0) return;
+    const file = e.target.files[0];
+    const formData = new FormData();
+    const fileName = file.name;
+    formData.append("deviceFile", file, fileName);
+    await dispatch(saveDeviceImagePath(formData));
+    await dispatch(setRequestValues({[name]:fileName }));
+  }
 
   const handleQualityAnimation = (value) => {
     const estimateBox = document.getElementById('estimateBox');
@@ -193,18 +209,27 @@ function SellDevice() {
             
           <div className="form-column-image-hud">
             <h2 className="section-title-hud">2. Device Image (preferred)</h2>
-            <label htmlFor="imageUpload" className="image-upload-box-hud">
-              <div className="placeholder-content-hud">
-                <FiUpload size={24} />
-                <p>Upload Photo</p>
-              </div>
-            </label>
+                    <label htmlFor="imageUpload" className="image-upload-wrapper-hud">
+                  {deviceImgPath && (
+                      <img 
+                          className="image-upload-box-hud" 
+                          src={variables.DEVICEIMG_API + deviceImgPath} 
+                          alt=""
+                      />
+                  )}
+                 {!deviceImgPath && (
+                <div className="upload-overlay-hud">
+                    <FiUpload size={24} />
+                    <p>Upload Photo</p>
+                </div>
+                 )}
+              </label>
             <input
               type="file"
               id="imageUpload"
               className="d-none"
               name="DeviceImagePath"
-              onChange={handleChange}
+              onChange={handleImageUpload}
             />
 
             <h2 className="section-title-hud with-margin-top">3. Pickup Info</h2>

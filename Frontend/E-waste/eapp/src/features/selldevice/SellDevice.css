@@ -181,7 +181,7 @@
     accent-color: var(--primary-color); 
 }
 .qualityinp{
-    margin-left: -36px;
+    margin-left: -25px;
     width: 170px!important;
 }
 .pickup-method-selector-hud 
@@ -227,7 +227,6 @@
     border-color: var(--primary-color); 
 }
 .placeholder-content-hud { 
-    text-align: center; 
     color: var(--text-color-secondary); 
 } 
 .placeholder-content-hud svg { 
@@ -488,4 +487,44 @@
 }
 .btn-sell:hover{
     transform: scale(1.1);
+}
+.image-upload-wrapper-hud {
+    position: relative;
+    width: 70%;
+    height: 220px; 
+    border: 2px dashed teal;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center; 
+    align-items: center;     
+    overflow: hidden;
+    cursor: pointer;
+    background-color: #f9f9f9;
+}
+
+.image-upload-box-hud {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.upload-overlay-hud {
+    position: relative;
+    z-index: 2; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    padding: 10px;
+    border-radius: 8px;
+    pointer-events: none; 
+}
+
+.upload-overlay-hud p {
+    margin: 5px 0 0 0;
+    font-weight: 500;
 }

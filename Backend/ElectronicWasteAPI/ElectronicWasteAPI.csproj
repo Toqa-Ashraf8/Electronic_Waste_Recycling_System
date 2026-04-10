@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Devices_Images\" />
     <Folder Include="user_Images\" />
   </ItemGroup>
 
