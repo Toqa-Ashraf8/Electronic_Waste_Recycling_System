@@ -4,6 +4,7 @@ using ElectronicWasteAPI.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ElectronicWasteAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20260410120935_setSellRequestsTable")]
+    partial class setSellRequestsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,31 +75,6 @@ namespace ElectronicWasteAPI.Migrations
                     b.HasIndex("CategoryID");
 
                     b.ToTable("Items");
-                });
-
-            modelBuilder.Entity("ElectronicWasteAPI.Models.Qualities", b =>
-                {
-                    b.Property<int>("QualityID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("QualityID"));
-
-                    b.Property<int?>("CategoryID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Condition")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("EstimatedPrice")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Quality")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("QualityID");
-
-                    b.ToTable("Qualities");
                 });
 
             modelBuilder.Entity("ElectronicWasteAPI.Models.SellRequest", b =>
