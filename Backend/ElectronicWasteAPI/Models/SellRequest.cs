@@ -21,7 +21,9 @@ namespace ElectronicWasteAPI.Models
         public int? PickUpMethod { get; set; }
         public string? ShippingAddress { get; set; }
         public DateTime? PickUpDate { get; set; }
-
-
+        public DateTime? SubmissionDate { get; set; }
+        public int? RequestStatus { get; set; }
+        [ForeignKey("UserID")]
+        public int? UserID { get; set; }
     }
 }

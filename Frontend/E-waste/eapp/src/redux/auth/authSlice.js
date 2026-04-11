@@ -7,6 +7,7 @@ const initialState={
     token:sessionStorage.getItem('token'),
     role:sessionStorage.getItem('role'),
     userAddress:sessionStorage.getItem('address'),
+    userID:sessionStorage.getItem('userId')
    
 }
 const authSlice=createSlice({
@@ -16,7 +17,6 @@ const authSlice=createSlice({
         setUserValues:(state,action)=>{
             state.user={...state.user,...action.payload};
         },
-      
     },
     extraReducers:(builder)=>{
         builder
@@ -31,7 +31,9 @@ const authSlice=createSlice({
             sessionStorage.setItem('role',action.payload.role);
             state.role=action.payload.role;
             sessionStorage.setItem('address',action.payload.address);
-            state.userAddress=action.payload.address;
+            state.userAddress=action.payload.address; 
+            sessionStorage.setItem('userId',action.payload.userId);
+            state.userID=action.payload.userId;
         })
         .addCase(loginUser.fulfilled,(state,action)=>{
             if(action.payload.token){
@@ -41,6 +43,10 @@ const authSlice=createSlice({
             if(action.payload.address){
                  sessionStorage.setItem('address',action.payload.address);
                  state.userAddress=action.payload.address;
+            }
+            if(action.payload.userId){
+               sessionStorage.setItem('userId',action.payload.userId);
+               state.userID=action.payload.userId;
             }
            
         })

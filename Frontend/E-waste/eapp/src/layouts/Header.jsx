@@ -95,8 +95,7 @@ const Header = () => {
           <Link className="nav-link" to="#">
               Points
           </Link>
-        </li>
-           
+        </li> 
           </ul>
         </li>
       </ul>

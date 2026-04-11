@@ -141,9 +141,11 @@ namespace ElectronicWasteAPI.Controllers
                     if (conn.State == ConnectionState.Closed) conn.Open();
                     string saveR = @"insert into SellRequests (CategoryID,DeviceCategory,DeviceBrand,ItemID,DeviceItem,
                                     DeviceQuality,DeviceCondition,EstimatedPrice,DeviceImagePath,PickUpMethod,
-                                    ShippingAddress,PickUpDate) values (@CategoryID,@DeviceCategory,@DeviceBrand,@ItemID,@DeviceItem,
+                                    ShippingAddress,PickUpDate,SubmissionDate,RequestStatus,UserID) 
+                                    values (@CategoryID,@DeviceCategory,@DeviceBrand,@ItemID,@DeviceItem,
                                     @DeviceQuality,@DeviceCondition,@EstimatedPrice,@DeviceImagePath,@PickUpMethod,
-                                    @ShippingAddress,@PickUpDate)select SCOPE_IDENTITY()";
+                                    @ShippingAddress,@PickUpDate,@SubmissionDate,@RequestStatus,@UserID)
+                                    select SCOPE_IDENTITY()";
                     using(SqlCommand cmd=new SqlCommand(saveR, conn))
                     {
                         cmd.Parameters.Clear();
@@ -159,6 +161,9 @@ namespace ElectronicWasteAPI.Controllers
                         cmd.Parameters.AddWithValue("@PickUpMethod", req.PickUpMethod);
                         cmd.Parameters.AddWithValue("@ShippingAddress", req.ShippingAddress);
                         cmd.Parameters.AddWithValue("@PickUpDate", req.PickUpDate);
+                        cmd.Parameters.AddWithValue("@SubmissionDate", req.SubmissionDate);
+                        cmd.Parameters.AddWithValue("@RequestStatus", req.RequestStatus);
+                        cmd.Parameters.AddWithValue("@UserID", req.UserID);
                         id = Convert.ToInt32(cmd.ExecuteScalar());
                         saved = true;
                     }
@@ -177,7 +182,8 @@ namespace ElectronicWasteAPI.Controllers
                     string updateR = @"update SellRequests set CategoryID=@CategoryID,DeviceCategory=@DeviceCategory
                                     ,DeviceBrand=@DeviceBrand,ItemID=@ItemID,DeviceItem=@DeviceItem, DeviceQuality=@DeviceQuality
                                     ,DeviceCondition=@DeviceCondition,EstimatedPrice=@EstimatedPrice,DeviceImagePath=@DeviceImagePath,
-                                     PickUpMethod=@PickUpMethod,ShippingAddress=@ShippingAddress,PickUpDate=@PickUpDate
+                                     PickUpMethod=@PickUpMethod,ShippingAddress=@ShippingAddress,PickUpDate=@PickUpDate,
+                                     SubmissionDate=@SubmissionDate,RequestStatus=@RequestStatus,UserID=@UserID
                                      where RequestID=@RequestID"; 
                     using (SqlCommand cmd = new SqlCommand(updateR, conn))
                     {
@@ -194,6 +200,9 @@ namespace ElectronicWasteAPI.Controllers
                         cmd.Parameters.AddWithValue("@PickUpMethod", req.PickUpMethod);
                         cmd.Parameters.AddWithValue("@ShippingAddress", req.ShippingAddress);
                         cmd.Parameters.AddWithValue("@PickUpDate", req.PickUpDate);
+                        cmd.Parameters.AddWithValue("@SubmissionDate", req.SubmissionDate);
+                        cmd.Parameters.AddWithValue("@RequestStatus", req.RequestStatus);
+                        cmd.Parameters.AddWithValue("@UserID", req.UserID);
                         cmd.Parameters.AddWithValue("@RequestID",id);
                         cmd.ExecuteNonQuery();
                         updated = true;

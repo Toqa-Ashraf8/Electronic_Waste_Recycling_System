@@ -1,5 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchBrands, fetchPriceEstimation, fetchRequests, removeRequest, saveData, saveDeviceImagePath } from "../../services/sellingService";
+import { 
+    fetchBrands, 
+    fetchPriceEstimation, 
+    fetchRequests, 
+    removeRequest, 
+    saveData, 
+    saveDeviceImagePath 
+} from "../../services/sellingService";
 
 const initialState={
     request:{},
@@ -16,7 +23,7 @@ const sellingSlice=createSlice({
     initialState,
     reducers:{
         setRequestValues:(state,action)=>{
-            state.request={...state.request,...action.payload};
+            state.request={...state.request, ...action.payload,SubmissionDate:new Date().toISOString().split('T')[0]};
             if(!state.request.RequestID){
                  state.request={RequestID:0,...state.request,...action.payload};
             }
@@ -36,6 +43,13 @@ const sellingSlice=createSlice({
         setRemoveRequestIndex:(state,action)=>{
             state.requestRowId=state.requestsList[action.payload].RequestID;
             state.isDeleteReqModalOpen=true;
+        },
+        resetRequestForm:(state,action)=>{
+            state.request={};
+            state.deviceImgPath="";
+            state.request.DeviceQuality='-1';
+            state.priceEstimation = {};
+            state.request.PickUpDate="";
         }
 
     },
@@ -73,7 +87,8 @@ export const {
     setRequestValues,
     setEditRequestIndex,
     toggleDeleteReqModal,
-    setRemoveRequestIndex
+    setRemoveRequestIndex,
+    resetRequestForm
 }=sellingSlice.actions;
 const sellReducer=sellingSlice.reducer;
 export default sellReducer;

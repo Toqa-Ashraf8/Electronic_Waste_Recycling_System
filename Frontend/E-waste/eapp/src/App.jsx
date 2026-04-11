@@ -12,6 +12,7 @@ import Login from './features/auth/Login';
 import UserProfile from './features/userProfile/userProfile';
 import SellDevice from './features/selldevice/SellDevice';
 import Categories from './features/categories/Categories';
+import TrackingPage from './features/selldevice/TrackingPage';
 function App() {
  const {globalError,globalMessage}=useSelector((state)=>state.ui);
  const {token}=useSelector((state)=>state.auth);
@@ -65,6 +66,12 @@ useEffect(() => {
        element={
         <ProtectedRoute>
            <Categories/>
+        </ProtectedRoute>
+      }/>
+        <Route path='/tracking-requests' 
+       element={
+        <ProtectedRoute>
+           <TrackingPage/>
         </ProtectedRoute>
       }/>
     </Routes>

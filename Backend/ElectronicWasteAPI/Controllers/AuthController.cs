@@ -81,7 +81,8 @@ namespace ElectronicWasteAPI.Controllers
             var data = new
             {   token = new JwtSecurityTokenHandler().WriteToken(token),
                 role = user.Role,
-                address=user.Address
+                address=user.Address,
+                userId=user.UserID
             };
             return Ok(data);    
             
@@ -94,6 +95,7 @@ namespace ElectronicWasteAPI.Controllers
             bool isNull = false;
             string savedPassword="";
             string address = "";
+            int userId=0;
             if (user == null) return BadRequest(new { isNull = true });
             string sqls = @"select * from Users where Email=@Email";
             SqlCommand cmd = new SqlCommand(sqls, conn);
@@ -107,6 +109,7 @@ namespace ElectronicWasteAPI.Controllers
             {
                 savedPassword = dt.Rows[0]["Password"].ToString();
                 address = dt.Rows[0]["Address"].ToString();
+                userId = Convert.ToInt32(dt.Rows[0]["UserID"]);
             }
             bool isPasswordValid = BCrypt.Net.BCrypt.EnhancedVerify(user.Password, savedPassword);
             if (!isPasswordValid)
@@ -132,7 +135,8 @@ namespace ElectronicWasteAPI.Controllers
             var data = new{ 
                 token = new JwtSecurityTokenHandler().WriteToken(token),
                 usertbl= dt,
-                address=address
+                address=address,
+                userId=userId,
             };
             return Ok(data);
                

@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from "react";
 import "./SellDevice.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaRecycle, FaGift, FaMoneyBillWave, FaLeaf } from "react-icons/fa";
-import { Save, BrushCleaning, Search, Trash } from 'lucide-react';
+import { 
+  Save, 
+  BrushCleaning, 
+  Search, 
+  Trash ,
+  PackagePlus , 
+  LayoutDashboard,
+  ListTree  
+} from 'lucide-react';
 import { BsFillSendFill } from "react-icons/bs";
 import { 
   FiTag, 
@@ -20,7 +28,12 @@ import {
 import { motion } from "framer-motion";
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchCategories, fetchItems } from "../../services/categoryService";
-import { setEditRequestIndex, setRemoveRequestIndex, setRequestValues } from "../../redux/selldevice/sellingSlice";
+import { 
+  resetRequestForm,
+  setEditRequestIndex, 
+  setRemoveRequestIndex, 
+  setRequestValues 
+} from "../../redux/selldevice/sellingSlice";
 import { 
   fetchBrands, 
   fetchPriceEstimation, 
@@ -34,7 +47,7 @@ import DeleteRequestModal from "../../components/modals/DeleteRequestModal";
 
 function SellDevice() {
   const { categories, itemsList } = useSelector((state) => state.category);  
-  const {userAddress} = useSelector((state) => state.auth);
+  const {userAddress,userID} = useSelector((state) => state.auth);
   const { 
     request, 
     brands ,
@@ -44,6 +57,7 @@ function SellDevice() {
     isDeleteReqModalOpen
   } = useSelector((state) => state.selldevice);
   const dispatch = useDispatch();
+  const navigate=useNavigate();
   const [activeMethod, setActiveMethod] = useState("");
 
   const handleChange = async (e) => {
@@ -115,8 +129,9 @@ const handlePickUpdropoff=()=>{
 }
 
 const handleSave=async()=>{
+  const data={UserID:userID ,RequestStatus:0,...request};
   try {
-      const result=await dispatch(saveData(request)).unwrap();
+      const result=await dispatch(saveData(data)).unwrap();
     if(result.saved){
       await dispatch(fetchRequests()).unwrap();
       toast.success(`Your Request ID is #${result.id}`,{
@@ -143,6 +158,10 @@ dispatch(setEditRequestIndex(index));
         Quality:qualityRow ,
         CategoryID:categoryRow
     }
+    console.log("categoryRow",categoryRow);
+    console.log("itemRow",itemRow);
+    console.log("qualityRow",qualityRow);
+    console.log("params",params);
     await dispatch(fetchItems(categoryRow));
     await dispatch(fetchBrands(itemRow));
     await dispatch(fetchPriceEstimation(params));
@@ -151,13 +170,17 @@ dispatch(setEditRequestIndex(index));
     }
     if(requestsList[index].PickUpMethod===1){
       setActiveMethod('dropoff');
-    }
+    } 
  
 }
 const handleRemove=(index)=>{
 dispatch(setRemoveRequestIndex(index));
 }
 
+const handleClear=()=>{
+  dispatch(resetRequestForm());
+   setActiveMethod('');
+}
 useEffect(() => {
   const loadInitialData=async()=>{
       await Promise.all([
@@ -178,11 +201,14 @@ useEffect(() => {
         transition={{ duration: 0.6 }}
       >
         <div className="btns-container-sell col">
-          <button className="btn btn-sell">
-            <BrushCleaning size={25} color="black"/>
+          <button className="btn btn-sell" onClick={()=>handleClear()}>
+            <PackagePlus size={25} color="black" />
           </button>
           <button className="btn btn-sell" onClick={()=>handleSave()}>
-            <BsFillSendFill size={25} color="#00b4d8" />
+            <BsFillSendFill size={25} color="teal" />
+          </button>  
+          <button className="btn btn-sell">
+            <ListTree size={25} color="#312063" onClick={()=>navigate('/tracking-requests')} />
           </button>
         </div>
 
@@ -405,7 +431,7 @@ useEffect(() => {
               <th>Condition</th> 
               <th>Price</th>
               <th>Address</th> 
-              <th>Date</th>
+              <th>PickUp Date</th>
               <th>Actions</th>
             </tr>
           </thead>

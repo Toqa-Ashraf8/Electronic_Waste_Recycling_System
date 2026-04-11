@@ -1,0 +1,121 @@
+.tracking-wrapper {
+    max-width: 1000px;
+    margin: 60px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+}
+
+.tracking-header {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.tracking-header h2 {
+    color: #1b4332;
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+}
+
+.tracking-header p {
+    color: #888;
+    font-size: 0.95rem;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+.modern-track-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px; 
+}
+
+
+.modern-track-table tbody tr {
+    background-color: #fcfdfd;
+    transition: all 0.3s ease;
+}
+
+.modern-track-table tbody tr:hover {
+    background-color: #f7faf9;
+    transform: scale(1.01);
+}
+
+
+.id-column {
+    font-weight: 800;
+    color: #333;
+    border-left: 1px solid #f0f0f0;
+    border-radius: 10px 0 0 10px;
+}
+
+.date-column {
+    color: #777;
+    font-size: 0.9rem;
+}
+
+
+.status-inline {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* ده هيجيب الأيقونة والكلام كله في نص الخلية بالعرض */
+    gap: 12px;
+    padding: 8px;
+    text-align: center; /* ده عشان الكلام نفسه لو نزل على سطرين يبقى في النص */
+}
+
+.status-icon {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+}
+
+.msg-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* ده هيخلي العنوان والرسالة اللي تحته فوق بعض وفي النص */
+}
+
+/* تأكدي برضه إن الـ td نفسه مسموح له يوسطن المحتوى */
+.modern-track-table td {
+    padding: 15px;
+    border-top: 1px solid #f0f0f0;
+    border-bottom: 1px solid #f0f0f0;
+    text-align: center; /* سنترة كل محتوى الخلايا */
+    vertical-align: middle;
+}
+
+/* وعشان شكل الهيدر يفضل متناسق مع الجدول */
+.modern-track-table th {
+    padding: 15px;
+    color: #aaa;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    text-align: center; /* سنترة عناوين الأعمدة */
+}
+.msg-content strong {
+    font-size: 0.9rem;
+    margin-bottom: 2px;
+    text-align: center;
+}
+
+.msg-content span {
+    font-size: 0.8rem;
+    opacity: 0.8;
+    text-align: center;
+}
+
+
+.pending { color: #f9a825; }
+.accepted { color: #52b788; }
+.rejected { color: #e53935; }
+
+
+.modern-track-table td:last-child {
+    border-right: 1px solid #f0f0f0;
+    border-radius: 0 10px 10px 0;
+}
