@@ -1,12 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchBrands, fetchPriceEstimation, fetchRequests, saveData, saveDeviceImagePath } from "../../services/sellingService";
+import { fetchBrands, fetchPriceEstimation, fetchRequests, removeRequest, saveData, saveDeviceImagePath } from "../../services/sellingService";
 
 const initialState={
     request:{},
     brands:[],
     priceEstimation:{},
     deviceImgPath:"",
-    requestsList:[]
+    requestsList:[],
+    requestRowIndex:-1,
+    requestRowId:-1,
+    isDeleteReqModalOpen:false,
 }
 const sellingSlice=createSlice({
     name:'selldevice',
@@ -20,7 +23,21 @@ const sellingSlice=createSlice({
             else{
                  state.request={...state.request,...action.payload};
             }
+        },
+        setEditRequestIndex:(state,action)=>{
+            state.requestRowIndex=action.payload;
+            state.request=state.requestsList[state.requestRowIndex];
+            state.request.PickUpDate=state.requestsList[state.requestRowIndex].PickUpDate.split('T')[0];
+            state.deviceImgPath=state.requestsList[state.requestRowIndex].DeviceImagePath;
+        },
+        toggleDeleteReqModal:(state,action)=>{
+            state.isDeleteReqModalOpen=action.payload;
+        },
+        setRemoveRequestIndex:(state,action)=>{
+            state.requestRowId=state.requestsList[action.payload].RequestID;
+            state.isDeleteReqModalOpen=true;
         }
+
     },
     extraReducers:(builder)=>{
         builder
@@ -46,9 +63,17 @@ const sellingSlice=createSlice({
         .addCase(fetchRequests.fulfilled,(state,action)=>{
             state.requestsList=action.payload;
         })
-       
+        .addCase(removeRequest.fulfilled,(state,action)=>{
+            state.requestsList=state.requestsList.filter((req=>req.RequestID!==state.requestRowId));
+            state.requestRowId=-1;
+        })
     }
 })
-export const {setRequestValues}=sellingSlice.actions;
+export const {
+    setRequestValues,
+    setEditRequestIndex,
+    toggleDeleteReqModal,
+    setRemoveRequestIndex
+}=sellingSlice.actions;
 const sellReducer=sellingSlice.reducer;
 export default sellReducer;

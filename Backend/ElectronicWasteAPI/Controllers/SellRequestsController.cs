@@ -215,7 +215,30 @@ namespace ElectronicWasteAPI.Controllers
             SqlDataAdapter da = new SqlDataAdapter(sqlg, conn);
             da.Fill(dt);
             return Ok(dt);
-
+        }
+        [Route("DeleteRequest")]
+        [HttpDelete]
+        public IActionResult DeleteRequest(int id)
+        {
+            bool deleted = false;
+            if (conn.State == ConnectionState.Closed) conn.Open();
+            try
+            {
+                if (id > 0 || id !=0)
+                {
+                    string del = "delete SellRequests where RequestID=@RequestID";   
+                    using (SqlCommand cmd = new SqlCommand(del, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@RequestID", id);
+                        cmd.ExecuteNonQuery(); 
+                        deleted = true;
+                    }
+                }
+                var data = new { deleted = deleted };
+                return Ok(data);
+            }
+            catch (Exception ex){ return BadRequest(new { error = ex.Message });}
+            finally { if (conn.State == ConnectionState.Open) conn.Close(); }
         }
 
     }

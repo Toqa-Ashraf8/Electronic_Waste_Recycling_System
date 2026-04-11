@@ -20,10 +20,17 @@ import {
 import { motion } from "framer-motion";
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchCategories, fetchItems } from "../../services/categoryService";
-import { setRequestValues } from "../../redux/selldevice/sellingSlice";
-import { fetchBrands, fetchPriceEstimation, fetchRequests, saveData, saveDeviceImagePath } from "../../services/sellingService";
+import { setEditRequestIndex, setRemoveRequestIndex, setRequestValues } from "../../redux/selldevice/sellingSlice";
+import { 
+  fetchBrands, 
+  fetchPriceEstimation, 
+  fetchRequests, 
+  saveData, 
+  saveDeviceImagePath 
+} from "../../services/sellingService";
 import { variables } from "../../components/variables";
 import { toast } from "react-toastify";
+import DeleteRequestModal from "../../components/modals/DeleteRequestModal";
 
 function SellDevice() {
   const { categories, itemsList } = useSelector((state) => state.category);  
@@ -33,7 +40,8 @@ function SellDevice() {
     brands ,
     priceEstimation,
     deviceImgPath,
-    requestsList
+    requestsList,
+    isDeleteReqModalOpen
   } = useSelector((state) => state.selldevice);
   const dispatch = useDispatch();
   const [activeMethod, setActiveMethod] = useState("");
@@ -51,6 +59,7 @@ function SellDevice() {
       if(value!=='-1'){
         await dispatch(fetchItems(value));
       }
+     
     }
      else if (name === 'DeviceItem') {
         const selectedItem = itemsList.find(c => c.ItemID === parseInt(value));
@@ -62,6 +71,7 @@ function SellDevice() {
       if(value!=='-1'){
           await dispatch(fetchBrands(value));
       }
+     
     }
     if (name === 'DeviceQuality') {
       const params={ 
@@ -83,7 +93,7 @@ function SellDevice() {
     const fileName = file.name;
     formData.append("deviceFile", file, fileName);
     await dispatch(saveDeviceImagePath(formData));
-     dispatch(setRequestValues({[name]:fileName }));
+    dispatch(setRequestValues({[name]:fileName }));
   }
 
   const handleQualityAnimation = (value) => {
@@ -108,6 +118,7 @@ const handleSave=async()=>{
   try {
       const result=await dispatch(saveData(request)).unwrap();
     if(result.saved){
+      await dispatch(fetchRequests()).unwrap();
       toast.success(`Your Request ID is #${result.id}`,{
         theme:'colored',
         position:'top-right'
@@ -122,6 +133,30 @@ const handleSave=async()=>{
  } 
  catch (error) {}
 }
+const handleEditRequest=async(index)=>{
+dispatch(setEditRequestIndex(index));
+    const categoryRow=requestsList[index].CategoryID;
+    const itemRow=requestsList[index].ItemID;
+    const qualityRow=requestsList[index].DeviceQuality;
+    const params={ 
+        ItemID:itemRow , 
+        Quality:qualityRow ,
+        CategoryID:categoryRow
+    }
+    await dispatch(fetchItems(categoryRow));
+    await dispatch(fetchBrands(itemRow));
+    await dispatch(fetchPriceEstimation(params));
+    if(requestsList[index].PickUpMethod===0){
+      setActiveMethod('home');
+    }
+    if(requestsList[index].PickUpMethod===1){
+      setActiveMethod('dropoff');
+    }
+ 
+}
+const handleRemove=(index)=>{
+dispatch(setRemoveRequestIndex(index));
+}
 
 useEffect(() => {
   const loadInitialData=async()=>{
@@ -133,9 +168,9 @@ useEffect(() => {
   loadInitialData();
 }, [dispatch]);
 
-
   return (
     <div>
+      {isDeleteReqModalOpen && <DeleteRequestModal/>}
     <div className="page-container">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -144,7 +179,7 @@ useEffect(() => {
       >
         <div className="btns-container-sell col">
           <button className="btn btn-sell">
-            <BrushCleaning size={25} color="black" />
+            <BrushCleaning size={25} color="black"/>
           </button>
           <button className="btn btn-sell" onClick={()=>handleSave()}>
             <BsFillSendFill size={25} color="#00b4d8" />
@@ -276,11 +311,11 @@ useEffect(() => {
             </div>
           <div className="form-column-image-hud">
             <h2 className="section-title-hud">2. Device Image (preferred)</h2>
-                    <label htmlFor="imageUpload" className="image-upload-wrapper-hud">
-                    {deviceImgPath && (
+                    <label htmlFor="imageUpload" className="image-upload-wrapper-hud">   
+                    {deviceImgPath  && (
                       <img 
                           className="image-upload-box-hud" 
-                          src={variables.DEVICEIMG_API + deviceImgPath} 
+                          src={variables.DEVICEIMG_API +deviceImgPath }
                           alt=""
                       />
                   )}
@@ -384,24 +419,47 @@ useEffect(() => {
                       <td>{req.DeviceItem}</td>
                       <td>{req.DeviceBrand}</td>
                       <td>{req.DeviceQuality}</td>
-                      <td>{req.DeviceCondition}</td>
-                      <td>{req.EstimatedPrice} EGP</td>
-                      <td>{req.ShippingAddress}</td>
-                      <td>{req.PickUpDate?.split('T')[0]}</td>
-                      <td className="text-center">
-                       <FiEdit className="action-icon edit" /> 
-                      <FiTrash2 className="action-icon delete"/>                                           
-                     </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={9} style={{ color: "#a0a0a0", fontStyle: "italic", textAlign: "center", padding: "20px" }}>
-                      No requests to show yet.
+                    <td>
+                      <div style={{ fontWeight: '600' }}>
+                        {req.DeviceCondition === 'Good' && (
+                          <span style={{ color: 'teal'}}>{req.DeviceCondition}</span>
+                        )}
+                        {req.DeviceCondition === 'Fair' && (
+                          <span style={{ color: '#f9a825' }}>{req.DeviceCondition}</span>
+                        )}
+                        {req.DeviceCondition === 'Scrap/Bad' && (
+                          <span style={{ color: '#e53935' }}>{req.DeviceCondition}</span>
+                        )}
+                        {req.DeviceCondition === 'Excellent' && (
+                          <span style={{ color: 'green' }}>{req.DeviceCondition}</span>
+                        )}
+                      </div>
+                    </td>
+                    <td>{req.EstimatedPrice} EGP</td>
+                    <td>{req.ShippingAddress}</td>
+                    <td>{req.PickUpDate?.split('T')[0]}</td>
+                    <td className="text-center">
+                      <FiEdit 
+                      className="action-icon edit" 
+                      style={{ cursor: 'pointer', marginRight: '10px', color: '#55a690' }}
+                      onClick={()=>handleEditRequest(index)}
+                      />
+                      <FiTrash2 
+                      className="action-icon delete" 
+                      style={{ cursor: 'pointer', color: '#e53935' }} 
+                      onClick={()=>handleRemove(index)}
+                      />
                     </td>
                   </tr>
-                )}
-              </tbody>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={10} style={{ color: "#a0a0a0", fontStyle: "italic", textAlign: "center", padding: "20px" }}>
+                        No requests to show yet.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
             </table>
       </div>
      </div>
