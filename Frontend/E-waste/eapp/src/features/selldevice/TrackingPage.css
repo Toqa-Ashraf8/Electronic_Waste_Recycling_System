@@ -41,7 +41,6 @@
 
 .modern-track-table tbody tr:hover {
     background-color: #f7faf9;
-    transform: scale(1.01);
 }
 
 
@@ -61,10 +60,10 @@
 .status-inline {
     display: flex;
     align-items: center;
-    justify-content: center; /* ده هيجيب الأيقونة والكلام كله في نص الخلية بالعرض */
+    justify-content: center; 
     gap: 12px;
     padding: 8px;
-    text-align: center; /* ده عشان الكلام نفسه لو نزل على سطرين يبقى في النص */
+    text-align: center; 
 }
 
 .status-icon {
@@ -75,19 +74,19 @@
 .msg-content {
     display: flex;
     flex-direction: column;
-    align-items: center; /* ده هيخلي العنوان والرسالة اللي تحته فوق بعض وفي النص */
+    align-items: center; 
 }
 
-/* تأكدي برضه إن الـ td نفسه مسموح له يوسطن المحتوى */
+
 .modern-track-table td {
     padding: 15px;
     border-top: 1px solid #f0f0f0;
     border-bottom: 1px solid #f0f0f0;
-    text-align: center; /* سنترة كل محتوى الخلايا */
+    text-align: center; 
     vertical-align: middle;
 }
 
-/* وعشان شكل الهيدر يفضل متناسق مع الجدول */
+
 .modern-track-table th {
     padding: 15px;
     color: #aaa;
@@ -95,7 +94,7 @@
     text-transform: uppercase;
     font-size: 0.75rem;
     letter-spacing: 1px;
-    text-align: center; /* سنترة عناوين الأعمدة */
+    text-align: center; 
 }
 .msg-content strong {
     font-size: 0.9rem;

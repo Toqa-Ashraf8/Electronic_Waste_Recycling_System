@@ -9,7 +9,22 @@ import {
 } from "../../services/sellingService";
 
 const initialState={
-    request:{},
+    request:{
+        RequestID:0,
+        CategoryID:'-1',
+        DeviceCategory:"",
+        ItemID:'-1',
+        DeviceItem:"",
+        DeviceBrand:"-1",
+        DeviceQuality:'-1',
+        DeviceCondition:"",
+        EstimatedPrice:0,
+        PickUpMethod:-1,
+        ShippingAddress:"",
+        PickUpDate:"",
+        SubmissionDate:new Date().toISOString().split('T')[0],
+        RequestStatus:0,
+},
     brands:[],
     priceEstimation:{},
     deviceImgPath:"",
@@ -23,7 +38,7 @@ const sellingSlice=createSlice({
     initialState,
     reducers:{
         setRequestValues:(state,action)=>{
-            state.request={...state.request, ...action.payload,SubmissionDate:new Date().toISOString().split('T')[0]};
+            state.request={...state.request, ...action.payload};
             if(!state.request.RequestID){
                  state.request={RequestID:0,...state.request,...action.payload};
             }
@@ -45,11 +60,9 @@ const sellingSlice=createSlice({
             state.isDeleteReqModalOpen=true;
         },
         resetRequestForm:(state,action)=>{
-            state.request={};
+            state.request=initialState.request;
             state.deviceImgPath="";
-            state.request.DeviceQuality='-1';
             state.priceEstimation = {};
-            state.request.PickUpDate="";
         }
 
     },

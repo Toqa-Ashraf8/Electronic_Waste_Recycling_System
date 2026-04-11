@@ -129,7 +129,7 @@ const handlePickUpdropoff=()=>{
 }
 
 const handleSave=async()=>{
-  const data={UserID:userID ,RequestStatus:0,...request};
+  const data={UserID:userID ,...request};
   try {
       const result=await dispatch(saveData(data)).unwrap();
     if(result.saved){
@@ -158,10 +158,6 @@ dispatch(setEditRequestIndex(index));
         Quality:qualityRow ,
         CategoryID:categoryRow
     }
-    console.log("categoryRow",categoryRow);
-    console.log("itemRow",itemRow);
-    console.log("qualityRow",qualityRow);
-    console.log("params",params);
     await dispatch(fetchItems(categoryRow));
     await dispatch(fetchBrands(itemRow));
     await dispatch(fetchPriceEstimation(params));

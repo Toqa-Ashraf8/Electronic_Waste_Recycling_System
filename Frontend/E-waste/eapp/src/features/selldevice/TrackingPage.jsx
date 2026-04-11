@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FiClock, FiCheckCircle, FiXCircle } from 'react-icons/fi';
 import './TrackingPage.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchRequests } from '../../services/sellingService';
 
 const TrackingPage = () => {
-  const myRequests = [
-    { id: 'REQ-101', status: 'Pending', date: '2026-04-10' },
-    { id: 'REQ-105', status: 'Accepted', date: '2026-04-08' },
-    { id: 'REQ-109', status: 'Rejected', date: '2026-04-05' },
-  ];
+    const {requestsList}=useSelector((state)=>state.selldevice);
+    const dispatch=useDispatch();
+
+  useEffect(()=>{
+    dispatch(fetchRequests());
+  },[dispatch])
 
   return (
     <div className="tracking-wrapper">
@@ -25,12 +28,12 @@ const TrackingPage = () => {
             </tr>
           </thead>
           <tbody>
-            {myRequests.map((req) => (
-              <tr key={req.id}>
-                <td className="id-column">#{req.id}</td>
-                <td className="date-column">{req.date}</td>
+            {requestsList && requestsList.map((req) => (
+              <tr key={req.RequestID}>
+                <td className="id-column">#{req.RequestID}</td>
+                <td className="date-column">{req.SubmissionDate.split('T')[0]}</td>
                 <td>
-                  {req.status === 'Pending' && (
+                  {req.RequestStatus === 0 && (
                     <div className="status-inline pending">
                       <FiClock className="status-icon" />
                       <div className="msg-content">
@@ -40,7 +43,7 @@ const TrackingPage = () => {
                     </div>
                   )}
 
-                  {req.status === 'Accepted' && (
+                  {req.RequestStatus === 1 && (
                     <div className="status-inline accepted">
                       <FiCheckCircle className="status-icon" />
                       <div className="msg-content">
@@ -50,7 +53,7 @@ const TrackingPage = () => {
                     </div>
                   )}
 
-                  {req.status === 'Rejected' && (
+                  {req.RequestStatus=== 2 && (
                     <div className="status-inline rejected">
                       <FiXCircle className="status-icon" />
                       <div className="msg-content">
