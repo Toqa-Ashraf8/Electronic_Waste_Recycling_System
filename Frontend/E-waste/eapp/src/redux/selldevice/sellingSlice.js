@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchBrands, fetchPriceEstimation, saveData, saveDeviceImagePath } from "../../services/sellingService";
+import { fetchBrands, fetchPriceEstimation, fetchRequests, saveData, saveDeviceImagePath } from "../../services/sellingService";
 
 const initialState={
     request:{},
     brands:[],
     priceEstimation:{},
     deviceImgPath:"",
+    requestsList:[]
 }
 const sellingSlice=createSlice({
     name:'selldevice',
@@ -41,6 +42,9 @@ const sellingSlice=createSlice({
         }) 
         .addCase(saveData.fulfilled,(state,action)=>{
             state.request.RequestID=action.payload.id;
+        })
+        .addCase(fetchRequests.fulfilled,(state,action)=>{
+            state.requestsList=action.payload;
         })
        
     }

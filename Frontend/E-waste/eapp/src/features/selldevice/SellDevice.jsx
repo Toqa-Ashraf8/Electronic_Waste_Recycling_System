@@ -12,13 +12,16 @@ import {
   FiTruck, 
   FiNavigation, 
   FiMapPin, 
-  FiCalendar 
+  FiCalendar ,
+  FiPlus,
+  FiTrash2, 
+  FiEdit 
 } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchCategories, fetchItems } from "../../services/categoryService";
 import { setRequestValues } from "../../redux/selldevice/sellingSlice";
-import { fetchBrands, fetchPriceEstimation, saveData, saveDeviceImagePath } from "../../services/sellingService";
+import { fetchBrands, fetchPriceEstimation, fetchRequests, saveData, saveDeviceImagePath } from "../../services/sellingService";
 import { variables } from "../../components/variables";
 import { toast } from "react-toastify";
 
@@ -29,7 +32,8 @@ function SellDevice() {
     request, 
     brands ,
     priceEstimation,
-    deviceImgPath
+    deviceImgPath,
+    requestsList
   } = useSelector((state) => state.selldevice);
   const dispatch = useDispatch();
   const [activeMethod, setActiveMethod] = useState("");
@@ -104,7 +108,7 @@ const handleSave=async()=>{
   try {
       const result=await dispatch(saveData(request)).unwrap();
     if(result.saved){
-      toast.success("Request has been sent successfully",{
+      toast.success(`Your Request ID is #${result.id}`,{
         theme:'colored',
         position:'top-right'
       })
@@ -115,11 +119,18 @@ const handleSave=async()=>{
         position:'top-right'
       })
     }
- } catch (error) {}
+ } 
+ catch (error) {}
 }
 
 useEffect(() => {
-    dispatch(fetchCategories());
+  const loadInitialData=async()=>{
+      await Promise.all([
+        dispatch(fetchCategories()).unwrap(),
+        dispatch(fetchRequests()).unwrap(),
+      ]);
+  }
+  loadInitialData();
 }, [dispatch]);
 
 
@@ -347,8 +358,8 @@ useEffect(() => {
         </div>
       </motion.div>
     </div>
-     <div style={{ width: '90%', margin: 'auto', paddingTop: '40px' }}>
-        <table className="table table-striped table-bordered animate__animated animate__fadeInUp">
+   <div className="table-wrapper-scroll">
+       <table className="table table-striped table-bordered animate__animated animate__fadeInUp">
           <thead className="custom-table-header">
             <tr>
               <th>Request ID</th>
@@ -356,15 +367,42 @@ useEffect(() => {
               <th>Item</th>
               <th>Device Brand</th>
               <th>Quality</th>
+              <th>Condition</th> 
               <th>Price</th>
-              <th>Status</th>
+              <th>Address</th> 
+              <th>Date</th>
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody>
-    
-          </tbody>
-        </table>
+          
+              <tbody>
+                {requestsList.length > 0 ? (
+                  requestsList.map((req, index) => (
+                    <tr key={req.RequestID || index}>
+                      <td>{req.RequestID}</td>
+                      <td>{req.DeviceCategory}</td>
+                      <td>{req.DeviceItem}</td>
+                      <td>{req.DeviceBrand}</td>
+                      <td>{req.DeviceQuality}</td>
+                      <td>{req.DeviceCondition}</td>
+                      <td>{req.EstimatedPrice} EGP</td>
+                      <td>{req.ShippingAddress}</td>
+                      <td>{req.PickUpDate?.split('T')[0]}</td>
+                      <td className="text-center">
+                       <FiEdit className="action-icon edit" /> 
+                      <FiTrash2 className="action-icon delete"/>                                           
+                     </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={9} style={{ color: "#a0a0a0", fontStyle: "italic", textAlign: "center", padding: "20px" }}>
+                      No requests to show yet.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
       </div>
      </div>
   );

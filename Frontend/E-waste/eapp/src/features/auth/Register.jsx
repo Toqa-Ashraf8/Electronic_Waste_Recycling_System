@@ -51,7 +51,6 @@ const registerUser=async()=>{
     }
 }
 
-console.log("token",token)
     return (
         <div className="container register-container">
             <div className="register-card row g-0">

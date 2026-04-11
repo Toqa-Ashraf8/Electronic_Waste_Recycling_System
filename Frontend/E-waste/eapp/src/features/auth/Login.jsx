@@ -34,7 +34,11 @@ const handleLogin = async () => {
             }
         } catch (error) {}
 };
-
+const handleKeyDown = (e) => {
+  if (e.key === 'Enter') {
+    handleLogin(); 
+  }
+};
     return (
         <div className="login-modern-page">
             <div className="login-modern-card">
@@ -64,6 +68,7 @@ const handleLogin = async () => {
                             placeholder=" " 
                             value={user.Password}
                             onChange={handlechange}
+                            onKeyDown={handleKeyDown}
                             required 
                         />
                         <label className="floating-label">Password</label>

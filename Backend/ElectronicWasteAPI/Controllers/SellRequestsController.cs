@@ -206,5 +206,17 @@ namespace ElectronicWasteAPI.Controllers
             return Ok(data);
         }
 
+        [Route("GetRequests")]
+        [HttpGet]
+        public IActionResult GetRequests()
+        {
+            DataTable dt = new DataTable();
+            string sqlg = "select * from SellRequests";
+            SqlDataAdapter da = new SqlDataAdapter(sqlg, conn);
+            da.Fill(dt);
+            return Ok(dt);
+
+        }
+
     }
 }
