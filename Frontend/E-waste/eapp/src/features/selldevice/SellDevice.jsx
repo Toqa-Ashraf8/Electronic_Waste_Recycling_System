@@ -18,11 +18,13 @@ import { motion } from "framer-motion";
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchCategories, fetchItems } from "../../services/categoryService";
 import { setRequestValues } from "../../redux/selldevice/sellingSlice";
-import { fetchBrands, fetchPriceEstimation, saveDeviceImagePath } from "../../services/sellingService";
+import { fetchBrands, fetchPriceEstimation, saveData, saveDeviceImagePath } from "../../services/sellingService";
 import { variables } from "../../components/variables";
+import { toast } from "react-toastify";
 
 function SellDevice() {
-  const { categories, itemsList } = useSelector((state) => state.category);
+  const { categories, itemsList } = useSelector((state) => state.category);  
+  const {userAddress} = useSelector((state) => state.auth);
   const { 
     request, 
     brands ,
@@ -36,19 +38,37 @@ function SellDevice() {
     const { name, value } = e.target;
     dispatch(setRequestValues({ [name]: value }));
     if (name === 'DeviceCategory') {
-      await dispatch(fetchItems(value));
-    } else if (name === 'DeviceItem') {
-      await dispatch(fetchBrands(value));
+        const selectedCat = categories.find(c => c.CategoryID === parseInt(value));
+        const categoryName = selectedCat ? selectedCat.CategoryName : "";
+        dispatch(setRequestValues({ 
+        DeviceCategory: categoryName, 
+        CategoryID: value 
+      }));
+      if(value!=='-1'){
+        await dispatch(fetchItems(value));
+      }
+    }
+     else if (name === 'DeviceItem') {
+        const selectedItem = itemsList.find(c => c.ItemID === parseInt(value));
+        const itemName = selectedItem ? selectedItem.ItemName : "";
+        dispatch(setRequestValues({ 
+        DeviceItem: itemName, 
+        ItemID: value 
+      }));
+      if(value!=='-1'){
+          await dispatch(fetchBrands(value));
+      }
     }
     if (name === 'DeviceQuality') {
       const params={ 
-        ItemID:request.DeviceItem , 
+        ItemID:request.ItemID , 
         Quality:value ,
-        CategoryID:request.DeviceCategory
+        CategoryID:request.CategoryID
       }
       handleQualityAnimation(value);
       await dispatch(fetchPriceEstimation(params));
     }
+  
   };
 
   const handleImageUpload=async(e)=>{
@@ -59,7 +79,7 @@ function SellDevice() {
     const fileName = file.name;
     formData.append("deviceFile", file, fileName);
     await dispatch(saveDeviceImagePath(formData));
-    await dispatch(setRequestValues({[name]:fileName }));
+     dispatch(setRequestValues({[name]:fileName }));
   }
 
   const handleQualityAnimation = (value) => {
@@ -71,12 +91,38 @@ function SellDevice() {
       estimateBox.classList.add('is-dimmed');
     }
   };
+const handlePickUpHome=()=>{
+  setActiveMethod('home');
+  dispatch(setRequestValues({ PickUpMethod: 0 , ShippingAddress:userAddress}));
+}
+const handlePickUpdropoff=()=>{
+  setActiveMethod('dropoff');
+  dispatch(setRequestValues({ PickUpMethod: 1 }));
+}
 
-  useEffect(() => {
+const handleSave=async()=>{
+  try {
+      const result=await dispatch(saveData(request)).unwrap();
+    if(result.saved){
+      toast.success("Request has been sent successfully",{
+        theme:'colored',
+        position:'top-right'
+      })
+    }
+    else if(result.updated){
+      toast.success("Request updated successfully",{
+        theme:'colored',
+        position:'top-right'
+      })
+    }
+ } catch (error) {}
+}
+
+useEffect(() => {
     dispatch(fetchCategories());
-  }, [dispatch]);
+}, [dispatch]);
 
-  console.log("priceEstimation",priceEstimation)
+
   return (
     <div>
     <div className="page-container">
@@ -89,7 +135,7 @@ function SellDevice() {
           <button className="btn btn-sell">
             <BrushCleaning size={25} color="black" />
           </button>
-          <button className="btn btn-sell">
+          <button className="btn btn-sell" onClick={()=>handleSave()}>
             <BsFillSendFill size={25} color="#00b4d8" />
           </button>
         </div>
@@ -112,12 +158,22 @@ function SellDevice() {
           <div className="form-column-inputs-hud">
             <h2 className="section-title-hud">1. Item Details</h2>
             <div className="inputs-inline-row">
+               <div className="form-group-hud">
+                <label className="label-hud">Request ID</label>
+                <input
+                  className="form-control idInput"
+                  name="RequestID"
+                  value={request.RequestID || 0}
+                  onChange={handleChange}
+                  disabled
+                  />
+              </div>
               <div className="form-group-hud">
                 <label className="label-hud">Category</label>
                 <select
                   className="form-select"
                   name="DeviceCategory"
-                  value={request.DeviceCategory}
+                  value={request.CategoryID || "-1"}
                   onChange={handleChange}
                   required>
                   <option value="-1">- Select Category -</option>
@@ -129,13 +185,13 @@ function SellDevice() {
                 </select>
               </div>
 
-              {request.DeviceCategory && request.DeviceCategory !== "-1" && (
+              {request.CategoryID && request.CategoryID !== "-1" && (
                 <div className="form-group-hud">
                   <label className="label-hud">Item</label>
                   <select
                     className="form-select"
                     name="DeviceItem"
-                    value={request.DeviceItem}
+                    value={request.ItemID || '-1'}
                     onChange={handleChange}
                     required
                   >
@@ -156,6 +212,7 @@ function SellDevice() {
                     value={request.DeviceBrand}
                     onChange={handleChange}
                     required>
+                    <option value="-1">- select Brand -</option>
                     {brands.map((b, index) => (
                       <option key={index} value={b.BrandName}>{b.BrandName}</option>
                     ))}
@@ -206,11 +263,10 @@ function SellDevice() {
             </div>
          </div>          
             </div>
-            
           <div className="form-column-image-hud">
             <h2 className="section-title-hud">2. Device Image (preferred)</h2>
                     <label htmlFor="imageUpload" className="image-upload-wrapper-hud">
-                  {deviceImgPath && (
+                    {deviceImgPath && (
                       <img 
                           className="image-upload-box-hud" 
                           src={variables.DEVICEIMG_API + deviceImgPath} 
@@ -237,13 +293,13 @@ function SellDevice() {
               <button
                 type="button"
                 className={`method-btn-hud ${activeMethod === 'home' ? 'active' : ''}`}
-                onClick={() => setActiveMethod('home')}
+                onClick={() =>handlePickUpHome() }
               ><FiTruck /> Home
               </button>
               <button
-                type="button"
+                type="button"   
                 className={`method-btn-hud ${activeMethod === 'dropoff' ? 'active' : ''}`}
-                onClick={() => setActiveMethod('dropoff')}
+                onClick={() => handlePickUpdropoff()}
               ><FiNavigation /> Drop-off
               </button>
             </div>
@@ -251,24 +307,41 @@ function SellDevice() {
             {activeMethod === 'home' && (
               <div className="form-group-hud animate__animated animate__fadeIn">
                 <label className="label-hud" style={{width:'150px'}}>Home Address</label>
-                <input type="text" className="form-control" required  />
+                <input 
+                type="text" 
+                className="form-control" 
+                name="ShippingAddress"
+                defaultValue={userAddress}
+                value={request.ShippingAddress}
+                onChange={handleChange}
+                required  />
               </div>
             )}
-
             {activeMethod === 'dropoff' && (
               <div className="form-group-hud animate__animated animate__fadeIn">
                 <label className="label-hud">Select Branch</label>
-                <select className="form-select" required>
-                  <option value="">- Choose nearest branch -</option>
-                  <option value="cairo">Cairo - Maadi</option>
-                  <option value="alex">Alexandria - Smouha</option>
+                <select 
+                className="form-select" 
+                required
+                name="ShippingAddress"
+                value={request.ShippingAddress}
+                onChange={handleChange}
+                >
+                  <option value="-1">- Choose nearest branch -</option>
+                  <option value="cairo">Cairo</option>
+                  <option value="alex">Alexandria</option>
                 </select>
               </div>
             )}
-
             <div className="form-group-hud">
               <label className="label-hud">Pickup Date</label>
-              <input type="date" className="form-control" required />
+              <input 
+              type="date" 
+              className="form-control" 
+              name="PickUpDate"
+              value={request.PickUpDate}
+              onChange={handleChange}
+              required />
             </div>
           </div>
         </div>
@@ -283,7 +356,7 @@ function SellDevice() {
               <th>Item</th>
               <th>Device Brand</th>
               <th>Quality</th>
-              <th>Price (EGP)</th>
+              <th>Price</th>
               <th>Status</th>
               <th>Actions</th>
             </tr>

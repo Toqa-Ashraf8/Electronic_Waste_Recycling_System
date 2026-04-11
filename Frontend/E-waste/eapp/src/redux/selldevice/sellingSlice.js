@@ -1,12 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchBrands, fetchPriceEstimation, saveDeviceImagePath } from "../../services/sellingService";
+import { fetchBrands, fetchPriceEstimation, saveData, saveDeviceImagePath } from "../../services/sellingService";
 
 const initialState={
     request:{},
     brands:[],
     priceEstimation:{},
     deviceImgPath:"",
-    
 }
 const sellingSlice=createSlice({
     name:'selldevice',
@@ -14,6 +13,12 @@ const sellingSlice=createSlice({
     reducers:{
         setRequestValues:(state,action)=>{
             state.request={...state.request,...action.payload};
+            if(!state.request.RequestID){
+                 state.request={RequestID:0,...state.request,...action.payload};
+            }
+            else{
+                 state.request={...state.request,...action.payload};
+            }
         }
     },
     extraReducers:(builder)=>{
@@ -24,12 +29,18 @@ const sellingSlice=createSlice({
         .addCase(fetchPriceEstimation.fulfilled, (state, action) => {
             if (action.payload && action.payload.conditions && action.payload.conditions.length > 0) {
                 state.priceEstimation = action.payload.conditions[0];
+                state.request.DeviceCondition=state.priceEstimation.Condition;
+                state.request.EstimatedPrice=state.priceEstimation.EstimatedPrice;
+             
             } else {
                 state.priceEstimation = {}; 
             }
         }) 
         .addCase(saveDeviceImagePath.fulfilled,(state,action)=>{
             state.deviceImgPath=action.payload;
+        }) 
+        .addCase(saveData.fulfilled,(state,action)=>{
+            state.request.RequestID=action.payload.id;
         })
        
     }

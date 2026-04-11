@@ -11,6 +11,8 @@ namespace ElectronicWasteAPI.Models
         public int? CategoryID { get; set; }
         public string? DeviceCategory { get; set; }
         public string? DeviceBrand { get; set; }
+        [ForeignKey("ItemID")]
+        public int? ItemID { get; set; }
         public string? DeviceItem { get; set; }
         public string? DeviceQuality { get; set; }
         public string? DeviceCondition { get; set; }
@@ -18,7 +20,8 @@ namespace ElectronicWasteAPI.Models
         public string? DeviceImagePath { get; set; }
         public int? PickUpMethod { get; set; }
         public string? ShippingAddress { get; set; }
-       
+        public DateTime? PickUpDate { get; set; }
+
 
     }
 }

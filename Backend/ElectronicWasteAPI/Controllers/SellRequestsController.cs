@@ -1,4 +1,5 @@
 ﻿using ElectronicWasteAPI.EF;
+using ElectronicWasteAPI.Models;
 using ElectronicWasteAPI.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -35,7 +36,6 @@ namespace ElectronicWasteAPI.Controllers
             }
             return Ok(fileName);
         }
-
         [Route("GetBrandByItem")]
         [HttpPost]
         public IActionResult GetBrandByItem(int id)
@@ -71,8 +71,7 @@ namespace ElectronicWasteAPI.Controllers
             using (SqlTransaction transaction = conn.BeginTransaction())
             {
                 try
-                {
-                    
+                {  
                     DataTable dt = new DataTable();
                     string searchquality = @"select * from Items where ItemID=@ItemID and Quality=@Quality";
                     using (SqlCommand cmd = new SqlCommand(searchquality, conn, transaction))
@@ -89,7 +88,6 @@ namespace ElectronicWasteAPI.Controllers
                              Condition = dt.Rows[0]["Condition"].ToString(),
                              EstimatedPrice = Convert.ToInt32(dt.Rows[0]["EstimatedPrice"])
                           });
-
                     }
                     else
                     {
@@ -104,21 +102,19 @@ namespace ElectronicWasteAPI.Controllers
                          SqlDataAdapter adp = new SqlDataAdapter(cmd);
                          adp.Fill(dataTable);
                       }
-                        if (dataTable.Rows.Count > 0)
-                        {
+                      if (dataTable.Rows.Count > 0)
+                      {
                             conditions.Add(new Conditions
                             {
                                 Condition = dataTable.Rows[0]["Condition"].ToString(),
                                 EstimatedPrice = Convert.ToInt32(dataTable.Rows[0]["EstimatedPrice"])
                             });
-
-                        }
+                      }
                     }  
                     transaction.Commit();
                     var data = new { conditions = conditions };
                     return Ok(data);
                 }
-               
                 catch (Exception ex)
                 {
                     transaction.Rollback();
@@ -128,12 +124,87 @@ namespace ElectronicWasteAPI.Controllers
                 {
                     if (conn.State == ConnectionState.Open) conn.Close();
                 }
-
             }
-           
         }
 
-
+        [Route("SaveRequest")]
+        [HttpPost]
+        public IActionResult SaveRequest([FromBody]SellRequest req)
+        {
+            int id = Convert.ToInt32(req.RequestID);
+            bool saved = false;
+            bool updated = false;
+            if (id == 0)
+            {
+                try
+                {
+                    if (conn.State == ConnectionState.Closed) conn.Open();
+                    string saveR = @"insert into SellRequests (CategoryID,DeviceCategory,DeviceBrand,ItemID,DeviceItem,
+                                    DeviceQuality,DeviceCondition,EstimatedPrice,DeviceImagePath,PickUpMethod,
+                                    ShippingAddress,PickUpDate) values (@CategoryID,@DeviceCategory,@DeviceBrand,@ItemID,@DeviceItem,
+                                    @DeviceQuality,@DeviceCondition,@EstimatedPrice,@DeviceImagePath,@PickUpMethod,
+                                    @ShippingAddress,@PickUpDate)select SCOPE_IDENTITY()";
+                    using(SqlCommand cmd=new SqlCommand(saveR, conn))
+                    {
+                        cmd.Parameters.Clear();
+                        cmd.Parameters.AddWithValue("@CategoryID",req.CategoryID);
+                        cmd.Parameters.AddWithValue("@DeviceCategory",req.DeviceCategory);
+                        cmd.Parameters.AddWithValue("@DeviceBrand",req.DeviceBrand);
+                        cmd.Parameters.AddWithValue("@ItemID", req.ItemID);
+                        cmd.Parameters.AddWithValue("@DeviceItem", req.DeviceItem);
+                        cmd.Parameters.AddWithValue("@DeviceQuality", req.DeviceQuality);
+                        cmd.Parameters.AddWithValue("@DeviceCondition", req.DeviceCondition);
+                        cmd.Parameters.AddWithValue("@EstimatedPrice", req.EstimatedPrice);
+                        cmd.Parameters.AddWithValue("@DeviceImagePath", req.DeviceImagePath);
+                        cmd.Parameters.AddWithValue("@PickUpMethod", req.PickUpMethod);
+                        cmd.Parameters.AddWithValue("@ShippingAddress", req.ShippingAddress);
+                        cmd.Parameters.AddWithValue("@PickUpDate", req.PickUpDate);
+                        id = Convert.ToInt32(cmd.ExecuteScalar());
+                        saved = true;
+                    }
+                }
+                catch (Exception ex){ return BadRequest(new { error = ex.Message });}
+                finally {if (conn.State == ConnectionState.Open) conn.Close(); }
+               
+                    
+               
+            }
+            else
+            {
+                try
+                {
+                    if (conn.State == ConnectionState.Closed) conn.Open();
+                    string updateR = @"update SellRequests set CategoryID=@CategoryID,DeviceCategory=@DeviceCategory
+                                    ,DeviceBrand=@DeviceBrand,ItemID=@ItemID,DeviceItem=@DeviceItem, DeviceQuality=@DeviceQuality
+                                    ,DeviceCondition=@DeviceCondition,EstimatedPrice=@EstimatedPrice,DeviceImagePath=@DeviceImagePath,
+                                     PickUpMethod=@PickUpMethod,ShippingAddress=@ShippingAddress,PickUpDate=@PickUpDate
+                                     where RequestID=@RequestID"; 
+                    using (SqlCommand cmd = new SqlCommand(updateR, conn))
+                    {
+                        cmd.Parameters.Clear();
+                        cmd.Parameters.AddWithValue("@CategoryID", req.CategoryID);
+                        cmd.Parameters.AddWithValue("@DeviceCategory", req.DeviceCategory);
+                        cmd.Parameters.AddWithValue("@DeviceBrand", req.DeviceBrand);
+                        cmd.Parameters.AddWithValue("@ItemID", req.ItemID);
+                        cmd.Parameters.AddWithValue("@DeviceItem", req.DeviceItem);
+                        cmd.Parameters.AddWithValue("@DeviceQuality", req.DeviceQuality);
+                        cmd.Parameters.AddWithValue("@DeviceCondition", req.DeviceCondition);
+                        cmd.Parameters.AddWithValue("@EstimatedPrice", req.EstimatedPrice);
+                        cmd.Parameters.AddWithValue("@DeviceImagePath", req.DeviceImagePath);
+                        cmd.Parameters.AddWithValue("@PickUpMethod", req.PickUpMethod);
+                        cmd.Parameters.AddWithValue("@ShippingAddress", req.ShippingAddress);
+                        cmd.Parameters.AddWithValue("@PickUpDate", req.PickUpDate);
+                        cmd.Parameters.AddWithValue("@RequestID",id);
+                        cmd.ExecuteNonQuery();
+                        updated = true;
+                    }
+                }
+                catch (Exception ex) { return BadRequest(new { error = ex.Message }); }
+                finally { if (conn.State == ConnectionState.Open) conn.Close(); }
+            }
+            var data = new { id = id, saved = saved, updated = updated };
+            return Ok(data);
+        }
 
     }
 }

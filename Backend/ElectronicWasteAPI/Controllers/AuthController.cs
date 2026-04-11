@@ -79,7 +79,10 @@ namespace ElectronicWasteAPI.Controllers
                 signingCredentials: creds
             );
             var data = new
-            { token = new JwtSecurityTokenHandler().WriteToken(token),role = user.Role};
+            {   token = new JwtSecurityTokenHandler().WriteToken(token),
+                role = user.Role,
+                address=user.Address
+            };
             return Ok(data);    
             
         }
@@ -90,6 +93,7 @@ namespace ElectronicWasteAPI.Controllers
         {
             bool isNull = false;
             string savedPassword="";
+            string address = "";
             if (user == null) return BadRequest(new { isNull = true });
             string sqls = @"select * from Users where Email=@Email";
             SqlCommand cmd = new SqlCommand(sqls, conn);
@@ -102,6 +106,7 @@ namespace ElectronicWasteAPI.Controllers
             if (dt.Rows.Count > 0)
             {
                 savedPassword = dt.Rows[0]["Password"].ToString();
+                address = dt.Rows[0]["Address"].ToString();
             }
             bool isPasswordValid = BCrypt.Net.BCrypt.EnhancedVerify(user.Password, savedPassword);
             if (!isPasswordValid)
@@ -124,7 +129,11 @@ namespace ElectronicWasteAPI.Controllers
                 expires: DateTime.Now.AddHours(3),
                 signingCredentials: creds
             );
-            var data = new{ token = new JwtSecurityTokenHandler().WriteToken(token),usertbl= dt };
+            var data = new{ 
+                token = new JwtSecurityTokenHandler().WriteToken(token),
+                usertbl= dt,
+                address=address
+            };
             return Ok(data);
                
         }

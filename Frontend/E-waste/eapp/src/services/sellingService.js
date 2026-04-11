@@ -17,3 +17,8 @@ export const saveDeviceImagePath=createAsyncThunk("saveDeviceImagePath/selldevic
     .then((res)=>res.data);
     return resp;
 })
+export const saveData=createAsyncThunk("saveData/selldevice",async(data)=>{
+    const resp=await axios.post(variables.SELLREQUESTS_API+"SaveRequest",data)
+    .then((res)=>res.data);
+    return resp;
+})

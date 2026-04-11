@@ -6,6 +6,7 @@ const initialState={
     userImgPath:"",
     token:sessionStorage.getItem('token'),
     role:sessionStorage.getItem('role'),
+    userAddress:sessionStorage.getItem('address'),
    
 }
 const authSlice=createSlice({
@@ -29,11 +30,17 @@ const authSlice=createSlice({
             }
             sessionStorage.setItem('role',action.payload.role);
             state.role=action.payload.role;
+            sessionStorage.setItem('address',action.payload.address);
+            state.userAddress=action.payload.address;
         })
         .addCase(loginUser.fulfilled,(state,action)=>{
             if(action.payload.token){
                 sessionStorage.setItem('token',action.payload.token);
                 state.token=action.payload.token;
+            }
+            if(action.payload.address){
+                 sessionStorage.setItem('address',action.payload.address);
+                 state.userAddress=action.payload.address;
             }
            
         })
