@@ -1,0 +1,190 @@
+:root {
+  --primary-mint: #55a690;
+  --mint-light: #f0fdfa;
+  --text-main: #2d3748;
+  --text-muted: #718096;
+  --border-color: rgba(85, 166, 144, 0.3);
+}
+
+.branches-page-hud {
+  min-height: 100vh;
+  padding: 40px 20px;
+  background-color: transparent; 
+  direction: ltr;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.page-header { 
+  margin-bottom: 40px; 
+}
+.page-icon { 
+  font-size: 2.8rem; 
+  color: var(--primary-mint);
+  margin-bottom: 10px; 
+}
+
+.page-title { 
+  font-weight: 700;
+  font-size: 2.2rem; 
+  color: var(--primary-mint) !important;
+  letter-spacing: 1px; 
+  margin-bottom: 8px;
+}
+
+.page-subtitle { 
+  font-size: 0.95rem; 
+  color: var(--text-muted); 
+  max-width: 500px; 
+  margin: 0 auto; 
+}
+
+.branch-card-hud {
+  position: relative;
+  background: rgba(255, 255, 255, 0.8); 
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(5px);
+  clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.branch-card-hud:hover {
+  transform: translateY(-5px);
+  background: #fff;
+  border-color: var(--primary-mint);
+  box-shadow: 0 10px 20px rgba(85, 166, 144, 0.1);
+}
+
+.corner {
+     position: absolute; 
+     width: 12px; 
+     height: 12px; 
+}
+.corner::before, .corner::after { 
+  content: ''; 
+  position: absolute; 
+  background-color: var(--primary-mint); 
+}
+.corner-top-left { 
+    top: 0; 
+    left: 0; 
+} 
+.corner-top-left::before 
+{ 
+    width: 100%; 
+    height: 1.5px; 
+} 
+.corner-top-left::after { 
+    width: 1.5px; 
+    height: 100%; 
+}
+
+.corner-top-right { 
+    top: 0; 
+    right: 0; }
+
+.corner-top-right::before 
+{ 
+    width: 100%;
+    height: 1.5px;
+    right: 0; 
+} 
+.corner-top-right::after { 
+    width: 1.5px; 
+    height: 100%;
+    right: 0; 
+}
+.corner-bottom-left { 
+    bottom: 0; 
+    left: 0; 
+} 
+.corner-bottom-left::before 
+{ 
+    width: 100%; 
+    height: 1.5px; 
+    bottom: 0; 
+} 
+.corner-bottom-left::after 
+{ 
+    width: 1.5px; 
+    height: 100%; 
+    bottom: 0; 
+}
+.corner-bottom-right { 
+    bottom: 0; 
+    right: 0; 
+} 
+.corner-bottom-right::before 
+{ 
+    width: 100%; 
+    height: 1.5px; 
+    bottom: 0; 
+    right: 0; 
+} 
+.corner-bottom-right::after
+ { 
+    width: 1.5px; 
+    height: 100%; 
+    bottom: 0; 
+    right: 0; 
+}
+
+
+.branch-card-header {
+  padding: 20px 15px 10px;
+  text-align: center;
+  border-bottom: 1px dashed var(--border-color);
+}
+.header-icon { 
+  font-size: 1.3rem; 
+  margin-bottom: 8px; 
+  color: var(--primary-mint); 
+}
+.branch-name { 
+  font-size: 1.1rem; 
+  font-weight: 600; 
+  color: var(--text-main); 
+}
+
+
+.branch-card-body {
+  padding: 15px 20px;
+  flex-grow: 1;
+}
+.info-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  color: var(--text-main);
+  font-size: 0.85rem; 
+}
+.info-icon {
+  color: var(--primary-mint);
+  font-size: 1rem;
+  margin-right: 12px;
+}
+
+.branch-card-footer {
+  padding: 0 20px 20px;
+}
+
+.map-button {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  background-color: transparent;
+  color: var(--primary-mint);
+  border: 1px solid var(--primary-mint);
+  text-align: center;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.map-button:hover {
+  background-color: var(--primary-mint);
+  color: #fff;
+  text-decoration: none;
+}

@@ -22,13 +22,12 @@ namespace ElectronicWasteAPI.Controllers
         private readonly IWebHostEnvironment _env;
         private readonly DataContext _context;
         private readonly JwtSettings _jwt;
-        SqlConnection conn;
+     
         public AuthController(IOptions<JwtSettings> jwt ,DataContext dataContext , IWebHostEnvironment env)
         {
             _jwt = jwt.Value;
             _env = env; 
             _context= dataContext;
-            conn = new SqlConnection(_context.Database.GetConnectionString());
         }
         [Route("UploadUserImage")]
         [HttpPost]
@@ -90,36 +89,25 @@ namespace ElectronicWasteAPI.Controllers
 
         [Route("Login")]
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody] userData user)
+        public async Task<IActionResult> Login([FromBody] userData userDto)
         {
-            bool isNull = false;
-            string savedPassword="";
-            string address = "";
-            int userId=0;
-            if (user == null) return BadRequest(new { isNull = true });
-            string sqls = @"select * from Users where Email=@Email";
-            SqlCommand cmd = new SqlCommand(sqls, conn);
-            if (conn.State == ConnectionState.Closed) conn.Open();
-            cmd.Parameters.Clear();
-            cmd.Parameters.AddWithValue("@Email", user.Email);
-            DataTable dt = new DataTable();
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            da.Fill(dt);
-            if (dt.Rows.Count > 0)
+            if (userDto == null) return BadRequest(new { isNull = true });
+            var user = await _context.Users
+                              .FirstOrDefaultAsync(u => u.Email == userDto.Email);
+            if (user == null)
             {
-                savedPassword = dt.Rows[0]["Password"].ToString();
-                address = dt.Rows[0]["Address"].ToString();
-                userId = Convert.ToInt32(dt.Rows[0]["UserID"]);
+                return BadRequest("User not found or invalid email");
             }
-            bool isPasswordValid = BCrypt.Net.BCrypt.EnhancedVerify(user.Password, savedPassword);
+            bool isPasswordValid = BCrypt.Net.BCrypt.EnhancedVerify(userDto.Password, user.Password);
             if (!isPasswordValid)
             {
-                return BadRequest("user not valid");
+                return BadRequest("Invalid password");
             }
             var claims = new[]
             {
-                    new Claim(ClaimTypes.Name, dt.Rows[0]["UserName"].ToString()),
-                    new Claim(ClaimTypes.Role, dt.Rows[0]["Role"].ToString()),
+                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(ClaimTypes.Role, user.Role),
+                    new Claim(ClaimTypes.NameIdentifier, user.UserID.ToString())
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.SecretKey));
@@ -132,14 +120,15 @@ namespace ElectronicWasteAPI.Controllers
                 expires: DateTime.Now.AddHours(3),
                 signingCredentials: creds
             );
-            var data = new{ 
+            var data = new
+            {
                 token = new JwtSecurityTokenHandler().WriteToken(token),
-                usertbl= dt,
-                address=address,
-                userId=userId,
+                usertbl = user, 
+                address = user.Address,
+                userId = user.UserID
             };
             return Ok(data);
-               
+
         }
     }
 }
