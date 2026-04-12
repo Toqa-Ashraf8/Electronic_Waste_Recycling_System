@@ -13,6 +13,7 @@ import UserProfile from './features/userProfile/userProfile';
 import SellDevice from './features/selldevice/SellDevice';
 import Categories from './features/categories/Categories';
 import TrackingPage from './features/selldevice/TrackingPage';
+import Orders from './features/orders/Orders';
 function App() {
  const {globalError,globalMessage}=useSelector((state)=>state.ui);
  const {token}=useSelector((state)=>state.auth);
@@ -72,6 +73,12 @@ useEffect(() => {
        element={
         <ProtectedRoute>
            <TrackingPage/>
+        </ProtectedRoute>
+      }/> 
+      <Route path='/orders' 
+       element={
+        <ProtectedRoute>
+           <Orders/>
         </ProtectedRoute>
       }/>
     </Routes>
