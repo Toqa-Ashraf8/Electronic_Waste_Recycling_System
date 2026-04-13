@@ -14,6 +14,8 @@ namespace ElectronicWasteAPI.Models
         [ForeignKey("ItemID")]
         public int? ItemID { get; set; }
         public string? DeviceItem { get; set; }
+        [ForeignKey("QualityID")]
+        public int? QualityID { get; set; }
         public string? DeviceQuality { get; set; }
         public string? DeviceCondition { get; set; }
         public int? EstimatedPrice { get; set; }

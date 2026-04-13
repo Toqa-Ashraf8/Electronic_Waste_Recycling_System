@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Orders.css";
 import { 
     FaCheck, 
@@ -9,35 +9,59 @@ import {
     FaClock, 
     FaHistory 
 } from "react-icons/fa";
-
+import { FaStar } from "react-icons/fa6";
+import {useSelector,useDispatch} from 'react-redux'
+import { fetchRequests } from "../../services/ordersService";
+import OrderDetailsModal from "./modals/OrderDetailsModal";
+import { setImageRowIndex, toggleconfirmReqModal, toggleOrdersImgModal } from "../../redux/orders/ordersSlice";
+import DeliveryDetailsModal from "../../components/modals/DeliveryDetailsModal";
+import { variables } from "../../components/variables";
+import ConfirmRequestModal from "./modals/ConfirmRequestModal";
 const Orders = () => {
-  const [view, setView] = useState("pending");
+    const [view, setView] = useState("pending");
+    const {
+      requests,
+      isOrdersImgsModalOpen,
+      isOrdersAddressModalOpen,
+      isConfirmOrderModalOpen
+}=useSelector((state)=>state.orders);
+    const dispatch=useDispatch();
+   
+const zoomDeviceImage=(index)=>{
+  dispatch(setImageRowIndex(index));
+  dispatch(toggleOrdersImgModal(true));
+}
 
-  const [orders, setOrders] = useState([
-    { id: 1, user: "Ahmed Ali", device: "iPhone 13", status: "Pending", price: 450, date: "2026-04-12" },
-    { id: 2, user: "Sara Mohamed", device: "Dell XPS", status: "Accepted", price: 1200, date: "2026-04-12" },
-    { id: 3, user: "Mona Hassan", device: "Old HP Laptop", status: "Out for Collection", price: 800, date: "2026-04-11" },
-    { id: 4, user: "Toqa Ashraf", device: "Monitor", status: "Received", price: 300, date: "2026-04-10" },
-  ]);
 
-  const updateStatus = (id, newStatus) => {
-    setOrders(orders.map(order => order.id === id ? { ...order, status: newStatus } : order));
-    if(newStatus === 'Completed') alert("تم إضافة النقاط لحساب العميل بنجاح! 🎉");
-  };
-
-  const pendingOrders = orders.filter(o => o.status !== "Completed" && o.status !== "Rejected");
-  const historyOrders = orders.filter(o => o.status === "Completed" || o.status === "Rejected");
+useEffect(()=>{
+    dispatch(fetchRequests());
+},[dispatch])
 
   return (
     <div className="orders-manager-container">
+      {isOrdersImgsModalOpen && <OrderDetailsModal/>}
+      {isOrdersAddressModalOpen && <DeliveryDetailsModal/>}
+      {isConfirmOrderModalOpen && <ConfirmRequestModal/>}
       <div className="orders-header">
-        <h2 className="title-modern">Order <span className="highlight">Workflow</span></h2>
+        <h2 className="title-modern">Order 
+            <span className="highlight">Workflow</span>
+        </h2>
         <div className="toggle-buttons">
-          <button className={`btn-toggle ${view === "pending" ? "active" : ""}`} onClick={() => setView("pending")}>
+          <button 
+          className={`btn-toggle ${view === "pending" ? "active" : ""}`} 
+          onClick={() => setView("pending")}>
             <FaClock /> Active Orders
           </button>
-          <button className={`btn-toggle ${view === "history" ? "active" : ""}`} onClick={() => setView("history")}>
+          <button 
+          className={`btn-toggle ${view === "completed" ? "active" : ""}`} 
+          onClick={() => setView("completed")}>
             <FaHistory /> Completed Log
+          </button>
+            <button className={`btn-toggle ${view === "history" ? "active" : ""}`} 
+            onClick={() => setView("history")}
+            >
+            <FaHistory /> 
+            History Log
           </button>
         </div>
       </div>
@@ -46,58 +70,99 @@ const Orders = () => {
         <table className="bootstrap-table">
           <thead>
             <tr>
-              <th>ID</th>
+              <th>ReqID</th>
               <th>Customer</th>
               <th>Device</th>
-              <th>Points</th>
+              <th>Condition/Quality</th>
+              <th>Expected Points</th>
+              <th style={{width:'100px'}}> Image</th>
+              <th>PickUp Date</th>
               <th>Current Status</th>
-              <th>Actions / Steps</th>
+              <th>Actions / Steps</th> 
             </tr>
           </thead>
           <tbody>
-            {(view === "pending" ? pendingOrders : historyOrders).map((order) => (
-              <tr key={order.id}>
-                <td>#{order.id}</td>
-                <td><strong>{order.user}</strong></td>
-                <td>{order.device}</td>
-                <td>{order.price} pts</td>
+         {requests && requests.map((req,index)=>
+              <tr key={req.RequestID || index}>
+                <td>{req.RequestID}</td>
+                <td><strong>{req.UserName}</strong></td>
+                <td>{req.DeviceItem}</td>
                 <td>
-                  <span className={`table-badge ${order.status.toLowerCase().replace(/ /g, '-')}`}>
-                    {order.status}
-                  </span>
+                  <div style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
+                    <span>{req.DeviceCondition}/</span>
+                    <span>{req.DeviceQuality}</span>
+                  </div>
+                  </td>
+                <td>
+                  <div style={{display:'flex',gap:'5px',justifyContent:'center',alignItems:'center'}}>
+                  <span>{req.Points}</span>
+                  <span >
+                    <FaStar size={20} color="#fbff03" style={{marginTop:'-3px'}}/>
+                    </span>
+                  </div>
+                  </td>
+                <td>
+                  <div className="img-container" 
+                  onClick={()=>zoomDeviceImage(index)}>
+                    <img 
+                    src={variables.DEVICEIMG_API+req.DeviceImagePath}
+                    alt=""
+                   className="dev-img"
+                   />
+                  </div>
+                
                 </td>
+                <td>
+                 {req.PickUpDate.split('T')[0]}
+                 </td>
+                <td>
+                <div>
+                   {req.RequestStatus === 0 && (
+                        <span style={{
+                            backgroundColor: '#fffbeb',
+                            color: '#b45309',           
+                            padding: '4px 12px',
+                            borderRadius: '12px',      
+                            fontSize: '0.8rem',
+                            fontWeight: '600',
+                            border: '1px solid #fef3c7',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '5px',
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.5px'
+                            }}>
+                            <span style={{ 
+                                width: '6px', 
+                                height: '6px', 
+                                backgroundColor: '#f59e0b', 
+                                borderRadius: '50%' 
+                            }}></span> 
+                            Pending
+                            </span>
+                            )}
+                        </div>
+                        </td>
                 <td>
                   <div className="workflow-actions">
-                    {order.status === "Pending" && (
-                      <>
-                        <button className="btn-sm btn-approve" onClick={() => updateStatus(order.id, "Accepted")} title="Accept Order"><FaCheck /></button>
-                        <button className="btn-sm btn-reject" onClick={() => updateStatus(order.id, "Rejected")} title="Reject Order"><FaTimes /></button>
-                      </>
-                    )}
-                    
-                    {order.status === "Accepted" && (
-                      <button className="btn-step btn-courier" onClick={() => updateStatus(order.id, "Out for Collection")}>
-                        <FaTruck /> Dispatch Courier
+                    {req.RequestStatus === 0 && (
+                      <div className="order-actions-wrapper">
+                      <button 
+                      className="btn-hud btn-accept" 
+                      title="Accept Order"
+                      onClick={()=>dispatch(toggleconfirmReqModal(true))}
+                      >
+                        <FaCheck />
                       </button>
-                    )}
-
-                    {order.status === "Out for Collection" && (
-                      <button className="btn-step btn-receive" onClick={() => updateStatus(order.id, "Received")}>
-                        <FaBoxOpen /> Mark as Received
+                      <button className="btn-hud btn-reject" title="Reject Order">
+                        <FaTimes />
                       </button>
-                    )}
-
-                    {order.status === "Received" && (
-                      <button className="btn-step btn-points" onClick={() => updateStatus(order.id, "Completed")}>
-                        <FaCoins /> Grant Points
-                      </button>
-                    )}
-
-                    {view === "history" && <span className="done-text">Archived</span>}
-                  </div>
-                </td>
-              </tr>
-            ))}
+                    </div>
+                    )} 
+                    </div>
+                    </td>
+                </tr>
+              )}
           </tbody>
         </table>
       </div>

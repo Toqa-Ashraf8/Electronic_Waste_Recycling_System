@@ -16,13 +16,14 @@ const initialState={
         ItemID:'-1',
         DeviceItem:"",
         DeviceBrand:"-1",
+        QualityID:-1,
         DeviceQuality:'-1',
         DeviceCondition:"",
         EstimatedPrice:0,
         PickUpMethod:-1,
         ShippingAddress:"",
         PickUpDate:"",
-        SubmissionDate:new Date().toISOString().split('T')[0],
+        SubmissionDate:new Date().toISOString(),
         RequestStatus:0,
 },
     brands:[],
@@ -76,7 +77,7 @@ const sellingSlice=createSlice({
                 state.priceEstimation = action.payload.conditions[0];
                 state.request.DeviceCondition=state.priceEstimation.Condition;
                 state.request.EstimatedPrice=state.priceEstimation.EstimatedPrice;
-             
+                state.request.QualityID=state.priceEstimation.QualityID;
             } else {
                 state.priceEstimation = {}; 
             }

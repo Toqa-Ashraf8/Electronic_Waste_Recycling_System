@@ -9,6 +9,7 @@
     }
     public class Conditions
     {
+        public int? QualityID { get; set; }
         public string? Condition { get; set; }
         public int? EstimatedPrice { get; set; }
     }

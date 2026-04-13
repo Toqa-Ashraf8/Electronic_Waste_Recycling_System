@@ -2,7 +2,6 @@
   padding: 60px 5%;
   min-height: 100vh;
   background-color: #f0fdfa; 
-  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 .orders-header {
   display: flex;
@@ -59,8 +58,9 @@
 .bootstrap-table td {
   padding: 18px 15px;
   border: 1px solid #dee2e6; 
-  text-align: left;
+  text-align: center;
   vertical-align: middle;
+  font-weight: 600;
 }
 .bootstrap-table thead {
   background-color: #f8fafc;
@@ -81,6 +81,7 @@
 }
 .workflow-actions {
   display: flex;
+  justify-content: center;
   gap: 8px;
   flex-wrap: wrap;
 }
@@ -94,19 +95,53 @@
   align-items: center;
   justify-content: center;
 }
-.btn-approve { 
-    background: #55a690; 
-    color: white; 
+
+
+.order-actions-wrapper {
+  display: flex;
+  gap: 8px; 
+  justify-content: center; 
+  align-items: center;
 }
-.btn-approve:hover { 
-    background: #448b78; 
+
+
+.btn-hud {
+  width: 32px; 
+  height: 32px;
+  border-radius: 6px; 
+  border: 1px solid ; 
+  background-color: transparent; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  outline: none;
+  font-size: 0.9rem; 
+  padding: 0; 
 }
-.btn-reject { 
-    background: #fee2e2; 
-    color: #9b2c2c; 
+.btn-accept {
+  color: #55a690; 
 }
-.btn-reject:hover { 
-    background: #fecaca; 
+
+.btn-accept:hover {
+  background-color: #f1f8f6; 
+  border-color: #a3d9cb; 
+  transform: translateY(-2px); 
+}
+
+.btn-reject {
+  color: #e53e3e;
+}
+
+.btn-reject:hover {
+  background-color: #fff5f5; 
+  border-color: #feb2b2; 
+  transform: translateY(-2px); 
+}
+.btn-hud:active {
+  transform: translateY(1px);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05); 
 }
 .btn-step {
   padding: 10px 18px;
@@ -212,4 +247,18 @@
     padding: 8px 12px;
     font-size: 0.8rem;
 }
+}
+.img-container{
+  position: relative;
+  width: 30px;
+  height: 30px;
+  margin: auto;
+  right:  12px;
+  cursor: pointer;
+}
+.dev-img{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }

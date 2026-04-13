@@ -12,5 +12,6 @@ namespace ElectronicWasteAPI.Models
         public string? Quality { get; set; }
         public string? Condition { get; set; }
         public int? EstimatedPrice { get; set; }
+        public int? Points { get; set; }
     }
 }

@@ -73,18 +73,29 @@ namespace ElectronicWasteAPI.Controllers
                 try
                 {  
                     DataTable dt = new DataTable();
+                    DataTable dt2 = new DataTable();
                     string searchquality = @"select * from Items where ItemID=@ItemID and Quality=@Quality";
+                    string sqlg = "select QualityID from Qualities where CategoryID=@CategoryID and Quality=@Quality";
                     using (SqlCommand cmd = new SqlCommand(searchquality, conn, transaction))
                     {
                         cmd.Parameters.AddWithValue("@ItemID", item.ItemID);
                         cmd.Parameters.AddWithValue("@Quality", item.Quality);
                         SqlDataAdapter da = new SqlDataAdapter(cmd);
                         da.Fill(dt);
-                    } 
+                    }
+                    using (SqlCommand cmd2 = new SqlCommand(sqlg, conn, transaction))
+                    {
+                        cmd2.Parameters.AddWithValue("@CategoryID", item.CategoryID);
+                        cmd2.Parameters.AddWithValue("@Quality", item.Quality);
+                        SqlDataAdapter da2 = new SqlDataAdapter(cmd2);
+                        da2.Fill(dt2);
+                    }
                     if (dt.Rows.Count > 0)
                     {
+                       
                           conditions.Add(new Conditions
                           {
+                             QualityID= Convert.ToInt32(dt2.Rows[0]["QualityID"]),
                              Condition = dt.Rows[0]["Condition"].ToString(),
                              EstimatedPrice = Convert.ToInt32(dt.Rows[0]["EstimatedPrice"])
                           });
@@ -106,6 +117,7 @@ namespace ElectronicWasteAPI.Controllers
                       {
                             conditions.Add(new Conditions
                             {
+                                QualityID = Convert.ToInt32(dt2.Rows[0]["QualityID"]),
                                 Condition = dataTable.Rows[0]["Condition"].ToString(),
                                 EstimatedPrice = Convert.ToInt32(dataTable.Rows[0]["EstimatedPrice"])
                             });
@@ -139,10 +151,10 @@ namespace ElectronicWasteAPI.Controllers
                 try
                 {
                     if (conn.State == ConnectionState.Closed) conn.Open();
-                    string saveR = @"insert into SellRequests (CategoryID,DeviceCategory,DeviceBrand,ItemID,DeviceItem,
+                    string saveR = @"insert into SellRequests (CategoryID,DeviceCategory,DeviceBrand,ItemID,DeviceItem,QualityID,
                                     DeviceQuality,DeviceCondition,EstimatedPrice,DeviceImagePath,PickUpMethod,
                                     ShippingAddress,PickUpDate,SubmissionDate,RequestStatus,UserID) 
-                                    values (@CategoryID,@DeviceCategory,@DeviceBrand,@ItemID,@DeviceItem,
+                                    values (@CategoryID,@DeviceCategory,@DeviceBrand,@ItemID,@DeviceItem,@QualityID,
                                     @DeviceQuality,@DeviceCondition,@EstimatedPrice,@DeviceImagePath,@PickUpMethod,
                                     @ShippingAddress,@PickUpDate,@SubmissionDate,@RequestStatus,@UserID)
                                     select SCOPE_IDENTITY()";
@@ -154,6 +166,7 @@ namespace ElectronicWasteAPI.Controllers
                         cmd.Parameters.AddWithValue("@DeviceBrand",req.DeviceBrand);
                         cmd.Parameters.AddWithValue("@ItemID", req.ItemID);
                         cmd.Parameters.AddWithValue("@DeviceItem", req.DeviceItem);
+                        cmd.Parameters.AddWithValue("@QualityID", req.QualityID);
                         cmd.Parameters.AddWithValue("@DeviceQuality", req.DeviceQuality);
                         cmd.Parameters.AddWithValue("@DeviceCondition", req.DeviceCondition);
                         cmd.Parameters.AddWithValue("@EstimatedPrice", req.EstimatedPrice);
@@ -180,10 +193,11 @@ namespace ElectronicWasteAPI.Controllers
                 {
                     if (conn.State == ConnectionState.Closed) conn.Open();
                     string updateR = @"update SellRequests set CategoryID=@CategoryID,DeviceCategory=@DeviceCategory
-                                    ,DeviceBrand=@DeviceBrand,ItemID=@ItemID,DeviceItem=@DeviceItem, DeviceQuality=@DeviceQuality
-                                    ,DeviceCondition=@DeviceCondition,EstimatedPrice=@EstimatedPrice,DeviceImagePath=@DeviceImagePath,
-                                     PickUpMethod=@PickUpMethod,ShippingAddress=@ShippingAddress,PickUpDate=@PickUpDate,
-                                     SubmissionDate=@SubmissionDate,RequestStatus=@RequestStatus,UserID=@UserID
+                                     ,DeviceBrand=@DeviceBrand,ItemID=@ItemID,DeviceItem=@DeviceItem,QualityID=@QualityID,
+                                      DeviceQuality=@DeviceQuality,DeviceCondition=@DeviceCondition,EstimatedPrice=@EstimatedPrice,
+                                      DeviceImagePath=@DeviceImagePath,PickUpMethod=@PickUpMethod,ShippingAddress=@ShippingAddress
+                                     ,PickUpDate=@PickUpDate,SubmissionDate=@SubmissionDate,RequestStatus=@RequestStatus
+                                     ,UserID=@UserID
                                      where RequestID=@RequestID"; 
                     using (SqlCommand cmd = new SqlCommand(updateR, conn))
                     {
@@ -193,6 +207,7 @@ namespace ElectronicWasteAPI.Controllers
                         cmd.Parameters.AddWithValue("@DeviceBrand", req.DeviceBrand);
                         cmd.Parameters.AddWithValue("@ItemID", req.ItemID);
                         cmd.Parameters.AddWithValue("@DeviceItem", req.DeviceItem);
+                        cmd.Parameters.AddWithValue("@QualityID", req.QualityID);
                         cmd.Parameters.AddWithValue("@DeviceQuality", req.DeviceQuality);
                         cmd.Parameters.AddWithValue("@DeviceCondition", req.DeviceCondition);
                         cmd.Parameters.AddWithValue("@EstimatedPrice", req.EstimatedPrice);

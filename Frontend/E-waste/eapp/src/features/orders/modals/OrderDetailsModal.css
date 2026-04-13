@@ -1,0 +1,105 @@
+
+.modalI {
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 2000;
+    padding-top: 70px;
+    display: flex;
+    justify-content: center;
+}
+
+.details-mdl {
+    width: 500px !important; 
+    height: 480px !important;
+    background-color: #fff !important; 
+}
+
+
+@keyframes zzoom {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
+}
+
+.headerm {
+    height: 60px;
+    padding: 10px 25px;
+    color: #fff;
+}
+.bodyI {
+    height: 360px;
+    padding: 30px !important;
+}
+
+.mdl-flex-container {
+    display: flex;
+    gap: 25px;
+    height: 100%;
+    align-items: center;
+}
+
+.mdl-image-section {
+    flex: 1;
+}
+
+.image-frame {
+    position: relative;
+    width: 90%;
+    height: 380px;
+    margin: auto;
+    background-color: #f8faf9;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.image-frame img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.mdl-info-section {
+    flex: 1;
+}
+
+.section-title {
+    color: #2d3748;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.section-desc {
+    color: #718096;
+    font-size: 0.9rem;
+    margin-bottom: 25px;
+}
+
+
+.btn-group-hud {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.btn_close_m{
+    cursor: pointer;
+    font-size: 35px;
+    color: red;
+    font-weight: bold;
+    padding: 20px;
+    margin-left: -20px;
+}
+
+.btn_close_m:hover {
+    color: #a81d1d;
+    transition: 0.5s all;
+}

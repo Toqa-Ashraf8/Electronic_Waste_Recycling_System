@@ -16,6 +16,7 @@ import TrackingPage from './features/selldevice/TrackingPage';
 import Orders from './features/orders/Orders';
 import FindUs from './features/branches/FindUs';
 import ContactUs from './features/contact/ContactUs';
+import OrdersGallery from './features/orders/OrdersGallery';
 function App() {
  const {globalError,globalMessage}=useSelector((state)=>state.ui);
  const {token}=useSelector((state)=>state.auth);
@@ -93,6 +94,12 @@ useEffect(() => {
                 element={
                   <ProtectedRoute>
                     <ContactUs/>
+                  </ProtectedRoute>
+                }/>
+                  <Route path='/gallery' 
+                element={
+                  <ProtectedRoute>
+                    <OrdersGallery/>
                   </ProtectedRoute>
                 }/>
     </Routes>
