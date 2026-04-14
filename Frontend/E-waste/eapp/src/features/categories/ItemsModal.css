@@ -1,65 +1,96 @@
-.modalI{
+.modalI {
     position: fixed;
     width: 100%;
     height: 100vh;
     top: 0;
     left: 0;
-    background-color: rgba(0, 0, 0, 0.4);
-    z-index: 1000;
-    padding-top: 70px;
-   
-}
-.modalcnt{
-    width: 50%;
-    height: 520px;
-    margin: auto;
-    border: 1px solid grey;
-    box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
-    background-color: #d0d0d0;
-    font-weight: 400; 
-    animation-name: zzoom;
-    animation-duration: 0.7s;
-}
-@keyframes zzoom {
-    from{
-        transform: scale(0);
-    }
-    to{
-        transform: scale(1);
-    }
-}
-.headerI{
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
     display: flex;
-    justify-content: space-between;
-    color: #fff;
+    align-items: center;
+    justify-content: center;
 }
-.headerI,.footerI{
-    height: 70px;
+
+.modalcnt {
+    width: 90%;
+    max-width: 550px;
+    height: auto;
+    background-color: #f0f0f0;
+    font-weight: 400; 
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    animation: zzoom 0.4s ease-out;
+}
+
+@keyframes zzoom {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.headerI, .footerI {
+    height: 60px;
     background-color: teal;
     padding: 10px 25px;
-}
-.bodyI{
-    height: 380px;
-    padding: 50px 60px!important;
-}
-.btn_close{
-    font-size: 35px;
-    color: #fff;
-    font-weight: 600;
-    cursor: pointer;
-}
-.btn_close:hover{
-    color: red;
-    transition: 0.5s all;
-}
-.mdlData{
     display: flex;
-    margin-bottom:17px;
-   
+    color: #fff;
 }
-.inpMdl{
-    width: 300px!important;
+.footerI {
+    display: flex;
+    justify-content: space-between!important;
+    gap: 20px;
 }
-.lblMdl{
-    width: 140px;
+
+
+.headerI h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    flex-grow: 1;
+    text-align: center;
+}
+
+.bodyI {
+    padding: 30px !important;
+}
+
+.mdlData {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    gap: 10px;
+}
+
+.lblMdl {
+    width: 130px;
+    flex-shrink: 0;
+    font-size: 0.9rem;
+}
+
+.inpMdl {
+    flex: 1;
+    width: 100% !important;
+}
+
+.btn_close {
+    font-size: 30px;
+    cursor: pointer;
+    line-height: 1;
+}
+.header_title{
+margin-left: -2%!important;
+}
+.btn_close:hover { color: #ff4d4d; }
+
+
+@media (max-width: 500px) {
+    .mdlData {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .lblMdl {
+        width: 100%;
+    }
+   .bodyI{
+    overflow: scroll;
+   }
 }

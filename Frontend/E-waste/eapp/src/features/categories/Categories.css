@@ -101,3 +101,54 @@ tbody td {
     padding: 15px!important;
 }
 
+@media (min-width:300px) and (max-width: 700px) {
+    .btns-container{
+        display: flex;
+        position: relative;
+        left: -20px;
+        background-color: #fbfdfc;
+        border-radius:10px;
+        }
+}
+@media (min-width:768px) {
+    .btns-container{
+        display: flex;
+        position: relative;
+        left: -50px;
+        background-color: #fbfdfc;
+        border-radius:10px;
+        }
+}
+.btn-add-item-hud {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background-color: #008080; 
+    color: #ffffff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 128, 128, 0.15); 
+    text-transform: uppercase;
+}
+
+.btn-add-item-hud:hover {
+    background-color: #006666; 
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 128, 128, 0.25); 
+}
+
+.btn-add-item-hud:active {
+    transform: translateY(0); 
+}
+
+.btn-add-item-hud svg {
+    stroke-width: 3px; 
+}
+

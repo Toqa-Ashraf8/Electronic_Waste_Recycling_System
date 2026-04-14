@@ -106,7 +106,7 @@ namespace ElectronicWasteAPI.Controllers
         public IActionResult GetOrders()
         {
             DataTable dt = new DataTable();
-            string sqlg = "select * from vw_Orders";
+            string sqlg = "select * from vw_Orders where OrderStatus != 2";
             SqlDataAdapter da = new SqlDataAdapter(sqlg, conn);
             da.Fill(dt);
             return Ok(dt);

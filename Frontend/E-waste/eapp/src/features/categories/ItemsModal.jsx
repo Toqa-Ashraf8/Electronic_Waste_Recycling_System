@@ -29,7 +29,10 @@ const ItemsModal = () => {
         <div className="modalI">
             <div className="modalcnt">
                 <div className="headerI">
-                  <h3 style={{marginLeft:'40%',marginTop:'10px'}}>Add Item</h3>
+                  <h3 
+                  className='header_title'
+                  style={{marginLeft:'40%',marginTop:'10px'}}
+                  >Add Item</h3>
                   <span 
                   className='btn_close'
                   onClick={()=>dispatch(toggleCategoryModal(false))}
@@ -113,15 +116,14 @@ const ItemsModal = () => {
                   </div>
                 </div>
                 <div className="footerI">
-                  <div 
-                  style={{display:'flex',justifyContent:'space-between',marginTop:'8px'}}>
+              
                      <button 
                      className='btn' 
                      style={{color:'#fff',backgroundColor:'#03071e'}}
                      onClick={()=>addToTable()}
                      >Add</button>
                      <button className='btn btn-danger'>Close</button>  
-                  </div>
+                
                 
                 </div>
             </div>

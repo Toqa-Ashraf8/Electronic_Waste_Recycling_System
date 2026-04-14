@@ -462,7 +462,7 @@ useEffect(() => {
                     <td>{req.EstimatedPrice} EGP</td>
                     <td>{req.ShippingAddress}</td>
                     <td>{req.PickUpDate?.split('T')[0]}</td>
-                    <td className="text-center">
+                    <td className="text-center btns_ed">
                       <FiEdit 
                       className="action-icon edit" 
                       style={{ cursor: 'pointer', marginRight: '10px', color: '#55a690' }}

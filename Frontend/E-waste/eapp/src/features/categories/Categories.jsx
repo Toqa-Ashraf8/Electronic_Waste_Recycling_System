@@ -129,13 +129,10 @@ useEffect(()=>{
         <hr className="divider-hud" />
 
         <div className="table-header-actions">
-          <button 
-          className="btn-action" 
-          style={{padding: '10px 20px',backgroundColor:'teal',color:'#fff'}}
-          onClick={()=>addNew()}>
-            <FiPlus /> 
-            ADD NEW ITEM
-          </button>
+         <button className="btn-add-item-hud" onClick={() => addNew()}>
+          <FiPlus size={18} /> 
+          <span>ADD NEW ITEM</span>
+        </button>
         </div>
         <div className="table-responsive">
           <table className="table table-bordered">

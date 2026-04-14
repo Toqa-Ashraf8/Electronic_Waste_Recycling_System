@@ -1,7 +1,7 @@
 import React from 'react';
 import { FaStar, FaTruck, FaBoxOpen, FaCoins } from 'react-icons/fa';
 
-export const OrdersTable = ({ ordersList, zoomDeviceImage, variables }) => {
+export const CompletedOrdersTable = ({ ordersList, zoomDeviceImage, variables }) => {
   return (
     <div className="table-responsive">
       <table className="bootstrap-table">
