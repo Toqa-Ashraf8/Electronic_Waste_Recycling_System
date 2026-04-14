@@ -26,7 +26,7 @@ export const fetchRequests=createAsyncThunk("fetchRequests/selldevice",async()=>
     const resp=await axios.get(variables.SELLREQUESTS_API+"GetRequests")
     .then((res)=>res.data);
     return resp;
-})
+}) 
 export const removeRequest=createAsyncThunk("removeRequest/selldevice",async(id)=>{
     const resp=await axios.delete(variables.SELLREQUESTS_API+"DeleteRequest?id="+id)
     .then((res)=>res.data);

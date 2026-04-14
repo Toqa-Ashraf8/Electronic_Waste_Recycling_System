@@ -4,6 +4,7 @@ using ElectronicWasteAPI.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ElectronicWasteAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20260414145022_setOrderDispatches")]
+    partial class setOrderDispatches
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,14 +94,17 @@ namespace ElectronicWasteAPI.Migrations
                     b.Property<string>("CourierPhone")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<int?>("OrderID")
                         .HasColumnType("int");
 
-                    b.Property<string>("ShippingAddress")
+                    b.Property<string>("PickUpAddress")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("RequestID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserID")
+                        .HasColumnType("int");
 
                     b.HasKey("DispatchID");
 

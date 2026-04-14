@@ -105,11 +105,6 @@ const Header = () => {
                   Contacts
               </Link>
             </li> 
-            <li>
-              <Link className="nav-link" to="/gallery">
-                  Gallery
-              </Link>
-            </li> 
           </ul>
         </li>
       </ul>

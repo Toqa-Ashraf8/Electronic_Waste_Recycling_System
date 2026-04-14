@@ -202,6 +202,9 @@
      background-color: var(--primary-color); 
      color: #fff; 
 }
+.badge-condition-hud{
+    margin-left:250px;
+}
 
 .table-wrapper-scroll {
      max-height: 400px; 

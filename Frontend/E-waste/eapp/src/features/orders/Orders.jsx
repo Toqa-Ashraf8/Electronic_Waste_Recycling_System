@@ -15,23 +15,27 @@ import {
   toggleOrdersImgModal,
   toggleRejectReqModal,
 } from "../../redux/orders/ordersSlice";
-import DeliveryDetailsModal from "../../components/modals/DeliveryDetailsModal";
 import { variables } from "../../components/variables";
 import ConfirmRequestModal from "./modals/ConfirmRequestModal";
 import RejectRequestModal from "./modals/RejectRequestModal";
 import { CompletedOrdersTable } from "./CompletedOrdersTable";
 import { RejectedOrdersTable } from "./RejectedOrdersTable";
 import { PendingOrdersTable } from "./PendingOrdersTable";
+import DeliveryDetailsModal from "./modals/DeliveryDetailsModal";
+import ConfirmRecievingModal from "./modals/ConfirmRecievingModal";
+import SendPointsModal from "./modals/SendPointsModal";
 const Orders = () => {
     const [view, setView] = useState("pending");
     const {
       requests,
       isOrdersImgsModalOpen,
-      isOrdersAddressModalOpen,
       isConfirmOrderModalOpen,
       isRejectOrderModalOpen,
       ordersList,
-      rejectedList
+      rejectedList,
+      isCourierModalOpen,
+      isConfirmRecieveModal,
+      isSendPointsModalOpen
 }=useSelector((state)=>state.orders);
     const dispatch=useDispatch();
    
@@ -52,7 +56,7 @@ const handleOrderReject=(index)=>{
 }
 
 const completedOrders=()=>{
-  setView("completed");
+  setView("history");
   dispatch(fetchOrders());
 }
 const rejectedOrders=()=>{
@@ -60,23 +64,18 @@ const rejectedOrders=()=>{
   dispatch(fetchRejectedOrders());
 }
 
-
 useEffect(() => {
-  const loadData=async()=>{
-      await Promise.all([
-        dispatch(fetchRequests()).unwrap(),
-      ]);
-  }
-  loadData();
-}, [dispatch]);
-
+   dispatch(fetchRequests());
+},[dispatch]);
 
   return (
     <div className="orders-manager-container">
       {isOrdersImgsModalOpen && <OrderDetailsModal/>}
-      {isOrdersAddressModalOpen && <DeliveryDetailsModal/>}
       {isConfirmOrderModalOpen && <ConfirmRequestModal/>}
       {isRejectOrderModalOpen && <RejectRequestModal/>}
+      {isCourierModalOpen && <DeliveryDetailsModal/>}
+      {isConfirmRecieveModal && <ConfirmRecievingModal/>}
+      {isSendPointsModalOpen && <SendPointsModal/>}
       <div className="orders-header">
         <h2 className="title-modern">Order 
             <span className="highlight">Workflow</span>
@@ -88,15 +87,15 @@ useEffect(() => {
             <FaClock /> Active Orders
           </button>
           <button 
-          className={`btn-toggle ${view === "completed" ? "active" : ""}`} 
+          className={`btn-toggle ${view === "history" ? "active" : ""}`} 
           onClick={() => completedOrders()}>
-            <FaHistory /> Completed Log
+            <FaHistory /> History Log
           </button>
             <button className={`btn-toggle ${view === "rejected" ? "active" : ""}`} 
             onClick={() => rejectedOrders()}
             >
             <FaHistory /> 
-            Rejected Log
+            Rejected 
           </button>
         </div>
       </div>
@@ -110,7 +109,7 @@ useEffect(() => {
         />
       }
 
-     {view==="completed" && 
+     {view==="history" && 
         <CompletedOrdersTable 
         ordersList={ordersList} 
         zoomDeviceImage={zoomDeviceImage} 

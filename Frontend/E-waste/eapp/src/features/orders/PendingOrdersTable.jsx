@@ -18,7 +18,7 @@ export const PendingOrdersTable=({handleOrderApprove,handleOrderReject,variables
                 </tr>
                 </thead>
                 <tbody>
-            {requests && requests.map((req,index)=>
+                {requests.length>0 ?( requests.map((req,index)=>
                     <tr key={req.RequestID || index}>
                     <td>{req.RequestID}</td>
                     <td><strong>{req.UserName}</strong></td>
@@ -110,7 +110,13 @@ export const PendingOrdersTable=({handleOrderApprove,handleOrderReject,variables
                         </div>
                         </td>
                     </tr>
-                    )}
+                   )) :(
+                  <tr>
+                    <td colSpan={9} className="empty-msg">
+                      No Pending Orders 
+                    </td>
+                  </tr>
+                )}
                 </tbody>
             </table>
     </div>

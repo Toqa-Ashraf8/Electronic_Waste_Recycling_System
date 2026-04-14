@@ -22,4 +22,23 @@ export const fetchRejectedOrders=createAsyncThunk("fetchRejectedOrders/orders",a
     .then((res)=>res.data);
     return resp;
 })
-
+export const saveDispatch=createAsyncThunk("saveDispatch/orders",async(params)=>{
+    const resp=await axios.post(variables.ORDERS_API+"SaveDispatchInformation",params)
+    .then((res)=>res.data);
+    return resp;
+})
+export const getRequestWithDispatches=createAsyncThunk("getRequestWithDispatches/orders",async(reqId)=>{
+    const resp=await axios.post(variables.ORDERS_API+"GetDispatchInformation?requestId="+reqId)
+    .then((res)=>res.data);
+    return resp;
+})
+export const recieveOK=createAsyncThunk("recieveOK/orders",async(params)=>{
+    const resp=await axios.post(variables.ORDERS_API+"RecieveOrder",params)
+    .then((res)=>res.data);
+    return resp;
+})
+export const sendPoints=createAsyncThunk("sendPoints/orders",async(params)=>{
+    const resp=await axios.post(variables.ORDERS_API+"SendPoints",params)
+    .then((res)=>res.data);
+    return resp;
+})

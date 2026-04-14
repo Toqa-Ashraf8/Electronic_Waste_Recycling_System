@@ -3,7 +3,11 @@ import {
     fetchOrders, 
     fetchRejectedOrders, 
     fetchRequests, 
-    saveOrders 
+    getRequestWithDispatches, 
+    recieveOK, 
+    saveDispatch, 
+    saveOrders, 
+    sendPoints,
 } from "../../services/ordersService";
 
 const initialState={
@@ -14,13 +18,23 @@ const initialState={
     },
     requests:[],
     isOrdersImgsModalOpen:false,
-    isOrdersAddressModalOpen:false,
     isConfirmOrderModalOpen:false,
     requestDeviceImg:"",
     isRejectOrderModalOpen:false,
     rowReqID:-1,
     ordersList:[],
-    rejectedList:[]
+    rejectedList:[],
+    isCourierModalOpen:false,
+    dispatchData:{
+        CourierName:"-1",
+        CourierPhone:"",
+        ArrivalTime:"", 
+        CreatedAt:new Date().toISOString()
+    },
+    selectedCourier:[],
+    isConfirmRecieveModal:false,
+    isSendPointsModalOpen:false,
+    orderDetail:{}
 }
 const ordersSlice=createSlice({
     name:"orders",
@@ -28,9 +42,6 @@ const ordersSlice=createSlice({
     reducers:{
         toggleOrdersImgModal:(state,action)=>{
             state.isOrdersImgsModalOpen=action.payload;
-        },
-        toggleOrdersAdrModal:(state,action)=>{
-            state.isOrdersAddressModalOpen=action.payload;
         },
         toggleconfirmReqModal:(state,action)=>{
             state.isConfirmOrderModalOpen=action.payload;
@@ -42,7 +53,6 @@ const ordersSlice=createSlice({
             if(state.ordersList.length>0){
              state.requestDeviceImg=state.ordersList[action.payload].DeviceImagePath;
             }
-            
         },
         setOrder:(state,action)=>{
             state.rowReqID=action.payload.reqId;
@@ -59,7 +69,29 @@ const ordersSlice=createSlice({
         },
         setRejectNote:(state,action)=>{
             state.order={...state.order,...action.payload};
+        },
+        toggleCourierModal:(state,action)=>{
+            state.isCourierModalOpen=action.payload;
+            
+        },
+        setDispatchData:(state,action)=>{
+            state.dispatchData={...state.dispatchData,...action.payload};
+        },
+        resetDipatchModal:(state,action)=>{
+             state.dispatchData.CourierName="-1";
+             state.dispatchData.CourierPhone="";
+             state.dispatchData.ArrivalTime="";
+        },
+         toggleConfirmRecieveModal:(state,action)=>{
+            state.isConfirmRecieveModal=action.payload;
+        },
+         toggleSendPointsModal:(state,action)=>{
+            state.isSendPointsModalOpen=action.payload;
+        },
+        setOrderDetails:(state,action)=>{
+            state.orderDetail=action.payload;
         }
+        
 },
     extraReducers:(builder)=>{
         builder
@@ -78,17 +110,35 @@ const ordersSlice=createSlice({
         })
         .addCase(fetchRejectedOrders.fulfilled,(state,action)=>{
             state.rejectedList=action.payload;
+        }) 
+        .addCase(saveDispatch.fulfilled,(state,action)=>{
+            state.isCourierModalOpen=false;
+        })
+        .addCase(getRequestWithDispatches.fulfilled,(state,action)=>{
+            state.selectedCourier=action.payload;
+        })
+        .addCase(recieveOK.fulfilled,(state,action)=>{
+            state.isConfirmRecieveModal=false;
+        }) 
+        .addCase(sendPoints.fulfilled,(state,action)=>{
+            state.isSendPointsModalOpen=false;
+            
         })
     }
 })
 export const{
     setOrder,
     toggleOrdersImgModal,
-    toggleOrdersAdrModal,
     toggleconfirmReqModal,
     setImageRowIndex,
     toggleRejectReqModal,
-    setRejectNote
+    setRejectNote,
+    toggleCourierModal,
+    setDispatchData,
+    resetDipatchModal,
+    toggleConfirmRecieveModal,
+    toggleSendPointsModal,
+    setOrderDetails
 }=ordersSlice.actions;
 const orderReducer=ordersSlice.reducer;
 export default orderReducer;

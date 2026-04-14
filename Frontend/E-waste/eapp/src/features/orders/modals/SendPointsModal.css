@@ -1,0 +1,97 @@
+/* الأوفرلاي */
+.top-modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(15, 23, 42, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* بيطلع من فوق */
+    padding-top: 50px; /* مسافة من سقف الشاشة */
+    z-index: 200000;
+    
+}
+
+/* الكارت */
+.send-points-card {
+    background: white;
+    width: 400px;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    border: 2px solid #e2e8f0;
+    animation: slideDown 0.4s cubic-bezier(0.17, 0.04, 0.03, 0.94);
+}
+
+/* الأيقونة والعنوان جنب بعض */
+.send-points-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.coin-icon {
+    font-size: 1.8rem;
+    background: #fef3c7;
+    width: 45px; height: 45px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 12px;
+}
+
+.send-points-header h4 {
+    margin: 0;
+    color: #1e293b;
+    font-size: 1.25rem;
+    font-weight: 800;
+}
+
+/* المحتوى */
+.send-points-body p {
+    color: #64748b;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0 0 20px 0;
+}
+
+.send-points-body strong {
+    color: #d97706; /* لون ذهبي للبوينتات */
+}
+
+/* الأزرار */
+.send-points-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.send-points-actions button {
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: 0.2s;
+}
+
+.btn-no {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.btn-yes-send {
+    background: #d97706; /* Amber color */
+    color: white;
+    box-shadow: 0 4px 10px rgba(217, 119, 6, 0.2);
+}
+
+.btn-yes-send:hover {
+    background: #b45309;
+    transform: translateY(-2px);
+}
+
+/* أنيميشن النزول من فوق */
+@keyframes slideDown {
+    from { transform: translateY(-100px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}

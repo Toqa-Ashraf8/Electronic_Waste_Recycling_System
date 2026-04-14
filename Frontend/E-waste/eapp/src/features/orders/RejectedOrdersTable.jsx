@@ -19,7 +19,7 @@ export const RejectedOrdersTable = ({ rejectedList, zoomDeviceImage, variables }
           </tr>
         </thead>
         <tbody>
-          {rejectedList && rejectedList.map((order, index) => (
+          {rejectedList.length>0 ?  (rejectedList.map((order, index) => (
             <tr key={order.RequestID || index}>
               <td>{order.RequestID}</td>
               <td><strong>{order.UserName}</strong></td>
@@ -77,7 +77,13 @@ export const RejectedOrdersTable = ({ rejectedList, zoomDeviceImage, variables }
                 </div>
               </td>
             </tr>
-          ))}
+          ))):(
+             <tr>
+                  <td colSpan={9} className="empty-msg">
+                      No Rejected Orders 
+                    </td>
+                  </tr>
+                )}
         </tbody>
       </table>
     </div>
