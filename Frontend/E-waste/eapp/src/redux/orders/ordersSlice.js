@@ -1,27 +1,31 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchRequests } from "../../services/ordersService";
+import { 
+    fetchOrders, 
+    fetchRejectedOrders, 
+    fetchRequests, 
+    saveOrders 
+} from "../../services/ordersService";
 
 const initialState={
     order:{
-        RequestID:0,
-        UserID:0,
-        OrderStatus:-1,
+        OrderStatus:0,
         CheckDate:new Date().toISOString(),
         Notes:"",
-},
+    },
     requests:[],
     isOrdersImgsModalOpen:false,
     isOrdersAddressModalOpen:false,
     isConfirmOrderModalOpen:false,
     requestDeviceImg:"",
+    isRejectOrderModalOpen:false,
+    rowReqID:-1,
+    ordersList:[],
+    rejectedList:[]
 }
 const ordersSlice=createSlice({
     name:"orders",
     initialState,
     reducers:{
-        setOrder:(state,action)=>{
-            state.order={...state.order,...action.payload};
-        },
         toggleOrdersImgModal:(state,action)=>{
             state.isOrdersImgsModalOpen=action.payload;
         },
@@ -32,13 +36,48 @@ const ordersSlice=createSlice({
             state.isConfirmOrderModalOpen=action.payload;
         },
         setImageRowIndex:(state,action)=>{
-            state.requestDeviceImg=state.requests[action.payload].DeviceImagePath;
+            if(state.requests.length>0){
+                 state.requestDeviceImg=state.requests[action.payload].DeviceImagePath;
+            }
+            if(state.ordersList.length>0){
+             state.requestDeviceImg=state.ordersList[action.payload].DeviceImagePath;
+            }
+            
+        },
+        setOrder:(state,action)=>{
+            state.rowReqID=action.payload.reqId;
+            state.order={...state.order,...action.payload.orderRow};
+            if(action.payload.Action==="Approve"){
+                state.order.OrderStatus=1;
+            }
+            else if(action.payload.Action==="Reject"){
+                state.order.OrderStatus=2;
+            }
+        },
+        toggleRejectReqModal:(state,action)=>{
+            state.isRejectOrderModalOpen=action.payload;
+        },
+        setRejectNote:(state,action)=>{
+            state.order={...state.order,...action.payload};
         }
-    },
+},
     extraReducers:(builder)=>{
         builder
         .addCase(fetchRequests.fulfilled,(state,action)=>{
             state.requests=action.payload;
+        })
+        .addCase(saveOrders.fulfilled,(state,action)=>{
+            if(action.payload.saved===true){
+             state.isConfirmOrderModalOpen=false;
+             state.isRejectOrderModalOpen=false;
+             state.requests=state.requests.filter(req=>req.RequestID!==state.rowReqID);
+            }
+        })
+        .addCase(fetchOrders.fulfilled,(state,action)=>{
+            state.ordersList=action.payload;
+        })
+        .addCase(fetchRejectedOrders.fulfilled,(state,action)=>{
+            state.rejectedList=action.payload;
         })
     }
 })
@@ -47,7 +86,9 @@ export const{
     toggleOrdersImgModal,
     toggleOrdersAdrModal,
     toggleconfirmReqModal,
-    setImageRowIndex
+    setImageRowIndex,
+    toggleRejectReqModal,
+    setRejectNote
 }=ordersSlice.actions;
 const orderReducer=ordersSlice.reducer;
 export default orderReducer;

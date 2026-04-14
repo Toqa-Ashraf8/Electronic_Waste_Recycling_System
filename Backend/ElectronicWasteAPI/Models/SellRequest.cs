@@ -27,5 +27,6 @@ namespace ElectronicWasteAPI.Models
         public int? RequestStatus { get; set; }
         [ForeignKey("UserID")]
         public int? UserID { get; set; }
+        public List<Orders> orders { get; set; }
     }
 }
