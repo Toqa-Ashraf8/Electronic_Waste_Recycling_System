@@ -12,9 +12,9 @@ const SendPointsModal = () => {
     try {
         const result=await dispatch(sendPoints(orderDetail)).unwrap();
         if(result.done){
-        toast.success(`Points sent successfully! Order ${orderDetail.OrderID} is now completed`,{
+        toast.success(`Points sent ! Order ${orderDetail.OrderID} is now completed`,{
                 theme:'colored',
-                position:'top-right'
+                position:'top-right',
         })
         dispatch(fetchOrders());
         }

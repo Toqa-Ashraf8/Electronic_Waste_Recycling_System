@@ -3,6 +3,8 @@ export const variables={
     CATEGORY_API:"https://localhost:7289/api/Categories/",
     SELLREQUESTS_API:"https://localhost:7289/api/SellRequests/",    
     ORDERS_API:"https://localhost:7289/api/Orders/",
+    CART_API:"https://localhost:7289/api/Cart/",
     USERIMG_API:"https://localhost:7289/user_Images/",
-    DEVICEIMG_API:"https://localhost:7289/Devices_Images/"
+    DEVICEIMG_API:"https://localhost:7289/Devices_Images/",
+    PRODUCTIMG_API:"https://localhost:7289/Products_Images/"
 }

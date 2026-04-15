@@ -7,7 +7,7 @@ const Header = () => {
     <div>
   <nav className="navbar navbar-expand-lg navbar-light ">
   <div className="container-fluid">
-    <Link className="navbar-brand" to="#">
+    <Link className="navbar-brand" to="/home">
       <img src={logo} alt="" width={50} height={50} />
     </Link>
     <button
@@ -86,7 +86,7 @@ const Header = () => {
               </Link>
             </li>
             <li>
-              <Link className="nav-link" to="#">
+              <Link className="nav-link" to="/cartItems">
                Cart Items
               </Link>
             </li>

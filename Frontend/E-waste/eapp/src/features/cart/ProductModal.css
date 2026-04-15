@@ -1,0 +1,200 @@
+
+.modalp {
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    display: flex;
+    align-items: center; 
+    justify-content: center;
+    overflow-y: auto; 
+}
+
+.modalcntp {
+    width: 90%;
+    max-width: 850px; 
+    height: auto;
+    background-color: #f0f0f0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    animation: zzoom 0.4s ease-out;
+    margin: auto; 
+}
+
+@keyframes zzoom {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+.headerp h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    flex-grow: 1;
+    text-align: center;
+}
+.btnp_close {
+    font-size: 30px;
+    cursor: pointer;
+    line-height: 1;
+    margin-top: 7px;
+}
+.headerp_title{
+margin-left: -2%!important;
+}
+.btnp_close:hover { color: #ff4d4d; }
+
+.headerp, .footerp {
+    height: 60px;
+    background-color: teal;
+    padding: 10px 25px;
+    color: #fff;
+  
+}
+.headerp{
+    display: flex;
+    justify-content: space-between;
+}
+
+.bodyp {
+    padding: 30px !important;
+}
+
+.pData {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    gap: 10px;
+}
+
+.lblProduct {
+    width: 130px;
+    flex-shrink: 0;
+    font-size: 0.9rem;
+}
+
+.inpProduct {
+    flex: 1;
+    width: 100% !important;
+}
+
+
+.productimg_container {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border: 2px dashed #008080;
+    border-radius: 12px;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 5px;
+}
+
+.productimg_container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+
+@media (max-width: 500px) {
+    .modalp {
+        align-items: flex-start;
+        padding: 20px 0;
+    }
+
+    .bodyp {
+        padding: 20px !important;
+        overflow: visible !important; 
+    }
+
+
+    .bodyp .row {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .col-7, .col-5 {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .pData {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 20px;
+    }
+
+    .lblProduct {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .productimg_container {
+        margin-top: 20px;
+        width: 100%; 
+    }
+}
+.btn-upload-modern {
+    background-color: #fff;
+    border: 1.5px solid teal;
+    color: teal;
+    padding: 8px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 128, 128, 0.05);
+}
+
+.btn-upload-modern:hover {
+    background-color: teal;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 128, 128, 0.15);
+}
+
+.btn-upload-modern:active {
+    transform: translateY(0);
+}
+.custom-file-label-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background: #f8fafc;
+    border: 2px dashed #cbd5e1;
+    border-radius: 16px;
+    color: #64748b;
+    font-weight: 600;
+    cursor: pointer;
+    flex: 1;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.custom-file-label-btn:hover {
+    background: #f1f5f9;
+    border-color: teal;
+    color: teal;
+}
+
+
+.custom-file-label-btn:hover  {
+    color: teal;
+}
+
+@media (max-width: 500px) {
+    .custom-file-label-btn {
+        width: 100%;
+    }
+}

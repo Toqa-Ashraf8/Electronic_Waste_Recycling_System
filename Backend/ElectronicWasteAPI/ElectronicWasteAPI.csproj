@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <Folder Include="Devices_Images\" />
+    <Folder Include="Products_Images\" />
     <Folder Include="user_Images\" />
   </ItemGroup>
 

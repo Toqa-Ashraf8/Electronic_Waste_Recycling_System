@@ -2,6 +2,7 @@ import React from 'react';
 import { FaStar, FaExclamationTriangle } from 'react-icons/fa';
 
 export const RejectedOrdersTable = ({ rejectedList, zoomDeviceImage, variables }) => {
+  
   return (
     <div className="table-responsive">
       <table className="bootstrap-table">
@@ -37,7 +38,7 @@ export const RejectedOrdersTable = ({ rejectedList, zoomDeviceImage, variables }
                 </div>
               </td>
               <td>
-                <div className="img-container" onClick={() => zoomDeviceImage(index)}>
+                <div className="img-container" onClick={() => zoomDeviceImage(index,"rejecting")}>
                   <img 
                     src={variables.DEVICEIMG_API + order.DeviceImagePath} 
                     alt="" 

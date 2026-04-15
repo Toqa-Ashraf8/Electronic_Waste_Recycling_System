@@ -63,7 +63,7 @@ const sendPoints=(order)=>{
                 </div>
               </td>
               <td>
-                <div className="img-container" onClick={() => zoomDeviceImage(index)}>
+                <div className="img-container" onClick={() => zoomDeviceImage(index,"inprocess")}>
                   <img src={variables.DEVICEIMG_API + order.DeviceImagePath} alt="" className="dev-img" />
                 </div>
               </td>
@@ -103,14 +103,12 @@ const sendPoints=(order)=>{
                     <FaCoins /> <span>Send Points</span>
                   </button>
                 )}
-                {order.OrderStatus === 5 && (
-                  <div className="points-sent-indicator">
-                      <div className="check-circle-icon">
-                          <FaCheck />
-                      </div>
-                      <span className="sent-text">Points Rewarded</span>
-                  </div>
-              )}
+               {order.OrderStatus === 5 && (
+                <div className="rewarded-pill">
+                    <FaStar className="rewarded-icon" color="#fbff03" />
+                    <span className="rewarded-text">Points Sent</span>
+                </div>
+            )}
               </td>
             </tr>
           ))}

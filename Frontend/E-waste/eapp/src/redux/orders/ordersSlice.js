@@ -47,11 +47,14 @@ const ordersSlice=createSlice({
             state.isConfirmOrderModalOpen=action.payload;
         },
         setImageRowIndex:(state,action)=>{
-            if(state.requests.length>0){
-                 state.requestDeviceImg=state.requests[action.payload].DeviceImagePath;
+            if(action.payload.status==="pending"){
+                 state.requestDeviceImg=state.requests[action.payload.index].DeviceImagePath;
             }
-            if(state.ordersList.length>0){
-             state.requestDeviceImg=state.ordersList[action.payload].DeviceImagePath;
+            if(action.payload.status==="inprocess"){
+             state.requestDeviceImg=state.ordersList[action.payload.index].DeviceImagePath;
+            }
+            if(action.payload.status==="rejecting"){
+                state.requestDeviceImg=state.rejectedList[action.payload.index].DeviceImagePath;
             }
         },
         setOrder:(state,action)=>{

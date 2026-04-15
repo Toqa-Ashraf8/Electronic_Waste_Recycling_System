@@ -14,6 +14,8 @@ namespace ElectronicWasteAPI.EF
             public DbSet<Qualities> Qualities { get; set; }
             public DbSet<Orders> Orders { get; set; }
             public DbSet<OrderDispatches> OrderDispatches { get; set; }
+            public DbSet<CartCategory> CartCategories { get; set; }
+            public DbSet<ProductsCart> Products { get; set; }
 
     }
 }

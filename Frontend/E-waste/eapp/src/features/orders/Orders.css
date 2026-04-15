@@ -310,3 +310,25 @@
   overflow: hidden;
   text-overflow: ellipsis; 
 }
+.rewarded-pill {
+    display: inline-flex;
+    align-items: center;   
+    gap: 6px;             
+    background: #f0fdf4;    
+    padding: 4px 10px;     
+    border-radius: 6px;     
+    border: 1px solid #bbf7d0;
+    width: fit-content;    
+    margin: 0 auto;        
+}
+
+.rewarded-icon {     
+    flex-shrink: 0;        
+}
+
+.rewarded-text {
+    color: #166534;         
+    font-size: 0.85rem;     
+    font-weight: 800;      
+    white-space: nowrap;  
+}

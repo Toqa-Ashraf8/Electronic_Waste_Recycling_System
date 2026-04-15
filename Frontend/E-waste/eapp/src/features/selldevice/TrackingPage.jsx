@@ -67,21 +67,15 @@ const TrackingPage = () => {
                                     </div>
                                 )}
                             </td>
-
-                            {/* عمود العمليات (Action/Notes) */}
-                            <td className="action-column">
-                                {/* الحالة 0: انتظار */}
+                            <td className="action-column"> 
                                 {req.RequestStatus === 0 && (
                                     <span className="waiting-text">Awaiting decision</span>
                                 )}
-
-                                {/* الحالة 1: مقبول (عرض المندوب + تأكيد الاستلام) */}
                                 {req.RequestStatus === 1 && (
                                     <div className="action-buttons-gap">
                                         <button className="btn-courier-action" onClick={() => handleViewCourier(req.RequestID)}>
                                             <FiTruck /> Courier
-                                        </button>
-                                       
+                                        </button> 
                                     </div>
                                 )}
                                 {req.RequestStatus === 2 && (
@@ -94,7 +88,7 @@ const TrackingPage = () => {
                                         <FiClock className="pulse-icon" />
                                         <div className="points-text">
                                             <strong>Received!</strong>
-                                            <span>Points pending admin review...</span>
+                                            <span>Points pending admin review</span>
                                         </div>
                                     </div>
                                 )}

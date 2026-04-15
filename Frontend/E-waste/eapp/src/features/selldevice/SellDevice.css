@@ -123,8 +123,8 @@
 }
 
 .qualityinp {
-    margin-left: 10px;
-    width: 400px!important;
+    position: relative;
+    width: 200px!important;
 }
 
 
@@ -203,9 +203,11 @@
      color: #fff; 
 }
 .badge-condition-hud{
-    margin-left:250px;
+    position: absolute;
+    left:35%;
+    margin-top: -10px;
+  
 }
-
 .table-wrapper-scroll {
      max-height: 400px; 
     overflow-x: auto; 

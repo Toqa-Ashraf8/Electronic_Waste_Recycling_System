@@ -1,9 +1,14 @@
 import React, { useEffect, useRef } from 'react'
 import './ItemsModal.css'
 import { useDispatch, useSelector } from 'react-redux'
-import { setFormMode, setItemValues, setQualityAutomatically, toggleCategoryModal } from '../../redux/categories/categorySlice';
+import { 
+  setFormMode, 
+  setItemValues, 
+  setQualityAutomatically, 
+  toggleCategoryModal 
+} from '../../redux/categories/categorySlice';
 const ItemsModal = () => {
-  const {item,rowIndex}=useSelector((state)=>state.category);
+  const {item}=useSelector((state)=>state.category);
   const dispatch=useDispatch();
   const nameRef=useRef(); 
   const priceRef=useRef();

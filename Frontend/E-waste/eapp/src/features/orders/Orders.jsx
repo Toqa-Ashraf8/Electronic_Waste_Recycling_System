@@ -39,8 +39,8 @@ const Orders = () => {
 }=useSelector((state)=>state.orders);
     const dispatch=useDispatch();
    
-const zoomDeviceImage=(index)=>{
-  dispatch(setImageRowIndex(index));
+const zoomDeviceImage=(index,status)=>{
+  dispatch(setImageRowIndex({ index: index, status: status }));
   dispatch(toggleOrdersImgModal(true));
 }
 const handleOrderApprove=(index)=>{
