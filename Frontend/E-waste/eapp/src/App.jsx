@@ -17,6 +17,8 @@ import Orders from './features/orders/Orders';
 import FindUs from './features/branches/FindUs';
 import ContactUs from './features/contact/ContactUs';
 import CartItems from './features/cart/CartItems';
+import TechStore from './features/techstore/TechStore';
+import PaymentPage from './features/techstore/PaymentPage';
 function App() {
  const {globalError,globalMessage}=useSelector((state)=>state.ui);
  const {token}=useSelector((state)=>state.auth);
@@ -97,9 +99,21 @@ useEffect(() => {
                   </ProtectedRoute>
                 }/>
                   <Route path='/cartItems' 
-                element={
+                 element={
                   <ProtectedRoute>
                     <CartItems/>
+                  </ProtectedRoute>
+                }/>
+                  <Route path='/store' 
+                 element={
+                  <ProtectedRoute>
+                    <TechStore/>
+                  </ProtectedRoute>
+                }/>
+                  <Route path='/payment' 
+                 element={
+                  <ProtectedRoute>
+                    <PaymentPage/>
                   </ProtectedRoute>
                 }/>
                

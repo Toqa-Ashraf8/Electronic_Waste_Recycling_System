@@ -4,11 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaRecycle, FaGift, FaMoneyBillWave, FaLeaf } from "react-icons/fa";
 import { 
   Save, 
-  BrushCleaning, 
-  Search, 
   Trash ,
   PackagePlus , 
-  LayoutDashboard,
   ListTree  
 } from 'lucide-react';
 import { BsFillSendFill } from "react-icons/bs";
@@ -43,7 +40,8 @@ import {
 } from "../../services/sellingService";
 import { variables } from "../../components/variables";
 import { toast } from "react-toastify";
-import DeleteRequestModal from "../../components/modals/DeleteRequestModal";
+import DeleteRequestModal from "./modals/DeleteRequestModal";
+
 
 function SellDevice() {
   const { categories, itemsList } = useSelector((state) => state.category);  

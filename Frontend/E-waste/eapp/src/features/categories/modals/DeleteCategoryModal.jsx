@@ -2,9 +2,9 @@ import React from 'react';
 import { FiAlertTriangle } from 'react-icons/fi';
 import './DeleteCategoryModal.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { resetCategoryForm, toggleDeleteCatModal } from '../../redux/categories/categorySlice';
-import { deleteCategory } from '../../services/categoryService';
 import { toast } from 'react-toastify';
+import { deleteCategory } from '../../../services/categoryService';
+import { resetCategoryForm, toggleDeleteCatModal } from '../../../redux/categories/categorySlice';
 
 const DeleteCategoryModal = () => {
     const {category}=useSelector((state)=>state.category);

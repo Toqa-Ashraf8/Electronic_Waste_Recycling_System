@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import { FiX } from 'react-icons/fi';
 import './CategorySearchModal.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { fillCategoryForm, toggleSearchModal } from '../../redux/categories/categorySlice';
-import { fetchCategories, fetchItems } from '../../services/categoryService';
+import { fillCategoryForm, toggleSearchModal } from '../../../redux/categories/categorySlice';
+import { fetchCategories, fetchItems } from '../../../services/categoryService';
 
 const CategorySearchModal = () => {
 const {categories}=useSelector((state)=>state.category);

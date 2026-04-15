@@ -1,0 +1,80 @@
+
+.cart-del-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5000;
+}
+.cart-del-card {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 380px;
+    text-align: center;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+.cart-del-icon-box {
+    font-size: 3.2rem;
+    color: #ef4444; 
+    margin-bottom: 15px;
+}
+.cart-del-title {
+    font-family: 'Exo 2', sans-serif !important;
+    color: #1e293b;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+.cart-del-text {
+    color: #64748b;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+.cart-del-text strong {
+    color: #ef4444;
+}
+.cart-del-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+.cart-del-btn-cancel {
+    background: #f1f5f9;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 10px;
+    color: #64748b;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.cart-del-btn-cancel:hover {
+    background: #e2e8f0;
+}
+.cart-del-btn-confirm {
+    background: #ef4444;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 10px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.cart-del-btn-confirm:hover {
+    background: #dc2626;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+.animate__zoomIn {
+    animation-duration: 0.5s;
+}

@@ -1,12 +1,32 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { saveProductImage } from "../../services/cartService";
+import { 
+    deleteAll,
+    fetchCartCategories, 
+    fetchProducts, 
+    saveProductImage, 
+    saveProducts 
+} from "../../services/cartService";
 
 const initialState={
-    category:{},
-    product:{},
+    category:{CategoryID:0,CategoryName:""},
+    product:{
+        serial:0,
+        ProductName:"",
+        ProductPrice:0,
+        Stock:0,
+        Points:0,
+        Description:"",
+        ProductImagePath:""
+    },
     productsList:[],
     isProductModalOpen:false,
     productImg:"",
+    rowIndex:-1,
+    isDeleteProModalOpen:false,
+    categoriesList:[],
+    isSearchModalOpen:false,
+    isDeleteAllModalOpen:false,
+    selectedCategoryId:-1,
 }
 const cartSlice=createSlice({
     name:'cart',
@@ -22,16 +42,72 @@ const cartSlice=createSlice({
             state.isProductModalOpen=action.payload;
         },
         addNewItem:(state,action)=>{
+            state.rowIndex=-1;
             state.isProductModalOpen=true;
-            state.product={};
+            state.product=initialState.product;
             state.productImg="";
-            state.product.serial=action.payload;
-        }
+            state.product={...state.product,serial:action.payload};
+        },
+        setProductList:(state,action)=>{   
+            if(state.rowIndex===-1){
+                state.productsList=[...state.productsList,state.product];
+            }
+            else{
+               state.productsList[state.rowIndex]=state.product;
+            } 
+            state.isProductModalOpen=false;
+        },
+        resetForm:(state,action)=>{
+            state.category=initialState.category;
+            state.productsList=[];
+        },
+        editProductRow:(state,action)=>{
+             state.rowIndex=action.payload;
+             state.product=state.productsList[state.rowIndex]
+             state.productImg=state.productsList[state.rowIndex].ProductImagePath;
+             state.isProductModalOpen=true;
+        },
+        toggleDeleteProductModal:(state,action)=>{
+            state.isDeleteProModalOpen=action.payload;
+        },
+       setDeleteProductIndex:(state,action)=>{
+             state.rowIndex=action.payload;
+             state.isDeleteProModalOpen=true;
+        },
+        deleteProductRow:(state,action)=>{
+            state.productsList=state.productsList.filter((p,index)=>index!==state.rowIndex);
+            state.isDeleteProModalOpen=false;
+        },
+        toggleSearchModal:(state,action)=>{
+            state.isSearchModalOpen=action.payload;
+        },
+        setCategoryWithProducts:(state,action)=>{
+            state.category=state.categoriesList[action.payload.index];
+            state.isSearchModalOpen=false;
+            state.selectedCategoryId=action.payload.id;
+        },
+        toggleDeleteAllModal:(state,action)=>{
+            state.isDeleteAllModalOpen=action.payload;
+        },
     },
     extraReducers:(builder)=>{
         builder
         .addCase(saveProductImage.fulfilled,(state,action)=>{
             state.productImg=action.payload;
+        }) 
+        .addCase(saveProducts.fulfilled,(state,action)=>{
+            state.category.CategoryID=action.payload.id;
+        })
+        .addCase(fetchCartCategories.fulfilled,(state,action)=>{
+            state.categoriesList=action.payload;
+        })
+        .addCase(fetchProducts.fulfilled,(state,action)=>{
+            state.productsList=action.payload;
+        })
+        .addCase(deleteAll.fulfilled,(state,action)=>{
+            state.isDeleteAllModalOpen=false;
+            state.category=initialState.category;
+            state.productsList=[];
         })
     }
 })
@@ -39,7 +115,17 @@ export const{
     setCategory,
     toggleProductModal,
     setProduct,
-    addNewItem
+    addNewItem,
+    setProductList,
+    resetForm,
+    editProductRow,
+    toggleDeleteProductModal,
+    deleteProductRow,
+    setDeleteProductIndex,
+    toggleSearchModal,
+    setCategoryWithProducts,
+    toggleDeleteAllModal,
+    selectedDeletedCat
 }=cartSlice.actions;
 const cartReducer=cartSlice.reducer;
 export default cartReducer;

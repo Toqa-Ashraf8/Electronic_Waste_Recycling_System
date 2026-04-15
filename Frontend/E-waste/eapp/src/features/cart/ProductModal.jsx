@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import './ProductModal.css'
 import { useDispatch, useSelector } from 'react-redux'
-import { setProduct, toggleProductModal } from '../../redux/cart/cartSlice';
+import { setProduct, setProductList, toggleProductModal } from '../../redux/cart/cartSlice';
 import { saveProductImage } from '../../services/cartService';
 import { variables } from '../../components/variables';
 const ProductModal = () => {
@@ -27,10 +27,8 @@ const ProductModal = () => {
     dispatch(setProduct({[name]:value}));
    }
  useEffect(()=>{
-    if(productRef.current){
-        productRef.current.focus();
-    }
-  })
+    productRef.current.focus();
+  },[])
   console.log("product",product);
 return (
     <div>
@@ -56,7 +54,7 @@ return (
                                 className="form-control inpProduct"
                                 autoComplete='off'
                                 name='serial'
-                                value={product.serial || ""}
+                                value={product.serial}
                                 disabled
                                 />
                             </div>
@@ -151,6 +149,7 @@ return (
                      <button 
                      className='btn' 
                      style={{color:'#fff',backgroundColor:'#03071e'}}
+                     onClick={()=>dispatch(setProductList())}
                      >Add</button>
                      <button
                       className='btn btn-danger'

@@ -3,9 +3,8 @@ import { FiAlertTriangle } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';; 
 import './DeleteRequestModal.css';
-import { toggleDeleteReqModal } from '../../redux/selldevice/sellingSlice';
-import { removeRequest } from '../../services/sellingService';
-
+import { removeRequest } from '../../../services/sellingService';
+import { toggleDeleteReqModal } from '../../../redux/selldevice/sellingSlice';
 const DeleteRequestModal = () => {
     const {requestRowId}=useSelector((state)=>state.selldevice);
     const dispatch = useDispatch();

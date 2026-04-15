@@ -2,7 +2,7 @@ import React from 'react';
 import { FiTrash2, FiAlertCircle } from 'react-icons/fi'; 
 import './DeleteItemModal.css';
 import { useDispatch } from 'react-redux';
-import { deleteItem, toggleDeleteItemModal } from '../../redux/categories/categorySlice';
+import { deleteItem, toggleDeleteItemModal } from '../../../redux/categories/categorySlice'; 
 
 const DeleteItemModal = () => {
 const dispatch=useDispatch();

@@ -1,37 +1,90 @@
 import React, { useEffect, useRef } from "react";
-import { FiPlus, FiTrash2, FiEdit, FiShoppingCart } from "react-icons/fi";
+import { FiPlus, FiTrash2, FiEdit } from "react-icons/fi";
 import { Save, BrushCleaning, Search, Trash, ShoppingBag } from 'lucide-react';
 import './CartItems.css';
 import { useSelector, useDispatch } from 'react-redux';
 import ProductModal from "./ProductModal";
-import { addNewItem, toggleProductModal } from "../../redux/cart/cartSlice";
-
+import { 
+  addNewItem, 
+  editProductRow, 
+  resetForm, 
+  setCategory, 
+  setDeleteProductIndex, 
+  toggleDeleteAllModal, 
+  toggleSearchModal } from "../../redux/cart/cartSlice";
+import { variables } from "../../components/variables";
+import DeleteProductModal from "./modals/DeleteProductModal";
+import { saveProducts } from "../../services/cartService";
+import {toast} from 'react-toastify'
+import CartCategorySearch from "./modals/CartCategorySearch";
+import CartCategoryDeleteModal from "./modals/CartCategoryDeleteModal";
 function CartItems() {
-  const {isProductModalOpen,productsList}=useSelector((state)=>state.cart);
+  const {
+    isProductModalOpen,
+    productsList,
+    category,
+    isDeleteProModalOpen,
+    isSearchModalOpen,
+    isDeleteAllModalOpen,
+    selectedCategoryId
+  }=useSelector((state)=>state.cart);
   const dispatch = useDispatch();
   const cartIdRef = useRef();
   const cartTitleRef = useRef();
 
+const handleChange=(e)=>{
+  const {name,value}=e.target;
+  dispatch(setCategory({[name]:value}));
+}
+const handleAddNew=()=>{
+  dispatch(addNewItem((productsList.length + 1)));
+}
+const handleClear=()=>{
+  dispatch(resetForm());
+  cartTitleRef.current.focus();
+}
+const handleSave=async()=>{
+  const params={...category,products:productsList}
+   try {
+    const result=await dispatch(saveProducts(params)).unwrap();
+    if(result.saved){
+      toast.success("Data saved Successfully !",{
+        theme:"colored",
+        position:"top-right"
+      })
+    }
+    if(result.updated){
+      toast.success("Data updated Successfully !",{
+        theme:"colored",
+        position:"top-right"
+      })
+    }
+  } catch (error) {}
+}
+console.log("selectedCategoryId",selectedCategoryId)
   useEffect(() => {
-    if (cartTitleRef.current) cartTitleRef.current.focus();
+    if (cartTitleRef) cartTitleRef.current.focus();
   }, []);
   return (
     <div className="cart-page-container">
       {isProductModalOpen && <ProductModal/>}
+      {isDeleteProModalOpen && <DeleteProductModal/>}
+      {isSearchModalOpen && <CartCategorySearch/>}
+      {isDeleteAllModalOpen && <CartCategoryDeleteModal categoryId={selectedCategoryId}/>}
       <h5 className="cart-main-title"><ShoppingBag size={22} /> CART MANAGEMENT</h5>
       <div className="cart-card-wrapper animate__animated animate__fadeIn">
         <div className="cart-side-actions col">
-          <button className="btn cart-action-btn" title="Clear Form">
+          <button className="btn cart-action-btn" title="Clear Form" onClick={()=>handleClear()}>
             <BrushCleaning size={20} color="black" />
           </button>
-          <button className="btn cart-action-btn" title="Save Cart">
+          <button className="btn cart-action-btn" title="Save Cart" onClick={()=>handleSave()}>
             <Save size={20} color="green" />
           </button>
-          <button className="btn cart-action-btn" title="Delete All">
+          <button className="btn cart-action-btn" title="Delete" onClick={()=>dispatch(toggleDeleteAllModal(true))}>
             <Trash size={20} color="red" />
           </button>
-          <button className="btn cart-action-btn" title="Search">
-            <Search size={20} color="blue" />
+          <button className="btn cart-action-btn" title="Search" onClick={()=>dispatch(toggleSearchModal(true))}>
+            <Search size={20} color="blue"  />
           </button>
         </div>
 
@@ -42,8 +95,10 @@ function CartItems() {
               <input 
                 type="text" 
                 className="form-control cart-input-control"
+                name="CategoryID"
                 ref={cartIdRef}
-                readOnly
+                value={category.CategoryID || 0}
+                disabled
               />
             </div>
             <div className="cart-form-field">
@@ -51,9 +106,11 @@ function CartItems() {
               <input 
                 type="text" 
                 className="form-control cart-input-control"
-                name="CartDescription"
+                name="CategoryName"
                 autoComplete="off"
                 ref={cartTitleRef}
+                value={category.CategoryName || ""}
+                onChange={handleChange}
                 required
               />
             </div>
@@ -63,7 +120,7 @@ function CartItems() {
         <div className="cart-table-top">
           <button 
           className="cart-btn-primary"
-          onClick={()=>dispatch(addNewItem((productsList.length+1)))}
+          onClick={()=>handleAddNew()}
           >
             <FiPlus size={18} /> 
             <span>ADD NEW PRODUCT</span>
@@ -87,19 +144,50 @@ function CartItems() {
             <tbody>
               {productsList.length>0 ? 
               (productsList.map((product,index)=>
-                  <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                  <tr key={index}>
+                    <td>{product.serial}</td>
+                    <td>{product.ProductName}</td>
+                    <td>{product.ProductPrice}</td>
+                    <td>{product.Stock}</td>
+                    <td>{product.Points}</td>
+                     <td>
+                      <div style={{display:'flex',justifyContent:'center'}}>
+                        <div className="product-img">
+                          {product.ProductImagePath ? (
+                            <img src= {variables.PRODUCTIMG_API+product.ProductImagePath} alt="" className="img-p" />
+                           ):(
+                           <div className="empty-msg" style={{
+                              width: '45px', 
+                              height: '40px', 
+                              position: 'relative',
+                              backgroundColor: '#f1f5f9', 
+                              display: 'flex',           
+                              alignItems: 'center',    
+                              justifyContent: 'center', 
+                              
+                             }}>
+                              <p style={{ 
+                                  margin: 0, 
+                                  fontSize: '10px', 
+                                  color: '#d3cece',
+                                  fontWeight: '600'
+                              }}>
+                                  No Image
+                              </p> 
+                          </div>
+                          )}
+                        
+                      </div>
+                      </div>
+                      </td>
+                    <td>{product.Description}</td> 
                     <td className="text-center">
                       <FiEdit className="cart-icon-edit" 
-                         />
+                      onClick={()=>dispatch(editProductRow(index))}
+                       />
                       <FiTrash2 className="cart-icon-delete" 
-                        />
+                      onClick={()=>dispatch(setDeleteProductIndex(index))} 
+                      />
                     </td>
                   </tr> 
                   )) : 

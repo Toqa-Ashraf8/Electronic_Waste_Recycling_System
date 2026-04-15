@@ -12,13 +12,11 @@ import {
   toggleCategoryModal, 
   toggleDeleteCatModal, 
   toggleSearchModal 
-} from "../../redux/categories/categorySlice";
+} from "../../redux/categories/categorySlice"; 
 import ItemsModal from "./ItemsModal";
-import DeleteItemModal from "../../components/modals/DeleteItemModal";
 import { saveAllData } from "../../services/categoryService";
 import { toast } from "react-toastify";
-import CategorySearchModal from "../../components/modals/CategorySearchModal";
-import DeleteCategoryModal from "../../components/modals/DeleteCategoryModal";
+
 function Categories() {
 const {
   category,
@@ -72,10 +70,10 @@ useEffect(()=>{
   return (
     <div className="container">
       {isCategoryModalOpen && <ItemsModal/>}
-      {isDeleteItemModalOpen && <DeleteItemModal/>}
+    {isDeleteItemModalOpen && <DeleteItemModal/>}
       {isSearchCatModalOpen && <CategorySearchModal/>}
-      {isDeleteCatModalOpen && <DeleteCategoryModal/>}
-        <h5 className="black-bold-title"> CATEGORY MANAGEMENT</h5>
+      {isDeleteCatModalOpen && <DeleteCategoryModal/>}        
+      <h5 className="black-bold-title"> CATEGORY MANAGEMENT</h5>
       <div className="sell-waste-card-hud animate__animated animate__fadeIn">
          <div className="btns-container col">
                 <button 
