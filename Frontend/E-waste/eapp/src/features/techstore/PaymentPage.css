@@ -248,6 +248,29 @@ input:checked + .slider:before {
     background: #438a76; 
     transform: translateY(-2px); 
 }
+.empty-cart-view {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  text-align: center;
+}
+
+.empty-cart-icon {
+  font-size: 80px;
+  margin-bottom: 20px;
+}
+
+.go-shopping-btn {
+  background: #007bff;
+  color: white;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 20px;
+  font-weight: bold;
+}
 
 @media (max-width: 900px) {
     .payment-wrapper { 

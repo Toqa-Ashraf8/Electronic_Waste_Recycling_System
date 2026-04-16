@@ -10,8 +10,6 @@ const addToCart=(product,id)=>{
   dispatch(addItem({product:product,id:id}))
   dispatch(setCartCount(product))
 }
-
-
 return(
   <div className="product-card-quantum">
     <div className="product-image-container">
@@ -38,7 +36,7 @@ return(
             <span><FaStar size={25} color='#fdf511'/></span>
           </div>
           <div>
-            <span className="price-value">{product.Price} EGP</span>
+            <span className="price-value">{product.ProductPrice} EGP</span>
           </div>
         </div>
       </div>

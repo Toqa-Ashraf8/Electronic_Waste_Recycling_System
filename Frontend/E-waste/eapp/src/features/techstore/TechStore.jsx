@@ -27,7 +27,7 @@ const TechStore = ({ onBackClick }) => {
     categories,
     selectedCategory,
     cartCount,
-    items,
+    selectedItems
 }=useSelector((state)=>state.store);
   const dispatch=useDispatch(); 
 
@@ -42,7 +42,7 @@ const fetchByCategory=async(cat)=>{
 }
 
 
-
+console.log(selectedItems)
 
   useEffect(()=>{
     const loadData=async()=>{

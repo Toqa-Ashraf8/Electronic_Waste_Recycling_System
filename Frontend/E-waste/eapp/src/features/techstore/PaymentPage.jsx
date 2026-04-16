@@ -9,12 +9,34 @@ import {
 } from 'react-icons/fa';
 import './PaymentPage.css';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { variables } from '../../components/variables';
+import { decrementQuantity, incrementQuantity, removeItem } from '../../redux/TechStore/storeSlice';
 const PaymentPage = () => {
   const {selectedItems}=useSelector((state)=>state.store);
   const navigate=useNavigate();
+  const dispatch=useDispatch();
+  const subtotal = selectedItems.reduce((acc, item) => {
+    return acc + (item.ProductPrice * item.quantity);
+  }, 0);
 
+  if (selectedItems.length === 0) {
+    return (
+      <div className="payment-page-container empty-cart-view">
+        <div className="empty-cart-content animate__animated animate__fadeIn">
+          <div className="empty-cart-icon">🛒</div>
+          <h2>Your Cart is Empty!</h2>
+          <p>Looks like you haven't added anything to your tech collection yet.</p>
+          <button 
+            onClick={() => navigate('/store')} 
+            className="go-shopping-btn"
+          >
+            Go Shopping Now
+          </button>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="payment-page-container animate__animated animate__fadeIn">
       <div className="payment-wrapper">
@@ -38,14 +60,23 @@ const PaymentPage = () => {
                   <p>{item.Points} <FaStar className="star-mini" /></p>
                 </div>
                 <div className="qty-control">
-                  <button><FaMinus /></button>
+                  <button onClick={()=>dispatch(decrementQuantity(item.ProductID))}>
+                    <FaMinus />
+                  </button>
                   <span>{item.quantity}</span>
-                  <button><FaPlus /></button>
+                  <button onClick={()=>dispatch(incrementQuantity(item.ProductID))}>
+                    <FaPlus />
+                  </button>
                 </div>
                 <div className="item-price">
-                  {item.Price * item.Stock} <small>EGP</small>
+                {(Number(item.ProductPrice)) * (Number(item.quantity))} <small>EGP</small>
                 </div>
-                <button className="remove-btn"><FaTrash /></button>
+                <button 
+                className="remove-btn"
+                onClick={()=>dispatch(removeItem(item.ProductID))}
+                >
+                  <FaTrash />
+                </button>
               </div>
             ))} 
           </div>
@@ -55,7 +86,7 @@ const PaymentPage = () => {
           <div className="summary-details">
             <div className="summary-line">
               <span>Subtotal</span>
-              <span>0 EGP</span>
+              <span>{subtotal} EGP</span>
             </div>
         
             <div className="points-discount-card">
@@ -74,16 +105,9 @@ const PaymentPage = () => {
                 </label>
               </div>
             </div>
-
-            <div className="promo-code-box">
-              <FaTicketAlt />
-              <input type="text" placeholder="Promo Code" />
-              <button>Apply</button>
-            </div>
-
             <div className="total-line">
               <span>Total Amount</span>
-              <span className="total-price">0 EGP</span>
+              <span className="total-price">{subtotal} EGP</span>
             </div>
             
             <button className="checkout-btn">Proceed to Payment</button>

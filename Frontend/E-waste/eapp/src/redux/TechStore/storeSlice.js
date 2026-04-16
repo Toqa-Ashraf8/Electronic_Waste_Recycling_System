@@ -35,7 +35,25 @@ const storeSlice=createSlice({
             setCartCount:(state,action)=>{
                   state.items=[...state.items,action.payload];
                   state.cartCount=state.items.length;
-            }
+            },
+           incrementQuantity: (state, action) => {
+                const item = state.selectedItems.find(i => i.ProductID === action.payload);
+                if (item) {
+                item.quantity += 1;
+                }
+            },
+           decrementQuantity: (state, action) => {
+                const item = state.selectedItems.find(i => i.ProductID === action.payload);
+                if (item && item.quantity > 1) {
+                item.quantity -= 1;
+                } 
+                else {
+                 state.selectedItems = state.selectedItems.filter(i => i.ProductID !== action.payload);
+                }
+        },
+        removeItem: (state, action) => {
+            state.selectedItems = state.selectedItems.filter(i => i.ProductID !== action.payload);
+         }
           
     },
     extraReducers:(builder)=>{
@@ -52,6 +70,13 @@ const storeSlice=createSlice({
         })
     }
 })
- export const {setSelectedCategory,addItem,setCartCount}=storeSlice.actions;
+ export const {
+    setSelectedCategory,
+    addItem,
+    setCartCount,
+    incrementQuantity,
+    decrementQuantity,
+    removeItem
+}=storeSlice.actions;
 const storeReducer=storeSlice.reducer;
 export default storeReducer;
