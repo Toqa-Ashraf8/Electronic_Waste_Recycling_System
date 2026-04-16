@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { FiPlus, FiTrash2, FiEdit } from "react-icons/fi";
 import { Save, BrushCleaning, Search, Trash, ShoppingBag } from 'lucide-react';
 import './CartItems.css';
+import { FaStar} from 'react-icons/fa';
 import { useSelector, useDispatch } from 'react-redux';
 import ProductModal from "./ProductModal";
 import { 
@@ -149,7 +150,13 @@ console.log("selectedCategoryId",selectedCategoryId)
                     <td>{product.ProductName}</td>
                     <td>{product.ProductPrice}</td>
                     <td>{product.Stock}</td>
-                    <td>{product.Points}</td>
+                    <td>
+                      <div 
+                      style={{display:'flex',justifyContent:'center',gap:'5px',alignItems:'center'}}>
+                        <span>{product.Points}</span>
+                        <span><FaStar size={18} color='#fdf511'/></span>
+                      </div>
+                      </td>
                      <td>
                       <div style={{display:'flex',justifyContent:'center'}}>
                         <div className="product-img">

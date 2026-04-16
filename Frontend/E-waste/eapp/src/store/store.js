@@ -5,6 +5,7 @@ import catReducer from "../redux/categories/categorySlice";
 import sellReducer from "../redux/selldevice/sellingSlice";
 import orderReducer from "../redux/orders/ordersSlice";
 import cartReducer from "../redux/cart/cartSlice";
+import storeReducer from "../redux/TechStore/storeSlice";
 
 export const store=configureStore({
     reducer:{
@@ -14,5 +15,6 @@ export const store=configureStore({
         selldevice:sellReducer,
         orders:orderReducer,
         cart:cartReducer,
+        store:storeReducer,
     }
 })

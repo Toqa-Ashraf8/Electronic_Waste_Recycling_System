@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { FaTrash, FaPlus, FaMinus, FaTicketAlt, FaStar, FaArrowLeft } from 'react-icons/fa';
 import './PaymentPage.css';
+import { useNavigate } from 'react-router-dom';
 
-const PaymentPage = ({ onBackClick }) => {
+const PaymentPage = () => {
+  const navigate=useNavigate();
   const [cartItems, setCartItems] = useState([
     { id: 1, name: "Motherboard Rev-3", priceEGP: 675, pointsPrice: 450, qty: 1, image: "https://via.placeholder.com/100x100/f8fafc/55a690?text=MB" },
     { id: 3, name: "Copper Coil Batch", priceEGP: 225, pointsPrice: 150, qty: 2, image: "https://via.placeholder.com/100x100/f8fafc/55a690?text=Copper" },
@@ -29,7 +31,7 @@ const PaymentPage = ({ onBackClick }) => {
     <div className="payment-page-container animate__animated animate__fadeIn">
       <div className="payment-wrapper">
         <div className="cart-section">
-          <button onClick={onBackClick} className="back-to-store">
+          <button onClick={()=>navigate('/store')} className="back-to-store">
             <FaArrowLeft /> Back to Store
           </button>
           <h2 className="section-title">Shopping Cart</h2>
