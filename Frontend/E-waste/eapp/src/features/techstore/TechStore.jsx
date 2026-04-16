@@ -2,19 +2,33 @@ import React, { useEffect, useState } from 'react';
 import { Col } from 'react-bootstrap';
 import 'animate.css';
 import './TechStore.css';
-import { FaShoppingCart, FaPlus, FaStar, FaSearch } from 'react-icons/fa';
+import { 
+  FaShoppingCart, 
+  FaPlus, 
+  FaStar,
+  FaSearch 
+} from 'react-icons/fa';
 import { FiRefreshCw } from "react-icons/fi";
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCartCategories, fetchCartProducts, fetchProductsByCat } from '../../services/storeService';
+import { 
+  fetchCartCategories, 
+  fetchCartProducts, 
+  fetchProductsByCat 
+} from '../../services/storeService';
 import { ProductCard } from './ProductCart';
 import { setSelectedCategory } from '../../redux/TechStore/storeSlice';
 
 const TechStore = ({ onBackClick }) => {
-  const [cartCount, setCartCount] = useState(5); 
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
-  const {cartProducts,categories,selectedCategory}=useSelector((state)=>state.store);
+  const {
+    cartProducts,
+    categories,
+    selectedCategory,
+    cartCount,
+    items,
+}=useSelector((state)=>state.store);
   const dispatch=useDispatch(); 
 
   const fetchAll=()=>{
@@ -22,10 +36,12 @@ const TechStore = ({ onBackClick }) => {
     dispatch(fetchProductsByCat(0));
   }
 const fetchByCategory=async(cat)=>{
-   const selectedCat=categories.find(c=>c.CategoryID ===parseInt(cat.CategoryID));
+  const selectedCat=categories.find(c=>c.CategoryID ===parseInt(cat.CategoryID));
   dispatch(setSelectedCategory(cat.CategoryName));
   dispatch(fetchProductsByCat(selectedCat.CategoryID)); 
 }
+
+
 
 
   useEffect(()=>{
@@ -38,7 +54,6 @@ const fetchByCategory=async(cat)=>{
     loadData();
   },[dispatch])
 
-  const handleAddToCart = () => setCartCount(prev => prev + 1);
   return (
     <div className="store-page-quantum">
       <div className="content-wrapper-quantum">
@@ -95,7 +110,6 @@ const fetchByCategory=async(cat)=>{
                 <ProductCard 
                 product={product} 
                 imagePath={product.ProductImagePath} 
-                onAddToCart={handleAddToCart} 
                 />
               </Col>
             ))

@@ -1,7 +1,16 @@
 import React from "react";
 import { variables } from "../../components/variables";
 import {  FaPlus, FaStar } from 'react-icons/fa';
-export const ProductCard = ({ product, onAddToCart ,imagePath}) => {
+import { useDispatch, useSelector } from "react-redux";
+import { addItem, setCartCount } from "../../redux/TechStore/storeSlice";
+export const ProductCard = ({ product ,imagePath}) => {
+  const dispatch=useDispatch();
+
+const addToCart=(product,id)=>{
+  dispatch(addItem({product:product,id:id}))
+  dispatch(setCartCount(product))
+}
+
 
 return(
   <div className="product-card-quantum">
@@ -12,11 +21,11 @@ return(
       <img src={variables.PRODUCTIMG_API+imagePath} className="product-image" />
       <button 
         className="add-to-cart-button" 
-        disabled={product.Stock === 0} 
-        onClick={onAddToCart}
+        disabled={product.Stock === 0}
+        onClick={()=>addToCart(product,product.ProductID)}
       >
         <FaPlus />
-      </button>
+      </button>    
     </div>
     <div className="product-info">
       <h3 className="product-name">{product.ProductName}</h3>
