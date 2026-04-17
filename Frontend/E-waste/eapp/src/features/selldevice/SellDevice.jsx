@@ -213,12 +213,15 @@ useEffect(() => {
           <p className="card-subtitle-hud">Get an instant estimate for your items</p>
         </div>
 
-        <div className="rewards-banner-hud">
-          <FaGift className="rewards-icon-hud" />
-          <p className="rewards-text-hud">
-            <strong>Every Sale is Rewarded!</strong> Earn <strong>10 Points</strong>.
-            <Link to="/points" className="rewards-learn-more-hud"> Learn More</Link>
-          </p>
+              <div className="rewards-banner-hud">
+              <FaGift className="rewards-icon-hud" />
+              <p className="rewards-text-hud">
+                <strong>Every Sale is Rewarded!</strong>
+                <span className="points-label-hud">Earn Points.</span>
+                <Link to="/points" className="rewards-learn-more-hud">
+                  Learn More
+                </Link>
+            </p>
         </div>
 
         <div className="main-form-grid-hud">

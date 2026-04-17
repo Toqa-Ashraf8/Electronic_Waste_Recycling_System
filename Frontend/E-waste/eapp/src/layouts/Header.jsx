@@ -25,7 +25,7 @@ const Header = () => {
       <ul className="navbar-nav">
       
          <li className="nav-item">
-          <Link className="nav-link active" aria-current="page" to="#">
+          <Link className="nav-link active" aria-current="page" to="/dashboard">
             Dashboard
           </Link>
         </li>
@@ -91,17 +91,17 @@ const Header = () => {
               </Link>
             </li>
               <li>
-              <Link className="nav-link" to="#">
+              <Link className="nav-link" to="/points">
                   Points
               </Link>
             </li> 
              <li>
-              <Link className="nav-link" to="#">
+              <Link className="nav-link" to="/addbranches">
                   Branches
               </Link>
             </li> 
             <li>
-              <Link className="nav-link" to="#">
+              <Link className="nav-link" to="/addcontacts">
                   Contacts
               </Link>
             </li> 

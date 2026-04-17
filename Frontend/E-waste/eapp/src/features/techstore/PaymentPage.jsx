@@ -14,16 +14,22 @@ import { variables } from '../../components/variables';
 import { 
   decrementQuantity, 
   incrementQuantity, 
-  removeItem 
+  removeItem, 
+  togglePointsUsage
 } from '../../redux/TechStore/storeSlice';
 const PaymentPage = () => {
-  const {selectedItems}=useSelector((state)=>state.store);
+  const {selectedItems,isUsingPoints}=useSelector((state)=>state.store);
+  const {userDetails}=useSelector((state)=>state.auth);
   const navigate=useNavigate();
   const dispatch=useDispatch();
+
+
   const subtotal = selectedItems.reduce((acc, item) => {
     return acc + (item.ProductPrice * item.quantity);
   }, 0);
-
+   const discount = isUsingPoints ? Math.min(subtotal, userDetails?.Points || 0) : 0;
+   const finalPrice = subtotal - discount;
+   
   if (selectedItems.length === 0) {
     return (
       <div className="payment-page-container empty-cart-view">
@@ -98,20 +104,24 @@ const PaymentPage = () => {
                 <FaStar className="star-main" />
                 <div>
                   <p className="p-title">Use Your Points</p>
-                  <p className="p-balance">Balance: 0 Pts</p>
+                  <p className="p-balance">Balance: {userDetails?.Points} Pts</p>
                 </div>
               </div>
-              <div className="discount-action">
-                <p className="discount-amt">- 0 EGP</p>
+             <div className="discount-action">
+                <p className="discount-amt">- {discount} EGP</p>
                 <label className="switch">
-                  <input type="checkbox"/>
+                  <input 
+                    type="checkbox" 
+                    checked={isUsingPoints}
+                    onChange={() => dispatch(togglePointsUsage())} 
+                  />
                   <span className="slider"></span>
                 </label>
-              </div>
+             </div>
             </div>
             <div className="total-line">
               <span>Total Amount</span>
-              <span className="total-price">{subtotal} EGP</span>
+              <span className="total-price">{finalPrice} EGP</span>
             </div> 
             <button className="checkout-btn">Proceed to Payment</button>
           </div>

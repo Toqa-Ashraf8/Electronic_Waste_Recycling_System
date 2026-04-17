@@ -19,6 +19,8 @@ import CartItems from './features/cart/CartItems';
 import TechStore from './features/techstore/TechStore';
 import PaymentPage from './features/techstore/PaymentPage';
 import UserProfile from './features/userProfile/UserProfile';
+import PointsPage from './features/points/PointsPage';
+import AdminDashboard from './features/dashboard/AdminDashboard';
 function App() {
  const {globalError,globalMessage}=useSelector((state)=>state.ui);
  const {token}=useSelector((state)=>state.auth);
@@ -111,12 +113,23 @@ useEffect(() => {
                   </ProtectedRoute>
                 }/>
                   <Route path='/payment' 
-                 element={
+                   element={
                   <ProtectedRoute>
                     <PaymentPage/>
                   </ProtectedRoute>
                 }/>
-               
+               <Route path='/points' 
+                   element={
+                  <ProtectedRoute>
+                    <PointsPage/>
+                  </ProtectedRoute>
+                }/> 
+                <Route path='/dashboard' 
+                   element={
+                  <ProtectedRoute>
+                    <AdminDashboard/>
+                  </ProtectedRoute>
+                }/>
     </Routes>
     </div>
   )

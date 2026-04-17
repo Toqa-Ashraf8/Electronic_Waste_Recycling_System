@@ -6,6 +6,7 @@ import sellReducer from "../redux/selldevice/sellingSlice";
 import orderReducer from "../redux/orders/ordersSlice";
 import cartReducer from "../redux/cart/cartSlice";
 import storeReducer from "../redux/TechStore/storeSlice";
+import dashReducer from "../redux/dashboard/dashboardSLice";
 
 
 export const store=configureStore({
@@ -17,5 +18,6 @@ export const store=configureStore({
         orders:orderReducer,
         cart:cartReducer,
         store:storeReducer,
+        dashboard:dashReducer,
     } 
 })

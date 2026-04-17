@@ -7,6 +7,7 @@ import {
     recieveOK, 
     saveDispatch, 
     saveOrders, 
+    search, 
     sendPoints,
 } from "../../services/ordersService";
 
@@ -34,7 +35,8 @@ const initialState={
     selectedCourier:[],
     isConfirmRecieveModal:false,
     isSendPointsModalOpen:false,
-    orderDetail:{}
+    orderDetail:{},
+   
 }
 const ordersSlice=createSlice({
     name:"orders",
@@ -93,7 +95,8 @@ const ordersSlice=createSlice({
         },
         setOrderDetails:(state,action)=>{
             state.orderDetail=action.payload;
-        }
+        },
+        
         
 },
     extraReducers:(builder)=>{
@@ -127,6 +130,9 @@ const ordersSlice=createSlice({
             state.isSendPointsModalOpen=false;
             
         })
+        .addCase(search.fulfilled,(state,action)=>{
+          state.ordersList=action.payload;
+        })
     }
 })
 export const{
@@ -141,7 +147,7 @@ export const{
     resetDipatchModal,
     toggleConfirmRecieveModal,
     toggleSendPointsModal,
-    setOrderDetails
+    setOrderDetails,
 }=ordersSlice.actions;
 const orderReducer=ordersSlice.reducer;
 export default orderReducer;

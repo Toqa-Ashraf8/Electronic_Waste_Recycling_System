@@ -5,6 +5,7 @@ export const variables={
     ORDERS_API:"https://localhost:7289/api/Orders/",
     CART_API:"https://localhost:7289/api/Cart/",
     STORE_API:"https://localhost:7289/api/Store/",
+    DASH_API:"https://localhost:7289/api/Dashboard/",
     USERIMG_API:"https://localhost:7289/user_Images/",
     DEVICEIMG_API:"https://localhost:7289/Devices_Images/",
     PRODUCTIMG_API:"https://localhost:7289/Products_Images/"

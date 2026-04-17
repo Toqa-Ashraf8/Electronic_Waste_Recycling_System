@@ -78,14 +78,44 @@
     display: flex; 
     align-items: center; 
     gap: 15px; 
-    background-color: rgba(0, 240, 181, 0.08); 
-    border: 1px solid var(--border-color); 
+    background-color: rgba(85, 166, 144, 0.08); 
+    border: 1px solid var(--border-soft); 
     border-left: 3px solid var(--primary-color); 
     border-radius: 8px; 
     padding: 12px 18px; 
     margin-bottom: 25px; 
 }
 
+.rewards-icon-hud {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.rewards-text-hud {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap; 
+    gap: 8px; 
+}
+
+.points-label-hud {
+    font-weight: 500;
+}
+.rewards-learn-more-hud { 
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: none !important; 
+    margin-left: 5px; 
+    cursor: pointer;
+}
+.rewards-learn-more-hud:hover {
+    color: var(--primary-hover);
+    text-decoration: none !important;
+}
 
 .main-form-grid-hud { 
     display: grid; 

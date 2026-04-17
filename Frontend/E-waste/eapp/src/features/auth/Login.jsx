@@ -7,6 +7,7 @@ import { setUserValues } from '../../redux/auth/authSlice';
 import { loginUser } from '../../services/authService';
 
 const Login = () => {
+    const {isLoading}=useSelector((state)=>state.ui);
     const {user,token,userDetails}=useSelector((state)=>state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -26,7 +27,7 @@ const handleLogin = async () => {
             const {token}=result;
             if (token) {
                 sessionStorage.setItem('token',token);
-                toast.success("Welcome back to E-VIVE!",{
+                toast.success("Welcome to E-VIVE!",{
                     theme:"colored",
                     position:"top-right"
                 });
@@ -43,10 +44,9 @@ const handleKeyDown = (e) => {
         <div className="login-modern-page">
             <div className="login-modern-card">
                 <div className="login-modern-header">
-                    <h2>Welcome Back</h2>
+                    <h2>Welcome</h2>
                     <p>Log in to continue recycling with E-VIVE</p>
                 </div>
-
                 <div className="login-modern-form">
                     <div className="floating-group">
                         <input 
@@ -75,6 +75,7 @@ const handleKeyDown = (e) => {
                     </div>
                     <button 
                     className="login-modern-btn"
+                    disabled={isLoading}
                     onClick={()=>handleLogin()}
                     >
                         Login Now

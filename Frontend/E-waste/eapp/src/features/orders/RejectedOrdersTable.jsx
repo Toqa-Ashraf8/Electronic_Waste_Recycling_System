@@ -74,7 +74,12 @@ export const RejectedOrdersTable = ({ rejectedList, zoomDeviceImage, variables }
               <td>
                 <div className="rejection-note-container" title={order.Notes}>
                   <FaExclamationTriangle className="note-icon" />
-                  <span className="note-text">{order.Notes}</span>
+                  {order.Notes ? (
+                    <span className="note-text">{order.Notes}</span>
+                  ):(
+                    <span className="note-text">Empty</span>
+                  )}
+                 
                 </div>
               </td>
             </tr>

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "./Orders.css";
-import { FaClock, FaHistory } from "react-icons/fa";
+import { FaClock, FaHistory ,FaSearch } from "react-icons/fa";
 import {useSelector,useDispatch} from 'react-redux'
 import { 
   fetchOrders, 
   fetchRejectedOrders, 
-  fetchRequests 
+  fetchRequests, 
+  search
 } from "../../services/ordersService";
 import OrderDetailsModal from "./modals/OrderDetailsModal";
 import { 
@@ -35,7 +36,7 @@ const Orders = () => {
       rejectedList,
       isCourierModalOpen,
       isConfirmRecieveModal,
-      isSendPointsModalOpen
+      isSendPointsModalOpen,
 }=useSelector((state)=>state.orders);
     const dispatch=useDispatch();
    
@@ -64,6 +65,18 @@ const rejectedOrders=()=>{
   dispatch(fetchRejectedOrders());
 }
 
+const searchOrder=(e)=>{
+    const searchValue = e.target.value;
+    if (searchValue === "" ) {
+         dispatch(fetchOrders()); 
+        return;
+    }
+    const searchData={
+        term:searchValue,
+        fields:["UserName","RequestID","DeviceItem"]
+    }
+    dispatch(search(searchData));
+}
 useEffect(() => {
    dispatch(fetchRequests());
 },[dispatch]);
@@ -80,6 +93,14 @@ useEffect(() => {
         <h2 className="title-modern">Order 
             <span className="highlight">Workflow</span>
         </h2>
+        <div className="search-box-container">
+              <FaSearch className="search-icon" />
+              <input 
+                type="text" 
+                className="search-input"
+                onChange={(e)=>searchOrder(e)}
+              />
+            </div>
         <div className="toggle-buttons">
           <button 
           className={`btn-toggle ${view === "pending" ? "active" : ""}`} 

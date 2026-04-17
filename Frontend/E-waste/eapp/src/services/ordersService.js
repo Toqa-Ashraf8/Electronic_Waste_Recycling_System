@@ -42,3 +42,8 @@ export const sendPoints=createAsyncThunk("sendPoints/orders",async(params)=>{
     .then((res)=>res.data);
     return resp;
 })
+export const search=createAsyncThunk("search/orders",async(params)=>{
+    const resp=await axios.post(variables.ORDERS_API+"SearchOrders",params)
+    .then((res)=>res.data);
+    return resp;
+})

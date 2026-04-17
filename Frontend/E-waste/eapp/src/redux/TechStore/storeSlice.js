@@ -16,6 +16,7 @@ const initialState={
     selectedItems:JSON.parse(localStorage.getItem("selectedItems")) || [],
     cartCount:0,
     items:[],
+    isUsingPoints: false,
 }
 
 const storeSlice=createSlice({
@@ -64,6 +65,12 @@ const storeSlice=createSlice({
          clearCart: (state) => {
             state.items=[];
             state.cartCount = 0; 
+        },
+        togglePointsUsage: (state) => {
+            state.isUsingPoints = !state.isUsingPoints;
+        },
+        resetPointsUsage: (state) => {
+            state.isUsingPoints = false;
         }
           
     },
@@ -88,7 +95,9 @@ const storeSlice=createSlice({
     incrementQuantity,
     decrementQuantity,
     removeItem,
-    clearCart
+    clearCart,
+    togglePointsUsage,
+    resetPointsUsage
 }=storeSlice.actions;
 const storeReducer=storeSlice.reducer;
 export default storeReducer;
