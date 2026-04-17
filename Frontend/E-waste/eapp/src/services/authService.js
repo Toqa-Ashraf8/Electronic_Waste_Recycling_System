@@ -17,3 +17,8 @@ export const loginUser=createAsyncThunk("loginUser/auth",async(user)=>{
     .then((res)=>res.data);
     return resp;
 })
+export const fetchUserOrders=createAsyncThunk("fetchUserOrders/auth",async(id)=>{
+    const resp=await axios.post(variables.AUTH_API+"GetOrdersCount?userId="+id)
+    .then((res)=>res.data);
+    return resp;
+})

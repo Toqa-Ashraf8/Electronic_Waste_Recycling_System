@@ -97,7 +97,7 @@ const TrackingPage = () => {
                                         <span className="points-msg"> Points added!</span>
                                        <button 
                                             className="btn-mini-profile" 
-                                            onClick={() => window.location.href = '/profile'}
+                                            onClick={() => window.location.href = '/userprofile'}
                                         >
                                             View
                                         </button>

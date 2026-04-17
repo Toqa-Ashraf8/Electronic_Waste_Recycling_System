@@ -1,99 +1,95 @@
-import React from "react";
-import { ProgressBar } from "react-bootstrap";
-import { FaUserCircle, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaTrophy, FaEdit, FaKey } from "react-icons/fa";
-import "./UserProfile.css";
+import React, { useEffect } from 'react';
+import { 
+    FaUserCircle, 
+    FaTrophy, 
+    FaEdit, 
+    FaShieldAlt 
+} from 'react-icons/fa';
+import './UserProfile.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUserOrders } from '../../services/authService';
 
 const UserProfile = () => {
-  return (
-    <div className="profile-dashboard-layout">
-      <div className="wide-profile-card">
-        
-        {/* Header Section */}
-        <div className="profile-top-banner">
-          <div className="header-identity">
-            <FaUserCircle className="main-icon" />
-            <div>
-              <h1>MY ACCOUNT</h1>
-              <p>Manage your recycling impact and personal details</p>
+  const {userDetails,ordersCount,pendingCount}=useSelector((state)=>state.auth);
+  const dispatch=useDispatch();
+
+  useEffect(()=>{
+    if (userDetails?.UserID) {
+    dispatch(fetchUserOrders(userDetails.UserID));
+  }
+  },[dispatch,userDetails.UserID])
+
+  const calculateProgress = () => {
+    const goal = 5000;
+    const percentage = ((userDetails?.Points || 0) / goal) * 100;
+    return percentage > 100 ? 100 : percentage; 
+  };
+
+    return (
+        <div className="tq-profile-page">
+            <div className="tq-main-card">
+                <aside className="tq-sidebar">
+                    <div className="tq-avatar-wrapper">  
+                        <img src={`https://ui-avatars.com/api/?name=${userDetails.UserName}&background=55a690&color=fff&size=200`} alt="" />
+                    </div>
+                    <h3 className="tq-user-name">{userDetails.UserName}</h3>  
+                </aside>
+                <section className="tq-content">
+                    <div className="tq-content-header">
+                        <h2>Personal Information</h2>
+                        <button className="tq-edit-btn"><FaEdit /> Edit</button>
+                    </div>
+                    <div className="tq-info-grid">
+                        <div className="tq-info-box">
+                            <span className="tq-label">Full Name</span>
+                            <span className="tq-value">{userDetails.UserName}</span>
+                        </div>
+                        <div className="tq-info-box">
+                            <span className="tq-label">Email Address</span>
+                            <span className="tq-value">{userDetails.Email}</span>
+                        </div>
+                        <div className="tq-info-box">
+                            <span className="tq-label">Phone Number</span>
+                            <span className="tq-value">{userDetails.PhoneNumber}</span>
+                        </div>
+                        <div className="tq-info-box">
+                            <span className="tq-label">Address</span>
+                            <span className="tq-value">{userDetails.Address}</span>
+                        </div>
+                    </div>
+
+                    <div className="tq-divider"></div>
+                    <div className="tq-progress-area">
+                        <div className="tq-progress-header">
+                            <span>Points Goal</span>
+                            <span>{userDetails.Points} / 3000</span> 
+                        </div>
+                        <div className="tq-bar-container">
+                           <div 
+                            className="tq-bar-fill" 
+                            style={{ width: `${calculateProgress()}%`, transition: 'width 0.5s ease-in-out' }}
+                         ></div>
+                        </div>
+                    </div>
+                    <div className="tq-stats-grid">
+                        <div className="tq-stat-card">
+                            <span className="tq-stat-num">{ordersCount}</span> 
+                            <span className="tq-stat-lbl">Orders</span>
+                        </div>
+                        <div className="tq-stat-card">
+                            <span className="tq-stat-num">{pendingCount}</span>
+                            <span className="tq-stat-lbl">Pending</span>
+                        </div>
+                        <div className="tq-stat-card tq-dark-card">
+                            <span className="tq-stat-num">{userDetails.Points}</span> 
+                            <span className="tq-stat-lbl">Total Savings</span>
+                        </div>
+                    </div>
+                </section>
+
             </div>
-          </div>
-          <div className="eco-badge">
-            <FaTrophy /> <span>ECO-WARRIOR GOLD</span>
-          </div>
         </div>
-
-        <div className="profile-main-flex-container">
-          
-         <div className="profile-left-sidebar">
-            <div className="t-avatar-frame">
-                <img 
-                    src="" 
-                    alt="" 
-                    className="t-square-img" 
-                />
-            </div>
-            <div className="sidebar-buttons">
-                <button className="btn-mint-outline"><FaEdit /> Edit Profile</button>
-                <button className="btn-mint-outline"><FaKey /> Security</button>
-            </div>
-        </div>
-          <div className="profile-right-content">
-            <div className="welcome-message">
-              <h2>Welcome, <span className="name-highlight">Toqa Ashraf</span></h2>
-            </div>
-            <div className="info-horizontal-bar">
-              <div className="info-node">
-                <FaEnvelope className="node-icon" />
-                <div><label>Email</label><p>toqa.ashraf@example.com</p></div>
-              </div>
-              <div className="info-node">
-                <FaMapMarkerAlt className="node-icon" />
-                <div><label>Location</label><p>Cairo, Egypt</p></div>
-              </div>
-              <div className="info-node">
-                <FaPhoneAlt className="node-icon" />
-                <div><label>Phone</label><p>+20 102 345 6789</p></div>
-              </div>
-            </div>
-
-   
-            <div className="points-display-box">
-              <div className="points-meta">
-                <span className="p-label">Recycling Points Progress</span>
-                <span className="p-value">3,000 PTS</span>
-              </div>
-              <ProgressBar now={83} className="custom-progress-mint" />
-              <p className="points-hint">You are 500 points away from your next reward!</p>
-            </div>
-
-            <div className="stats-quad-grid">
-              <div className="stat-unit">
-                <span className="unit-val">0</span>
-                <span className="unit-label">Total Recycled</span>
-              </div>
-              <div className="stat-unit">
-                <span className="unit-val">0</span>
-                <span className="unit-label">In Progress</span>
-              </div>
-              <div className="stat-unit">
-                <span className="unit-val">0</span>
-                <span className="unit-label">Total Savings</span>
-              </div>
-              <div className="stat-unit highlight-unit">
-                <span className="unit-val">{2026}</span>
-                <span className="unit-label">Member Since</span>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <div className="profile-card-footer">
-          <button className="btn-save-main">Update My Profile</button>
-        </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default UserProfile;

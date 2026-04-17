@@ -11,7 +11,11 @@ import './PaymentPage.css';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { variables } from '../../components/variables';
-import { decrementQuantity, incrementQuantity, removeItem } from '../../redux/TechStore/storeSlice';
+import { 
+  decrementQuantity, 
+  incrementQuantity, 
+  removeItem 
+} from '../../redux/TechStore/storeSlice';
 const PaymentPage = () => {
   const {selectedItems}=useSelector((state)=>state.store);
   const navigate=useNavigate();
@@ -108,8 +112,7 @@ const PaymentPage = () => {
             <div className="total-line">
               <span>Total Amount</span>
               <span className="total-price">{subtotal} EGP</span>
-            </div>
-            
+            </div> 
             <button className="checkout-btn">Proceed to Payment</button>
           </div>
         </div>

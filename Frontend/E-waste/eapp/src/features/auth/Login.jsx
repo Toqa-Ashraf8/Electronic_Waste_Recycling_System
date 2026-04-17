@@ -7,7 +7,7 @@ import { setUserValues } from '../../redux/auth/authSlice';
 import { loginUser } from '../../services/authService';
 
 const Login = () => {
-    const {user,token}=useSelector((state)=>state.auth);
+    const {user,token,userDetails}=useSelector((state)=>state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -28,7 +28,7 @@ const handleLogin = async () => {
                 sessionStorage.setItem('token',token);
                 toast.success("Welcome back to E-VIVE!",{
                     theme:"colored",
-                    position:"top-left"
+                    position:"top-right"
                 });
                  navigate('/home');
             }

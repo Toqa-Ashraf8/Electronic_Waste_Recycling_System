@@ -45,7 +45,7 @@ import DeleteRequestModal from "./modals/DeleteRequestModal";
 
 function SellDevice() {
   const { categories, itemsList } = useSelector((state) => state.category);  
-  const {userAddress,userID} = useSelector((state) => state.auth);
+  const {userDetails} = useSelector((state) => state.auth);
   const { 
     request, 
     brands ,
@@ -119,7 +119,7 @@ function SellDevice() {
   };
 const handlePickUpHome=()=>{
   setActiveMethod('home');
-  dispatch(setRequestValues({ PickUpMethod: 0 , ShippingAddress:userAddress}));
+  dispatch(setRequestValues({ PickUpMethod: 0 , ShippingAddress:userDetails.Address}));
 }
 const handlePickUpdropoff=()=>{
   setActiveMethod('dropoff');
@@ -127,8 +127,7 @@ const handlePickUpdropoff=()=>{
 }
 
 const handleSave=async()=>{
-  const data={UserID:userID ,...request};
-  console.log("data",data);
+  const data={UserID:userDetails.UserID ,...request};
    try {
       const result=await dispatch(saveData(data)).unwrap();
     if(result.saved){
@@ -379,7 +378,7 @@ useEffect(() => {
                 type="text" 
                 className="form-control" 
                 name="ShippingAddress"
-                defaultValue={userAddress}
+                defaultValue={userDetails.Address}
                 value={request.ShippingAddress}
                 onChange={handleChange}
                 required  />

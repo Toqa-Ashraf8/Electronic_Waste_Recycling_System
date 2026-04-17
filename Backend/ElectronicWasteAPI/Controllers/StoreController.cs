@@ -54,7 +54,7 @@ namespace ElectronicWasteAPI.Controllers
             }
             else
             {
-                string getP = @"select * from Products CategoryID=@CategoryID";
+                string getP = @"select * from Products where CategoryID=@CategoryID";
                 using (SqlCommand cmd = new SqlCommand(getP, conn))
                 {
                     cmd.Parameters.Clear();

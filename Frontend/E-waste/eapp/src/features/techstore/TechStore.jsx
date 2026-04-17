@@ -17,10 +17,9 @@ import {
   fetchProductsByCat 
 } from '../../services/storeService';
 import { ProductCard } from './ProductCart';
-import { setSelectedCategory } from '../../redux/TechStore/storeSlice';
+import { clearCart, setSelectedCategory } from '../../redux/TechStore/storeSlice';
 
 const TechStore = ({ onBackClick }) => {
-  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   const {
     cartProducts,
@@ -40,16 +39,16 @@ const fetchByCategory=async(cat)=>{
   dispatch(setSelectedCategory(cat.CategoryName));
   dispatch(fetchProductsByCat(selectedCat.CategoryID)); 
 }
-
-
-console.log(selectedItems)
-
   useEffect(()=>{
     const loadData=async()=>{
       await Promise.all[(
         dispatch(fetchCartProducts()).unwrap(),
         dispatch(fetchCartCategories()).unwrap()
+        
       )]
+    }
+    if(selectedItems.length===0){
+        dispatch(clearCart());
     }
     loadData();
   },[dispatch])
@@ -72,17 +71,6 @@ console.log(selectedItems)
         </div>
 
         <div className="filter-container-quantum">
-          <div className="search-box-wrapper">
-            <FaSearch className="search-icon" />
-            <input 
-              type="text" 
-              placeholder="Search products" 
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="search-input-field"
-            />
-          </div>
-
           <div className="category-buttons-group">
             <button 
             onClick={() =>fetchAll()}

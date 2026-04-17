@@ -9,7 +9,6 @@ import { toast, ToastContainer } from 'react-toastify';
 import Home from './features/home/Home';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './features/auth/Login';
-import UserProfile from './features/userProfile/userProfile';
 import SellDevice from './features/selldevice/SellDevice';
 import Categories from './features/categories/Categories';
 import TrackingPage from './features/selldevice/TrackingPage';
@@ -19,6 +18,7 @@ import ContactUs from './features/contact/ContactUs';
 import CartItems from './features/cart/CartItems';
 import TechStore from './features/techstore/TechStore';
 import PaymentPage from './features/techstore/PaymentPage';
+import UserProfile from './features/userProfile/UserProfile';
 function App() {
  const {globalError,globalMessage}=useSelector((state)=>state.ui);
  const {token}=useSelector((state)=>state.auth);

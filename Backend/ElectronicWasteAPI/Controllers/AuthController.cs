@@ -22,7 +22,7 @@ namespace ElectronicWasteAPI.Controllers
         private readonly IWebHostEnvironment _env;
         private readonly DataContext _context;
         private readonly JwtSettings _jwt;
-     
+      
         public AuthController(IOptions<JwtSettings> jwt ,DataContext dataContext , IWebHostEnvironment env)
         {
             _jwt = jwt.Value;
@@ -79,9 +79,7 @@ namespace ElectronicWasteAPI.Controllers
             );
             var data = new
             {   token = new JwtSecurityTokenHandler().WriteToken(token),
-                role = user.Role,
-                address=user.Address,
-                userId=user.UserID
+                userData=user
             };
             return Ok(data);    
             
@@ -123,12 +121,33 @@ namespace ElectronicWasteAPI.Controllers
             var data = new
             {
                 token = new JwtSecurityTokenHandler().WriteToken(token),
-                usertbl = user, 
-                address = user.Address,
-                userId = user.UserID
+                userData = user, 
             };
             return Ok(data);
 
         }
+
+        [Route("GetOrdersCount")]
+        [HttpPost]
+        public async Task<IActionResult> GetOrdersCount(int userId)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            int allOrders = await _context.SellRequests
+                .CountAsync(r => r.UserID == userId);
+
+            int waitingOrders = await _context.SellRequests
+                .CountAsync(r => r.UserID == userId && r.RequestStatus == 0);
+            var data = new
+            {
+                orders = allOrders,
+                pending = waitingOrders,
+                points = user?.Points ?? 0
+            };
+
+            return Ok(data);
+        }
+
     }
+   
+   
 }

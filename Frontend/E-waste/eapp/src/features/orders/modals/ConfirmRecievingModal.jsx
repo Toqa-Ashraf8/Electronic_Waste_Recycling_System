@@ -32,9 +32,7 @@ const handleRecieve=async(orderId,reqId)=>{
                       <h4>Confirm Receipt</h4>
                       <div className="confirm-text-container">
                         <p className="confirm-text">
-                            Are you sure you have received request
-                            <span className="highlight-id"> # {c.RequestID} </span>
-                            from courier
+                            Are you sure you have received request from courier
                            <strong style={{marginLeft:'10px'}}>{c.CourierName}</strong>?
                         </p>
                         </div>

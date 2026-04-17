@@ -41,7 +41,8 @@ const handleChange=(e)=>{
   };
 
 const registerUser=async()=>{
-    const result=await dispatch(newUserRegister(user)).unwrap();
+    const data={...user,Points:0};
+    const result=await dispatch(newUserRegister(data)).unwrap();
     if(result.token){
          toast.success("Registration successful! Welcome to E-VIVE",{
             theme:"colored",

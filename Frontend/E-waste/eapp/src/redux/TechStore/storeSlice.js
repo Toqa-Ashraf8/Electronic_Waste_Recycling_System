@@ -5,14 +5,19 @@ import {
     fetchProductsByCat 
 } from "../../services/storeService";
 
+const saveData = (items) => {
+    localStorage.setItem("selectedItems", JSON.stringify(items));
+};
+
 const initialState={
     cartProducts:[],
     categories:[],
     selectedCategory:"",
-    selectedItems:[],
-    cartCount:-1,
+    selectedItems:JSON.parse(localStorage.getItem("selectedItems")) || [],
+    cartCount:0,
     items:[],
 }
+
 const storeSlice=createSlice({
     name:'store',
     initialState,
@@ -31,6 +36,7 @@ const storeSlice=createSlice({
                 else {
                     state.selectedItems.push({ ...product, quantity: 1 });
                 }
+               saveData(state.selectedItems);
             },
             setCartCount:(state,action)=>{
                   state.items=[...state.items,action.payload];
@@ -39,21 +45,26 @@ const storeSlice=createSlice({
            incrementQuantity: (state, action) => {
                 const item = state.selectedItems.find(i => i.ProductID === action.payload);
                 if (item) {
-                item.quantity += 1;
+                     item.quantity += 1;
+                     state.cartCount++;
                 }
             },
            decrementQuantity: (state, action) => {
                 const item = state.selectedItems.find(i => i.ProductID === action.payload);
                 if (item && item.quantity > 1) {
-                item.quantity -= 1;
-                } 
-                else {
+                    item.quantity -= 1;
+                    state.cartCount--;
+              } else {
                  state.selectedItems = state.selectedItems.filter(i => i.ProductID !== action.payload);
-                }
+             }
         },
         removeItem: (state, action) => {
             state.selectedItems = state.selectedItems.filter(i => i.ProductID !== action.payload);
-         }
+         },
+         clearCart: (state) => {
+            state.items=[];
+            state.cartCount = 0; 
+        }
           
     },
     extraReducers:(builder)=>{
@@ -76,7 +87,8 @@ const storeSlice=createSlice({
     setCartCount,
     incrementQuantity,
     decrementQuantity,
-    removeItem
+    removeItem,
+    clearCart
 }=storeSlice.actions;
 const storeReducer=storeSlice.reducer;
 export default storeReducer;

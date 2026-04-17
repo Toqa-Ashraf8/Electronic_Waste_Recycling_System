@@ -4,10 +4,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toggleSendPointsModal } from '../../../redux/orders/ordersSlice';
 import { fetchOrders, sendPoints } from '../../../services/ordersService';
 import { toast } from 'react-toastify';
+import { fetchUserOrders } from '../../../services/authService';
 
 const SendPointsModal = () => {
    const dispatch=useDispatch();
     const {orderDetail}=useSelector((state)=>state.orders);
+    const {userDetails}=useSelector((state)=>state.auth);
     const confirmSendingPoints=async()=>{
     try {
         const result=await dispatch(sendPoints(orderDetail)).unwrap();
@@ -16,8 +18,9 @@ const SendPointsModal = () => {
                 theme:'colored',
                 position:'top-right',
         })
-        dispatch(fetchOrders());
-        }
+         dispatch(fetchOrders());
+        } 
+        dispatch(fetchUserOrders(userDetails.UserID))
     } catch (error) {
         dispatch(toggleSendPointsModal(false))
     }

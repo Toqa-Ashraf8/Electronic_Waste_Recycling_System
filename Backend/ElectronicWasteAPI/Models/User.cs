@@ -12,6 +12,7 @@ namespace ElectronicWasteAPI.Models
         public string? Address { get; set; }
         public string? UserImagePath { get; set; }
         public string? Password { get; set; }
+        public int? Points { get; set; }
         public string? Role { get; set; }
     }
 }

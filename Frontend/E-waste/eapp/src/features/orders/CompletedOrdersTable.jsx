@@ -26,7 +26,7 @@ const handleRecieve=(reqId)=>{
 }
 const sendPoints=(order)=>{
   dispatch(toggleSendPointsModal(true));
- dispatch(setOrderDetails({OrderID:order.OrderID,RequestID:order.RequestID}));
+ dispatch(setOrderDetails(order));
 }
   return (
     <div className="table-responsive">

@@ -1,14 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loginUser, newUserRegister, saveImagePath } from "../../services/authService";
+import { 
+    fetchUserOrders, 
+    loginUser, 
+    newUserRegister, 
+    saveImagePath 
+} from "../../services/authService";
 
 const initialState={
     user:{},
     userImgPath:"",
     token:sessionStorage.getItem('token'),
-    role:sessionStorage.getItem('role'),
-    userAddress:sessionStorage.getItem('address'),
-    userID:sessionStorage.getItem('userId')
-   
+    userDetails:JSON.parse(sessionStorage.getItem('user')),
+    ordersCount:0,
+    pendingCount:0
 }
 const authSlice=createSlice({
     name:'auth',
@@ -28,27 +32,28 @@ const authSlice=createSlice({
                 sessionStorage.setItem('token',action.payload.token);
                 state.token=action.payload.token;
             }
-            sessionStorage.setItem('role',action.payload.role);
-            state.role=action.payload.role;
-            sessionStorage.setItem('address',action.payload.address);
-            state.userAddress=action.payload.address; 
-            sessionStorage.setItem('userId',action.payload.userId);
-            state.userID=action.payload.userId;
+             if(action.payload.userData){
+                sessionStorage.setItem('user',JSON.stringify(action.payload.userData));
+                state.userDetails=action.payload.userData;
+            }
         })
         .addCase(loginUser.fulfilled,(state,action)=>{
             if(action.payload.token){
                 sessionStorage.setItem('token',action.payload.token);
                 state.token=action.payload.token;
             }
-            if(action.payload.address){
-                 sessionStorage.setItem('address',action.payload.address);
-                 state.userAddress=action.payload.address;
+            if(action.payload.userData){
+                sessionStorage.setItem('user',JSON.stringify(action.payload.userData));
+                state.userDetails=action.payload.userData;
             }
-            if(action.payload.userId){
-               sessionStorage.setItem('userId',action.payload.userId);
-               state.userID=action.payload.userId;
+        })
+        .addCase(fetchUserOrders.fulfilled,(state,action)=>{
+            state.ordersCount=action.payload.orders;
+            state.pendingCount=action.payload.pending;
+            if (state.userDetails) {
+                state.userDetails.Points = action.payload.points;
+                sessionStorage.setItem('user', JSON.stringify(state.userDetails));
             }
-           
         })
     }
 })

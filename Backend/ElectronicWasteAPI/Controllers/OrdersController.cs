@@ -270,6 +270,15 @@ namespace ElectronicWasteAPI.Controllers
                             cmd.ExecuteNonQuery();
                             done = true;
                         }
+                        string updateU = @"UPDATE Users SET Points = Points + @NewPoints WHERE UserID = @UserID"; 
+                        using (SqlCommand cmd = new SqlCommand(updateU, conn, transaction))
+                        {
+                            cmd.Parameters.Clear();
+                            cmd.Parameters.AddWithValue("@UserID", ord.UserID);
+                            cmd.Parameters.AddWithValue("@NewPoints", ord.Points);
+                            cmd.ExecuteNonQuery();
+                            done = true;
+                        }
                     }
                     transaction.Commit();
                     return Ok(new { done = true });
