@@ -5,8 +5,8 @@ A Full-Stack Circular Economy solution that digitizes e-waste recycling—from a
 Electronic waste often ends up in landfills, causing environmental hazards. This system solves this by incentivizing users to recycle through a Loyalty Rewards Program, turning old devices into valuable salvaged components for a sustainable e-commerce marketplace.
 
 ##  Tech Stack
-*   **Backend:** .NET Core Web API, Entity Framework Core, **JWT (Secure Auth)**, BCrypt Hashing.
-*   **Frontend:** React.js, Redux Toolkit, Chart.js, Bootstrap 5.
+*   **Backend:** .NET Core Web API, Entity Framework Core, ADO.NET , **JWT (Secure Auth)**, BCrypt Hashing.
+*   **Frontend:** React.js, Redux Toolkit, Chart.js, CSS, Bootstrap 5.
 *   **Database:** MS SQL Server.
 
 ##  Core Features
