@@ -22,8 +22,8 @@ export const saveData=createAsyncThunk("saveData/selldevice",async(data)=>{
     .then((res)=>res.data);
     return resp;
 })
-export const fetchRequests=createAsyncThunk("fetchRequests/selldevice",async()=>{
-    const resp=await axios.get(variables.SELLREQUESTS_API+"GetRequests")
+export const fetchRequests=createAsyncThunk("fetchRequests/selldevice",async(id)=>{
+    const resp=await axios.post(variables.SELLREQUESTS_API+"GetRequests?userId="+id)
     .then((res)=>res.data);
     return resp;
 }) 

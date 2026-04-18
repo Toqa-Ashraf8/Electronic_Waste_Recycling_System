@@ -160,10 +160,11 @@ const registerUser=async()=>{
 
                 <div className="col-md-5 register-image-section text-center">
                     <div className="image-preview-wrapper">      
-                            <img src={variables.USERIMG_API+userImgPath} alt="" />                    
-                            <div className="upload-placeholder">
-                            </div>                        
-                      </div>                   
+                            {userImgPath ? 
+                            ( <img src={variables.USERIMG_API+userImgPath} alt="" /> )
+                            :<div style={{color:'#d0d0d0'}}>No Image Added</div>
+                            }                       
+                          </div>                   
                             <label 
                             htmlFor="profileImage" 
                             className="btn btn-outline-secondary btn-sm" 

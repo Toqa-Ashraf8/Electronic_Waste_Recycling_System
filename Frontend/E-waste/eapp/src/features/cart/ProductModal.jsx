@@ -139,7 +139,6 @@ return (
                             (<img src={variables.PRODUCTIMG_API+productImg} alt="" />)
                             :<div style={{color:'#d0d0d0'}}>No Image Added</div>
                             }
-                            
                         </div>
                     </div>
                  </div>

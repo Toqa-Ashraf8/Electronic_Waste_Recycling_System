@@ -1,0 +1,130 @@
+
+.contact-mgmt-container {
+    padding: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.contact-main-title {
+    padding: 20px;
+    margin-top: 20px;
+    text-align: center;
+    font-weight: 800;
+    color: #333;
+    text-transform: uppercase;
+}
+
+.contact-card-wrapper {
+    position: relative;
+    padding: 10px;
+}
+
+.contact-actions-sidebar {
+    background-color: #fbfdfc;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    left: -20px; 
+    top: 30px;
+    width: 60px;
+    padding: 20px 0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    z-index: 5;
+    border: 1px solid #edf7f5;
+    gap: 25px; 
+}
+
+.contact-btn-tool {
+    background: transparent;
+    border: none;
+    transition: 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.contact-btn-tool:hover {
+    transform: scale(1.25);
+}
+
+
+.contact-master-section {
+    background: #fbfdfc;
+    padding: 40px;
+    border-radius: 15px;
+    border: 1px solid #edf7f5;
+    margin-left: 70px;
+}
+
+.contact-stack-column {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.contact-input-group {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.contact-label {
+    color: #000 !important;
+    font-weight: 900 !important;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    width: 160px; 
+    text-align: left;
+}
+
+.contact-input-field {
+    flex: 1;
+    max-width: 450px; 
+    border-radius: 8px !important;
+    border: 1px solid #e2e8f0 !important;
+    padding: 10px 15px !important;
+    font-size: 14px;
+}
+
+.contact-input-field:focus {
+    border-color: #008080 !important;
+    box-shadow: 0 0 0 3px rgba(0, 128, 128, 0.1) !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .contact-actions-sidebar {
+        position: relative;
+        left: 0;
+        top: 0;
+        flex-direction: row;
+        width: 100%;
+        height: auto;
+        justify-content: center;
+        margin-bottom: 25px;
+        gap: 30px;
+        padding: 15px;
+    }
+    
+    .contact-master-section {
+        margin-left: 0;
+        padding: 25px 15px;
+    }
+
+    .contact-input-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .contact-label {
+        width: 100%;
+    }
+
+    .contact-input-field {
+        max-width: 100%;
+        width: 100% !important;
+    }
+}

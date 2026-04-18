@@ -8,6 +8,7 @@ import {
 import './UserProfile.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserOrders } from '../../services/authService';
+import { variables } from '../../components/variables';
 
 const UserProfile = () => {
   const {userDetails,ordersCount,pendingCount}=useSelector((state)=>state.auth);
@@ -29,8 +30,13 @@ const UserProfile = () => {
         <div className="tq-profile-page">
             <div className="tq-main-card">
                 <aside className="tq-sidebar">
-                    <div className="tq-avatar-wrapper">  
+                    <div className="tq-avatar-wrapper"> 
+                        {userDetails.UserImagePath ? (
+                            <img src={variables.USERIMG_API + userDetails.UserImagePath} />
+                        )
+                        :(
                         <img src={`https://ui-avatars.com/api/?name=${userDetails.UserName}&background=55a690&color=fff&size=200`} alt="" />
+                       )}   
                     </div>
                     <h3 className="tq-user-name">{userDetails.UserName}</h3>  
                 </aside>

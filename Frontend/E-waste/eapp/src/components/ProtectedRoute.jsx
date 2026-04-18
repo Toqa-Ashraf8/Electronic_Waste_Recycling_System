@@ -2,14 +2,16 @@ import { Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
-const ProtectedRoute = ({ children }) => {
-   const { token, role } = useSelector((state) => state.auth); 
-     if (!token) {
-     return <Navigate to="/register" replace />
+const ProtectedRoute = ({ children, allowedRoles }) => {
+    const { token, userDetails } = useSelector((state) => state.auth);
+
+    if (!token) {
+        return <Navigate to="/login" replace />;
     }
-   /*   if (allowedRoles && !allowedRoles.includes(role)) { 
+
+     if (allowedRoles && !allowedRoles.includes(userDetails.Role)) { 
         return <Navigate to="/home" replace />;
-    }  */
+    } 
     return children;
 };
 

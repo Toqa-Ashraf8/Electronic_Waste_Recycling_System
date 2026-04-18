@@ -27,8 +27,8 @@ export const saveDispatch=createAsyncThunk("saveDispatch/orders",async(params)=>
     .then((res)=>res.data);
     return resp;
 })
-export const getRequestWithDispatches=createAsyncThunk("getRequestWithDispatches/orders",async(reqId)=>{
-    const resp=await axios.post(variables.ORDERS_API+"GetDispatchInformation?requestId="+reqId)
+export const getRequestWithDispatches=createAsyncThunk("getRequestWithDispatches/orders",async(id)=>{
+    const resp=await axios.post(variables.ORDERS_API+"GetDispatchInformation?reqId="+id)
     .then((res)=>res.data);
     return resp;
 })

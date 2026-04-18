@@ -33,6 +33,7 @@ const initialState={
     requestRowIndex:-1,
     requestRowId:-1,
     isDeleteReqModalOpen:false,
+    
 }
 const sellingSlice=createSlice({
     name:'selldevice',

@@ -132,7 +132,8 @@ const ordersSlice=createSlice({
         })
         .addCase(search.fulfilled,(state,action)=>{
           state.ordersList=action.payload;
-        })
+        }) 
+        
     }
 })
 export const{

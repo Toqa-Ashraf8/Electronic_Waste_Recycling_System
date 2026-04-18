@@ -39,10 +39,22 @@
     font-size: 1.4rem;
 }
 
-.users-icon { background: #e0f2fe; color: #0ea5e9; }
-.pending-icon { background: #fff7ed; color: #d97706; }
-.points-icon { background: #f0fdf4; color: #55a690; }
-.sales-icon { background: #f5f3ff; color: #8b5cf6; }
+.users-icon { 
+    background: #e0f2fe; 
+    color: #0ea5e9; 
+}
+.pending-icon { 
+    background: #fff7ed; 
+    color: #d97706; 
+}
+.points-icon { 
+    background: #f0fdf4; 
+    color: #55a690; 
+}
+.sales-icon { 
+    background: #f5f3ff; 
+    color: #8b5cf6; 
+}
 
 .stat-info span {
     color: var(--text-light);
@@ -56,13 +68,11 @@
     font-weight: 700;
 }
 
-/* Charts Grid */
 .charts-main-grid {
     display: grid;
     grid-template-columns: 1.8fr 1.2fr;
     gap: 30px;
 }
-
 .chart-item-box {
     background: white;
     padding: 30px;
@@ -70,19 +80,16 @@
     border: 1px solid var(--border-soft);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
 }
-
 .chart-item-box h4 {
     margin-bottom: 25px;
     font-size: 1.1rem;
     color: var(--text-dark);
 }
-
 .doughnut-wrapper {
     height: 250px;
     position: relative;
 }
 
-/* Responsive */
 @media (max-width: 1024px) {
     .charts-main-grid {
         grid-template-columns: 1fr;

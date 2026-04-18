@@ -176,17 +176,16 @@ namespace ElectronicWasteAPI.Controllers
             }
         }
 
-
         [Route("GetDispatchInformation")]
         [HttpPost]
-        public IActionResult GetDispatchInformation(int requestId)
+        public IActionResult GetDispatchInformation(int reqId)
         {
             DataTable dt = new DataTable();
             string sqlg = "select * from vw_RequestsDetails where RequestID=@RequestID";
             using(SqlCommand cmd=new SqlCommand(sqlg, conn))
             {
                 cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("@RequestID", requestId);
+                cmd.Parameters.AddWithValue("@RequestID", reqId);
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
             }
@@ -235,10 +234,7 @@ namespace ElectronicWasteAPI.Controllers
                 {
                     if (conn.State == ConnectionState.Open) conn.Close();
                 }
-            }
-         
-           
-
+            }   
         }
 
         [Route("SendPoints")]
@@ -330,5 +326,8 @@ namespace ElectronicWasteAPI.Controllers
                 return new JsonResult(new DataTable());
             }
         }
+
+       
+
     }
 }

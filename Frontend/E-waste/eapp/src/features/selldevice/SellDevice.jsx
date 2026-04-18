@@ -131,7 +131,7 @@ const handleSave=async()=>{
    try {
       const result=await dispatch(saveData(data)).unwrap();
     if(result.saved){
-      await dispatch(fetchRequests()).unwrap();
+      await dispatch(fetchRequests(userDetails.UserID)).unwrap();
       toast.success(`Your Request ID is #${result.id}`,{
         theme:'colored',
         position:'top-right'
@@ -180,7 +180,7 @@ useEffect(() => {
   const loadInitialData=async()=>{
       await Promise.all([
         dispatch(fetchCategories()).unwrap(),
-        dispatch(fetchRequests()).unwrap(),
+        dispatch(fetchRequests(userDetails.UserID)).unwrap()
       ]);
   }
   loadInitialData();
@@ -398,8 +398,9 @@ useEffect(() => {
                 onChange={handleChange}
                 >
                   <option value="-1">- Choose nearest branch -</option>
-                  <option value="cairo">Cairo</option>
-                  <option value="alex">Alexandria</option>
+                  <option value="Nasr City Branch">Nasr City Branch</option>
+                  <option value="6th of October Branch">6th of October Branch</option>
+                  <option value="New Cairo Branch">New Cairo Branch</option>
                 </select>
               </div>
             )}

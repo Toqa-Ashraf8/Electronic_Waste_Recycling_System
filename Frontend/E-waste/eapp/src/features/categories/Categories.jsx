@@ -70,7 +70,7 @@ useEffect(()=>{
   return (
     <div className="container">
       {isCategoryModalOpen && <ItemsModal/>}
-    {isDeleteItemModalOpen && <DeleteItemModal/>}
+       {isDeleteItemModalOpen && <DeleteItemModal/>}
       {isSearchCatModalOpen && <CategorySearchModal/>}
       {isDeleteCatModalOpen && <DeleteCategoryModal/>}        
       <h5 className="black-bold-title"> CATEGORY MANAGEMENT</h5>

@@ -7,13 +7,15 @@ import { getRequestWithDispatches } from '../../services/ordersService';
 
 const TrackingPage = () => {
     const dispatch = useDispatch();
+    const {userDetails}=useSelector((state)=>state.auth);
     const {requestsList}=useSelector((state)=>state.selldevice);
     const {selectedCourier}=useSelector((state)=>state.orders);
     const [showModal, setShowModal] = useState(false);
-    const handleViewCourier = (reqId) => {
-       dispatch(getRequestWithDispatches(reqId));
+    const handleViewCourier = (userid) => {
+       dispatch(getRequestWithDispatches(userid));
        setShowModal(true);
     };
+ 
     return (
         <div className="tracking-wrapper">
             <div className="tracking-header">
@@ -38,8 +40,6 @@ const TrackingPage = () => {
                             <td className="id-column">#{req.RequestID}</td>
                             <td className="column">{req.DeviceItem}</td>
                             <td className="date-column">{req.SubmissionDate?.split('T')[0]}</td>   
-                            
-                            {/* عمود الحالة (Status) */}
                             <td>
                                 {req.RequestStatus === 0 && (
                                     <div className="status-label pending">

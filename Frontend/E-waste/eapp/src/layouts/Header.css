@@ -46,3 +46,17 @@ nav{
   background-color: var(--primary-color);
   color: white !important;
 }
+.btn-logout-custom {
+  background: transparent;
+  border: 1px solid #c50d0d;
+  color: #c20e0e; 
+  padding: 8px 12px;
+  border-radius: 12px;
+  transition: all 0.3s;
+}
+
+.btn-logout-custom:hover {
+  background: #fff5f5; 
+  color: #e53e3e;   
+  border-color: #feb2b2;
+}

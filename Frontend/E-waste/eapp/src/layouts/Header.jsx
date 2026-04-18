@@ -2,7 +2,11 @@ import React from 'react'
 import logo from './logo3.png'
 import './Header.css'
 import{Link} from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import HeaderActions from './HeaderActions'
 const Header = () => {
+   const {token ,userDetails}=useSelector((state)=>state.auth);
+    if (!token) return null;
   return (
     <div>
   <nav className="navbar navbar-expand-lg navbar-light ">
@@ -23,12 +27,14 @@ const Header = () => {
     </button>
     <div className="collapse navbar-collapse" id="navbarNavDropdown">
       <ul className="navbar-nav">
-      
-         <li className="nav-item">
+      {userDetails.Role==='Admin' && (
+          <li className="nav-item">
           <Link className="nav-link active" aria-current="page" to="/dashboard">
             Dashboard
           </Link>
         </li>
+      )}
+        
         <li className="nav-item">
           <Link className="nav-link active" aria-current="page" to="/home">
             Home
@@ -60,6 +66,7 @@ const Header = () => {
             Contact Us
           </Link>
         </li>
+        {userDetails.Role==='Admin' && (
         <li className="nav-item dropdown">
           <Link
             className="nav-link dropdown-toggle"
@@ -75,43 +82,58 @@ const Header = () => {
             className="dropdown-menu"
             aria-labelledby="navbarDropdownMenuLink"
           >
+             {userDetails.Role==='Admin' && (
              <li>
               <Link className="nav-link" to="/add-categories">
                Categories
               </Link>
             </li>
+            )}
+             {userDetails.Role==='Admin' && (
               <li>
               <Link className="nav-link" to="/orders">
                 Orders
               </Link>
             </li>
-            <li>
-              <Link className="nav-link" to="/cartItems">
-               Cart Items
-              </Link>
-            </li>
+            )}
+             {userDetails.Role==='Admin' && (
+              <li>
+                <Link className="nav-link" to="/cartItems">
+                Cart Items
+                </Link>
+              </li>
+            )}
+            {userDetails.Role==='Admin' && (
               <li>
               <Link className="nav-link" to="/points">
                   Points
               </Link>
             </li> 
+            )}
+            {userDetails.Role==='Admin' && (
              <li>
               <Link className="nav-link" to="/addbranches">
                   Branches
               </Link>
             </li> 
+            )}
+           {userDetails.Role==='Admin' && (
             <li>
               <Link className="nav-link" to="/addcontacts">
                   Contacts
               </Link>
             </li> 
+            )}
           </ul>
         </li>
+        )}
       </ul>
+      <div className="ms-lg-auto">
+          {token && <HeaderActions />}
+        </div>
     </div>
   </div>
 </nav>
-
     </div>
   )
 }

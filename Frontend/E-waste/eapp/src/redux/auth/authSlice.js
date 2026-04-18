@@ -21,6 +21,16 @@ const authSlice=createSlice({
         setUserValues:(state,action)=>{
             state.user={...state.user,...action.payload};
         },
+        confirmLoggingin:(state,action)=>{
+            state.isLoggedin=action.payload;
+            if(state.isLoggedin===true){
+              state.token="";
+              state.user=initialState.user;
+            }
+        },
+        resetUserForm:(state,action)=>{
+            state.user=initialState.user;
+        },
     },
     extraReducers:(builder)=>{
         builder
@@ -57,6 +67,6 @@ const authSlice=createSlice({
         })
     }
 })
-export const {setUserValues}=authSlice.actions;
+export const {setUserValues,confirmLoggingin,resetUserForm}=authSlice.actions;
 const authReducer=authSlice.reducer;
 export default authReducer;

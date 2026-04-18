@@ -1,0 +1,126 @@
+
+.branch-mgmt-container {
+    padding: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.branch-main-title {
+    padding: 20px;
+    margin-top: 20px;
+    text-align: center;
+    font-weight: 800;
+    color: #333;
+}
+
+.branch-card-wrapper {
+    position: relative;
+    padding: 10px;
+}
+.branch-actions-sidebar {
+    background-color: #fbfdfc;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    left: -20px; 
+    top: 30px;
+    width: 60px;
+    padding: 20px 0; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    z-index: 5;
+    border: 1px solid #edf7f5;
+    gap: 25px; 
+}
+
+.branch-btn-tool {
+    background: transparent;
+    border: none;
+    transition: 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.branch-btn-tool:hover {
+    transform: scale(1.25);
+}
+.branch-master-section {
+    background: #fbfdfc;
+    padding: 40px;
+    border-radius: 15px;
+    border: 1px solid #edf7f5;
+    margin-left: 70px;
+}
+
+.branch-stack-column {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.branch-input-group {
+    display: flex;
+    align-items: center; 
+    gap: 20px;
+}
+
+.branch-label {
+    color: #000 !important;
+    font-weight: 900 !important;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    width: 150px; 
+    text-align: left;
+}
+
+.branch-input-field {
+    flex: 1; 
+    max-width: 450px; 
+    border-radius: 8px !important;
+    border: 1px solid #e2e8f0 !important;
+    padding: 10px 15px !important;
+    font-size: 14px;
+}
+
+.branch-input-field:focus {
+    border-color: #008080 !important;
+    box-shadow: 0 0 0 3px rgba(0, 128, 128, 0.1) !important;
+}
+
+
+@media (max-width: 768px) {
+    .branch-actions-sidebar {
+        position: relative;
+        left: 0;
+        top: 0;
+        flex-direction: row;
+        width: 100%;
+        height: auto;
+        justify-content: center;
+        margin-bottom: 25px;
+        gap: 30px;
+        padding: 15px;
+    }
+    
+    .branch-master-section {
+        margin-left: 0;
+        padding: 25px 15px;
+    }
+
+    .branch-input-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .branch-label {
+        width: 100%;
+    }
+
+    .branch-input-field {
+        max-width: 100%;
+        width: 100% !important;
+    }
+}

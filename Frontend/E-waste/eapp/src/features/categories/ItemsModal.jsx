@@ -128,8 +128,6 @@ const ItemsModal = () => {
                      onClick={()=>addToTable()}
                      >Add</button>
                      <button className='btn btn-danger'>Close</button>  
-                
-                
                 </div>
             </div>
         </div>

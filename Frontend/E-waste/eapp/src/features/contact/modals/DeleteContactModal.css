@@ -1,0 +1,77 @@
+.cnt-delete-overlay {
+    position: fixed; 
+    top: 0; 
+    left: 0;
+    width: 100%; 
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    z-index: 5000;
+}
+
+.cnt-delete-card {
+    background: #fff;
+    width: 360px; 
+    padding: 25px;
+    border-radius: 12px; 
+    text-align: center;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+    animation: cntZoomEffect 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes cntZoomEffect {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.cnt-warn-icon {
+    font-size: 35px; 
+    color: #f5222d; 
+    margin-bottom: 15px;
+}
+
+.cnt-delete-body p { 
+    color: #666; 
+    font-size: 0.9rem; 
+    margin-bottom: 5px; 
+}
+.cnt-target-name { 
+    font-size: 0.8rem; 
+    color: #aaa; 
+    text-transform: uppercase; 
+}
+
+.cnt-delete-footer { 
+    display: flex; 
+    margin-top: 25px; 
+    gap: 10px; 
+}
+
+.cnt-delete-footer button {
+    flex: 1; 
+    padding: 11px; 
+    border: none;
+    border-radius: 6px; 
+    font-weight: bold;
+    cursor: pointer; 
+    transition: 0.3s;
+}
+
+.cnt-btn-cancel { 
+    background: #f0f2f5; 
+    color: #595959; 
+}
+.cnt-btn-cancel:hover { 
+    background: #e6e8eb; 
+}
+
+.cnt-btn-delete { 
+    background: #f5222d; 
+    color: #fff; 
+}
+.cnt-btn-delete:hover { 
+    background: #cf1322; 
+    box-shadow: 0 4px 10px rgba(245, 34, 45, 0.3); 
+}

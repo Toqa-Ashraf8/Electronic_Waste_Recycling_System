@@ -21,6 +21,8 @@ import PaymentPage from './features/techstore/PaymentPage';
 import UserProfile from './features/userProfile/UserProfile';
 import PointsPage from './features/points/PointsPage';
 import AdminDashboard from './features/dashboard/AdminDashboard';
+import AddBranches from './features/branches/AddBranches';
+import AddContacts from './features/contact/AddContacts';
 function App() {
  const {globalError,globalMessage}=useSelector((state)=>state.ui);
  const {token}=useSelector((state)=>state.auth);
@@ -72,7 +74,7 @@ useEffect(() => {
                 }/>
                 <Route path='/add-categories' 
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute allowedRoles={['Admin']}>
                     <Categories/>
                   </ProtectedRoute>
                 }/>
@@ -84,7 +86,7 @@ useEffect(() => {
                 }/> 
                 <Route path='/orders' 
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute allowedRoles={['Admin']}>
                     <Orders/>
                   </ProtectedRoute>
                 }/>
@@ -102,7 +104,7 @@ useEffect(() => {
                 }/>
                   <Route path='/cartItems' 
                  element={
-                  <ProtectedRoute>
+                  <ProtectedRoute allowedRoles={['Admin']}>
                     <CartItems/>
                   </ProtectedRoute>
                 }/>
@@ -120,14 +122,26 @@ useEffect(() => {
                 }/>
                <Route path='/points' 
                    element={
-                  <ProtectedRoute>
+                  <ProtectedRoute allowedRoles={['Admin']}>
                     <PointsPage/>
                   </ProtectedRoute>
                 }/> 
                 <Route path='/dashboard' 
                    element={
-                  <ProtectedRoute>
+                  <ProtectedRoute allowedRoles={['Admin']}>
                     <AdminDashboard/>
+                  </ProtectedRoute>
+                }/>
+                 <Route path='/addbranches' 
+                   element={
+                  <ProtectedRoute allowedRoles={['Admin']}>
+                    <AddBranches/>
+                  </ProtectedRoute>
+                }/>
+                <Route path='/addcontacts' 
+                   element={
+                  <ProtectedRoute allowedRoles={['Admin']}>
+                    <AddContacts/>
                   </ProtectedRoute>
                 }/>
     </Routes>

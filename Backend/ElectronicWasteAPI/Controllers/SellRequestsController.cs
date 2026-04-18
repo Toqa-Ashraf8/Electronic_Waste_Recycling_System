@@ -231,13 +231,18 @@ namespace ElectronicWasteAPI.Controllers
         }
 
         [Route("GetRequests")]
-        [HttpGet]
-        public IActionResult GetRequests()
+        [HttpPost]
+        public IActionResult GetRequests(int userId)
         {
             DataTable dt = new DataTable();
-            string sqlg = "select * from SellRequests";
-            SqlDataAdapter da = new SqlDataAdapter(sqlg, conn);
-            da.Fill(dt);
+            string sqlg = "select * from SellRequests where UserID=@UserID";
+            using (SqlCommand cmd = new SqlCommand(sqlg, conn))
+            {
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@UserID", userId);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+            }
             return Ok(dt);
         }
         [Route("DeleteRequest")]
