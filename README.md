@@ -4,41 +4,39 @@ A Full-Stack Circular Economy solution that digitizes e-waste recycling—from a
 ##  Why This Project? (The Problem)
 Electronic waste often ends up in landfills, causing environmental hazards. This system solves this by incentivizing users to recycle through a Loyalty Rewards Program, turning old devices into valuable salvaged components for a sustainable e-commerce marketplace.
 
-##  Core Features
-
-### 1. Role-Based Access Control (RBAC) 
-The system implements a secure multi-user environment where each role (Admin vs. Customer) has a tailored interface and specific permissions.
-
-* **Security & Auth:** Robust protection using **JWT** and **BCrypt** hashing.
-* **Role-Specific Portals:** Tailored Dashboards for Admins (Analytics via **Chart.js**) and Customers (Points Wallet & Order Tracking).
-  
-### 2. Dynamic Valuation & Pricing Engine
-* **Automated Estimation:** A smart engine that calculates the device's value instantly based on category and technical condition (20%, 50%, 80%, 100%).
-* **Logistics Workflow:** Integrated system for choosing disposal methods (Branch Drop-off vs. Scheduled "Mandoob" Pickup) with dynamic address mapping.
-  
-### 3. Managerial Approval & Review Workflow
-* **Request Lifecycle:**Admins receive recycling offers and can **Approve or Reject** them based on device specifications and recovery potential.
-* **Real-Time Status Tracking:** Users receive live updates in their profile as the request moves from **Pending to Received** and finally **Processed**.
-
-### 4. Inventory & Component Salvaging (Master-Detail)
-* **Master-Detail Architecture:**Administrators can decompose a single recycled device **(Master)** into multiple functional spare parts **(Details)** like Screens, Batteries, and RAM.
-* **Live Stock Management:** Instant inventory updates in the e-commerce shop once salvaged components are verified as functional.
-
-### 5. Loyalty Points & E-Commerce Integration
-* **Points Engine:** A specialized engine that credits the user's digital wallet with **Loyalty Points** immediately upon a successful recycling transaction.
-* **Redemption Store:** A full shopping cart where users can buy refurbished devices or salvaged parts using their earned points or cash.
-* **Wallet Management:** Real-time points balance and transaction history in the User Dashboard.
-
-### 6. Business Analytics & Reporting
-* **Performance Charts:** Visualizing daily recycling requests, sales volume, and user growth using **Chart.js**.
-* **Order History:** Comprehensive logs for managers to track every sale and recycling deal.
-
 ##  Tech Stack
-* **Frontend:** React.js, Redux Toolkit (Complex State Management), **Axios** For Fetching Data ,**Bootstrap**,Custom CSS.
-* **Backend:** .NET Core Web API (RESTful Services), JWT Authentication, Entity Framework Core.
-* **Database:** MS SQL Server using EF Core Code-First Approach (Migrations, Data Modeling)
-* **Data Visualization:** Chart.js for business analytics.
-* **Principles:** Developed with **Clean Code** standards, **SOLID Principles**, and **Focusing on Modular Logic**.
+*   **Backend:** .NET Core Web API, Entity Framework Core, **JWT (Secure Auth)**, BCrypt Hashing.
+*   **Frontend:** React.js, Redux Toolkit, Chart.js, Bootstrap 5.
+*   **Database:** MS SQL Server.
+
+##  Core Features
+### 1. Secure Authentication & RBAC
+A secure entry system using **JWT Tokens** to manage permissions for both **Admins** and **Customers**.
+<p align="center">
+  <img src="screenshots/Register.png" width="45%" alt="Create Account" />
+  <img src="screenshots/Login.png" width="45%" alt="Login Page" />
+</p>
+
+### 2. Smart Valuation Engine (User Journey)
+Users can submit their old devices. The system calculates an **Instant Price Estimate** based on the technical condition.
+<p align="center">
+  <img src="screenshots/ValueYourWaste.png" width="45%" alt="Valuation Form" />
+  <img src="screenshots/Profile.png" width="45%" alt="User Profile" />
+</p>
+
+### 3. Admin Decision Engine & Analytics
+Admins monitor business performance and manage the recycling workflow through a high-level **Data Dashboard**.
+<p align="center">
+  <img src="screenshots/AdminDashboard.png" width="45%" alt="Admin Analytics" />
+  <img src="screenshots/OrderWorkflow.png" width="45%" alt="Request Management" />
+</p>
+
+### 4. Component Marketplace & Cart
+Functional spare parts are listed in a marketplace where users can redeem their **Loyalty Points**.
+<p align="center">
+  <img src="screenshots/SecondLifeStore.png" width="45%" alt="Storefront" />
+  <img src="screenshots/CartManagement.png" width="45%" alt="Shopping Cart" />
+</p>
 
 ##  Database Architecture & Logic
 The system relies on a robust relational schema:
