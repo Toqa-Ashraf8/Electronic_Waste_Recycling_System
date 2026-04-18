@@ -10,12 +10,10 @@ import { formatTime } from '../../components/formatTime';
 
 const ContactUs = () => {
      const { contacts } = useSelector((state) => state.companyProfile);
-    const dispatch=useDispatch();
-
+     const dispatch=useDispatch();
 
     useEffect(()=>{
         dispatch(fetchContacts());
-        
     },[])
   return (
     <div className="contact-page-hud">
