@@ -1,11 +1,9 @@
 ﻿using ElectronicWasteAPI.EF;
 using ElectronicWasteAPI.Models;
 using ElectronicWasteAPI.ViewModels;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Data;
-using System.Data.SqlClient;
+
 
 namespace ElectronicWasteAPI.Controllers
 {
@@ -15,16 +13,14 @@ namespace ElectronicWasteAPI.Controllers
     {
         private readonly DataContext _context;
         private readonly IWebHostEnvironment _env;
-        SqlConnection conn;
         public SellRequestsController(DataContext context, IWebHostEnvironment env)
         {
             _env = env;
             _context = context;
-            conn = new SqlConnection(_context.Database.GetConnectionString());
         }
         [Route("UploadDeviceImage")]
         [HttpPost]
-        public IActionResult UploadDeviceImage([FromForm] DeviceImages image)
+        public async Task<IActionResult> UploadDeviceImage([FromForm] DeviceImages image)
         {
             if (image.deviceFile == null) return BadRequest("No file uploaded");
             var postedFile = image.deviceFile;
@@ -32,242 +28,127 @@ namespace ElectronicWasteAPI.Controllers
             var physicalPath = _env.ContentRootPath + "/Devices_Images/" + fileName;
             using (var stream = new FileStream(physicalPath, FileMode.Create))
             {
-                postedFile.CopyTo(stream);
+                await postedFile.CopyToAsync(stream);
             }
             return Ok(fileName);
         }
         [Route("GetBrandByItem")]
         [HttpPost]
-        public IActionResult GetBrandByItem(int id)
+        public async Task<IActionResult> GetBrandByItem(int id)
         {
-            DataTable dt = new DataTable();
-            string sqlg = @"select * from Items where ItemID=@ItemID";
-            if (conn.State == ConnectionState.Closed) conn.Open();
-            using (SqlCommand cmd = new SqlCommand(sqlg, conn))
+            var item = await _context.Items.FindAsync(id);
+            if (item == null)
             {
-                cmd.Parameters.AddWithValue("@ItemID", id);
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(dt);
+                return Ok(new List<object>());
             }
-            if (conn.State == ConnectionState.Open) conn.Close();
-            return Ok(dt);
+
+            return Ok(new List<object> { item });
         }
         [Route("GetQualities")]
         [HttpGet]
-        public IActionResult GetQualities()
+        public async Task<IActionResult> GetQualities()
         {
-            DataTable dt = new DataTable();
-            string sqlg = @"select Quality from Items";
-            SqlDataAdapter da = new SqlDataAdapter(sqlg,conn);
-            da.Fill(dt);
-            return Ok(dt);
+            var qualities = await _context.Items
+                .Select(i => new { i.Quality })
+                .ToListAsync();
+            return Ok(qualities);
         }
         [Route("getItemsConditionByQuality")]
         [HttpPost]
-        public IActionResult getItemsConditionByQuality([FromBody] ItemDetails item)
+        public async Task<IActionResult> getItemsConditionByQuality([FromBody] ItemDetails item)
         {
             var conditions = new List<Conditions>();
-            if (conn.State == ConnectionState.Closed) conn.Open();
-            using (SqlTransaction transaction = conn.BeginTransaction())
+            try
             {
-                try
-                {  
-                    DataTable dt = new DataTable();
-                    DataTable dt2 = new DataTable();
-                    string searchquality = @"select * from Items where ItemID=@ItemID and Quality=@Quality";
-                    string sqlg = "select QualityID from Qualities where CategoryID=@CategoryID and Quality=@Quality";
-                    using (SqlCommand cmd = new SqlCommand(searchquality, conn, transaction))
-                    {
-                        cmd.Parameters.AddWithValue("@ItemID", item.ItemID);
-                        cmd.Parameters.AddWithValue("@Quality", item.Quality);
-                        SqlDataAdapter da = new SqlDataAdapter(cmd);
-                        da.Fill(dt);
-                    }
-                    using (SqlCommand cmd2 = new SqlCommand(sqlg, conn, transaction))
-                    {
-                        cmd2.Parameters.AddWithValue("@CategoryID", item.CategoryID);
-                        cmd2.Parameters.AddWithValue("@Quality", item.Quality);
-                        SqlDataAdapter da2 = new SqlDataAdapter(cmd2);
-                        da2.Fill(dt2);
-                    }
-                    if (dt.Rows.Count > 0)
-                    {
-                       
-                          conditions.Add(new Conditions
-                          {
-                             QualityID= Convert.ToInt32(dt2.Rows[0]["QualityID"]),
-                             Condition = dt.Rows[0]["Condition"].ToString(),
-                             EstimatedPrice = Convert.ToInt32(dt.Rows[0]["EstimatedPrice"])
-                          });
-                    }
-                    else
-                    {
-                      DataTable dataTable = new DataTable();
-                      string getCond = @"select Condition,EstimatedPrice from Qualities 
-                                         where CategoryID=@CategoryID and Quality=@Quality";
+                var dbItem = await _context.Items
+                 .FirstOrDefaultAsync(i => i.ItemID == item.ItemID && i.Quality == item.Quality);
 
-                      using (SqlCommand cmd = new SqlCommand(getCond, conn, transaction))
-                      {
-                         cmd.Parameters.AddWithValue("@CategoryID", item.CategoryID);
-                         cmd.Parameters.AddWithValue("@Quality", item.Quality);
-                         SqlDataAdapter adp = new SqlDataAdapter(cmd);
-                         adp.Fill(dataTable);
-                      }
-                      if (dataTable.Rows.Count > 0)
-                      {
-                            conditions.Add(new Conditions
-                            {
-                                QualityID = Convert.ToInt32(dt2.Rows[0]["QualityID"]),
-                                Condition = dataTable.Rows[0]["Condition"].ToString(),
-                                EstimatedPrice = Convert.ToInt32(dataTable.Rows[0]["EstimatedPrice"])
-                            });
-                      }
-                    }  
-                    transaction.Commit();
-                    var data = new { conditions = conditions };
-                    return Ok(data);
-                }
-                catch (Exception ex)
+                var dbQuality = await _context.Qualities
+                 .FirstOrDefaultAsync(q => q.CategoryID == item.CategoryID && q.Quality == item.Quality);
+
+                if (dbItem != null && dbQuality != null)
                 {
-                    transaction.Rollback();
-                    return BadRequest(new { error = ex.Message});
+                    conditions.Add(new Conditions
+                    {
+                        QualityID = dbQuality.QualityID,
+                        Condition = dbItem.Condition,
+                        EstimatedPrice = dbItem.EstimatedPrice ?? 0
+                    });
                 }
-                finally
+                else if (dbQuality != null)
                 {
-                    if (conn.State == ConnectionState.Open) conn.Close();
+                    conditions.Add(new Conditions
+                    {
+                        QualityID = dbQuality.QualityID,
+                        Condition = dbQuality.Condition,
+                        EstimatedPrice = dbQuality.EstimatedPrice ?? 0
+                    });
                 }
+                var data = new { conditions = conditions };
+                return Ok(data);
             }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+               
         }
 
         [Route("SaveRequest")]
         [HttpPost]
-        public IActionResult SaveRequest([FromBody]SellRequest req)
+        public async Task<IActionResult> SaveRequest([FromBody]SellRequest req)
         {
             int id = Convert.ToInt32(req.RequestID);
             bool saved = false;
             bool updated = false;
-            if (id == 0)
-            {
                 try
                 {
-                    if (conn.State == ConnectionState.Closed) conn.Open();
-                    string saveR = @"insert into SellRequests (CategoryID,DeviceCategory,DeviceBrand,ItemID,DeviceItem,QualityID,
-                                    DeviceQuality,DeviceCondition,EstimatedPrice,DeviceImagePath,PickUpMethod,
-                                    ShippingAddress,PickUpDate,SubmissionDate,RequestStatus,UserID) 
-                                    values (@CategoryID,@DeviceCategory,@DeviceBrand,@ItemID,@DeviceItem,@QualityID,
-                                    @DeviceQuality,@DeviceCondition,@EstimatedPrice,@DeviceImagePath,@PickUpMethod,
-                                    @ShippingAddress,@PickUpDate,@SubmissionDate,@RequestStatus,@UserID)
-                                    select SCOPE_IDENTITY()";
-                    using(SqlCommand cmd=new SqlCommand(saveR, conn))
+                    if (req.RequestID == 0)
                     {
-                        cmd.Parameters.Clear();
-                        cmd.Parameters.AddWithValue("@CategoryID",req.CategoryID);
-                        cmd.Parameters.AddWithValue("@DeviceCategory",req.DeviceCategory);
-                        cmd.Parameters.AddWithValue("@DeviceBrand",req.DeviceBrand);
-                        cmd.Parameters.AddWithValue("@ItemID", req.ItemID);
-                        cmd.Parameters.AddWithValue("@DeviceItem", req.DeviceItem);
-                        cmd.Parameters.AddWithValue("@QualityID", req.QualityID);
-                        cmd.Parameters.AddWithValue("@DeviceQuality", req.DeviceQuality);
-                        cmd.Parameters.AddWithValue("@DeviceCondition", req.DeviceCondition);
-                        cmd.Parameters.AddWithValue("@EstimatedPrice", req.EstimatedPrice);
-                        cmd.Parameters.AddWithValue("@DeviceImagePath", req.DeviceImagePath);
-                        cmd.Parameters.AddWithValue("@PickUpMethod", req.PickUpMethod);
-                        cmd.Parameters.AddWithValue("@ShippingAddress", req.ShippingAddress);
-                        cmd.Parameters.AddWithValue("@PickUpDate", req.PickUpDate);
-                        cmd.Parameters.AddWithValue("@SubmissionDate", req.SubmissionDate);
-                        cmd.Parameters.AddWithValue("@RequestStatus", req.RequestStatus);
-                        cmd.Parameters.AddWithValue("@UserID", req.UserID);
-                        id = Convert.ToInt32(cmd.ExecuteScalar());
+                        _context.SellRequests.Add(req);
                         saved = true;
                     }
-                }
-                catch (Exception ex){ return BadRequest(new { error = ex.Message });}
-                finally {if (conn.State == ConnectionState.Open) conn.Close(); }
-               
-                    
-               
-            }
-            else
-            {
-                try
-                {
-                    if (conn.State == ConnectionState.Closed) conn.Open();
-                    string updateR = @"update SellRequests set CategoryID=@CategoryID,DeviceCategory=@DeviceCategory
-                                     ,DeviceBrand=@DeviceBrand,ItemID=@ItemID,DeviceItem=@DeviceItem,QualityID=@QualityID,
-                                      DeviceQuality=@DeviceQuality,DeviceCondition=@DeviceCondition,EstimatedPrice=@EstimatedPrice,
-                                      DeviceImagePath=@DeviceImagePath,PickUpMethod=@PickUpMethod,ShippingAddress=@ShippingAddress
-                                     ,PickUpDate=@PickUpDate,SubmissionDate=@SubmissionDate,RequestStatus=@RequestStatus
-                                     ,UserID=@UserID
-                                     where RequestID=@RequestID"; 
-                    using (SqlCommand cmd = new SqlCommand(updateR, conn))
+                    else
                     {
-                        cmd.Parameters.Clear();
-                        cmd.Parameters.AddWithValue("@CategoryID", req.CategoryID);
-                        cmd.Parameters.AddWithValue("@DeviceCategory", req.DeviceCategory);
-                        cmd.Parameters.AddWithValue("@DeviceBrand", req.DeviceBrand);
-                        cmd.Parameters.AddWithValue("@ItemID", req.ItemID);
-                        cmd.Parameters.AddWithValue("@DeviceItem", req.DeviceItem);
-                        cmd.Parameters.AddWithValue("@QualityID", req.QualityID);
-                        cmd.Parameters.AddWithValue("@DeviceQuality", req.DeviceQuality);
-                        cmd.Parameters.AddWithValue("@DeviceCondition", req.DeviceCondition);
-                        cmd.Parameters.AddWithValue("@EstimatedPrice", req.EstimatedPrice);
-                        cmd.Parameters.AddWithValue("@DeviceImagePath", req.DeviceImagePath);
-                        cmd.Parameters.AddWithValue("@PickUpMethod", req.PickUpMethod);
-                        cmd.Parameters.AddWithValue("@ShippingAddress", req.ShippingAddress);
-                        cmd.Parameters.AddWithValue("@PickUpDate", req.PickUpDate);
-                        cmd.Parameters.AddWithValue("@SubmissionDate", req.SubmissionDate);
-                        cmd.Parameters.AddWithValue("@RequestStatus", req.RequestStatus);
-                        cmd.Parameters.AddWithValue("@UserID", req.UserID);
-                        cmd.Parameters.AddWithValue("@RequestID",id);
-                        cmd.ExecuteNonQuery();
+                        var existingReq = await _context.SellRequests.FindAsync(req.RequestID);
+                        if (existingReq == null) return NotFound();
+
+                        _context.Entry(existingReq).CurrentValues.SetValues(req);
                         updated = true;
                     }
+
+                    await _context.SaveChangesAsync();
+                    return Ok(new { id = req.RequestID, saved = saved, updated = updated });
                 }
-                catch (Exception ex) { return BadRequest(new { error = ex.Message }); }
-                finally { if (conn.State == ConnectionState.Open) conn.Close(); }
-            }
-            var data = new { id = id, saved = saved, updated = updated };
-            return Ok(data);
+                catch (Exception ex){ return BadRequest(new { error = ex.Message });}
         }
 
         [Route("GetRequests")]
         [HttpPost]
-        public IActionResult GetRequests(int userId)
+        public async Task<IActionResult> GetRequests(int userId)
         {
-            DataTable dt = new DataTable();
-            string sqlg = "select * from SellRequests where UserID=@UserID";
-            using (SqlCommand cmd = new SqlCommand(sqlg, conn))
-            {
-                cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("@UserID", userId);
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(dt);
-            }
-            return Ok(dt);
+            var requests = await _context.SellRequests
+                 .Where(r => r.UserID == userId)
+                 .ToListAsync();
+            return Ok(requests);
         }
         [Route("DeleteRequest")]
         [HttpDelete]
-        public IActionResult DeleteRequest(int id)
+        public async Task<IActionResult> DeleteRequest(int id)
         {
-            bool deleted = false;
-            if (conn.State == ConnectionState.Closed) conn.Open();
+            bool deleted = false;       
             try
             {
-                if (id > 0 || id !=0)
-                {
-                    string del = "delete SellRequests where RequestID=@RequestID";   
-                    using (SqlCommand cmd = new SqlCommand(del, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@RequestID", id);
-                        cmd.ExecuteNonQuery(); 
-                        deleted = true;
-                    }
-                }
-                var data = new { deleted = deleted };
-                return Ok(data);
+                var req = await _context.SellRequests.FindAsync(id);
+                if (req == null) return NotFound(new { deleted = false });
+
+                _context.SellRequests.Remove(req);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { deleted = true });
             }
             catch (Exception ex){ return BadRequest(new { error = ex.Message });}
-            finally { if (conn.State == ConnectionState.Open) conn.Close(); }
+     
         }
 
     }
