@@ -44,6 +44,10 @@ The system relies on a robust relational schema:
 * **One-to-Many:** Recycled Device ➡️ Salvaged Components.
 * **Automation:** The system automatically calculates loyalty points based on device condition and updates the user's wallet balance upon manager approval. 
 
+###  Database Schema (ERD)
+The system relies on a highly normalized relational schema to ensure data integrity.
+![System ERD Diagram](./docs/ERD.jpeg)
+
 ##  System Workflow (Business Logic)
 ```mermaid
 graph TD
