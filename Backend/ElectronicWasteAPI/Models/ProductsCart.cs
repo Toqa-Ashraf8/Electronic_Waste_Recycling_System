@@ -16,6 +16,6 @@ namespace ElectronicWasteAPI.Models
         public string? Description { get; set; }
         [ForeignKey("CategoryID")]
         public int? CategoryID { get; set; }
-
+       
     }
 }

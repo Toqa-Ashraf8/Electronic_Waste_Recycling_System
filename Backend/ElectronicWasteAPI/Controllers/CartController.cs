@@ -37,39 +37,60 @@ namespace ElectronicWasteAPI.Controllers
 
         [Route("UpsertProducts")]
         [HttpPost]
-        public IActionResult UpsertProducts([FromBody] CartCategory cat)
+        public async Task<IActionResult> UpsertProducts([FromBody] CartCategory cat)
         {
             bool saved = false;
             bool updated = false;
-            int id = Convert.ToInt32(cat.CategoryID);
-                try
-                {
-                    var existingCat = _context.CartCategories
-                                  .Include(c => c.products) 
-                                  .FirstOrDefault(c => c.CategoryID == id);
-                    if (id == 0 || existingCat==null)
-                    {
-                                _context.CartCategories.Add(cat); 
-                                saved = true;
-                    }
-                    else
-                    {
-                            existingCat.CategoryName = cat.CategoryName;
-                            _context.Products.RemoveRange(existingCat.products);
-                            existingCat.products = cat.products;
-                            updated = true;
-                        
 
-                    }
-                    _context.SaveChanges();
-                    return Ok(new { saved = saved, id = id ,updated=updated});
-                }
-                catch (Exception ex)
+            try
+            {
+                var existingCat = await _context.CartCategories
+                                                .Include(c => c.products)
+                                                .FirstOrDefaultAsync(c => c.CategoryID == cat.CategoryID);
+
+                if (cat.CategoryID == 0 || existingCat == null)
                 {
-                   
-                    return BadRequest(new { error = ex.Message, saved = false ,updated=false});
+                     _context.CartCategories.Add(cat);
+                    await _context.SaveChangesAsync();
+
+                    if (cat.products != null && cat.products.Any())
+                    {
+                        foreach (var product in cat.products)
+                        {
+                            product.CategoryID = cat.CategoryID; 
+                        }
+                        await _context.SaveChangesAsync();
+                    }
+                    saved = true;
                 }
-              
+                else
+                {
+                    existingCat.CategoryName = cat.CategoryName;
+
+                    if (existingCat.products != null)
+                    {
+                        _context.Products.RemoveRange(existingCat.products);
+                    }
+                    if (cat.products != null)
+                    {
+                        foreach (var product in cat.products)
+                        {
+                            product.CategoryID = existingCat.CategoryID;
+                        }
+                        existingCat.products = cat.products;
+                    }
+
+                    updated = true;
+                    await _context.SaveChangesAsync();
+                }
+
+                return Ok(new { saved = saved, id = cat.CategoryID, updated = updated });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message, saved = false, updated = false });
+            }
+
         }
 
         [Route("GetCategories")]

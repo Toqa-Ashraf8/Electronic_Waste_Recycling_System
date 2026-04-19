@@ -16,7 +16,9 @@ import {
 import ItemsModal from "./ItemsModal";
 import { saveAllData } from "../../services/categoryService";
 import { toast } from "react-toastify";
-
+import CategorySearchModal from "./modals/CategorySearchModal";
+import DeleteCategoryModal from "./modals/DeleteCategoryModal";
+import DeleteItemModal from "./modals/DeleteItemModal";
 function Categories() {
 const {
   category,
