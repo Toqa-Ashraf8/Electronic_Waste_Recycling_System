@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using System.Data;
-using System.Data.SqlClient;
 using System.Globalization;
 
 namespace ElectronicWasteAPI.Controllers
@@ -15,149 +13,89 @@ namespace ElectronicWasteAPI.Controllers
     public class DashboardController : ControllerBase
     {
         private readonly DataContext _context;
-        SqlConnection conn;
         public DashboardController(DataContext dataContext)
         {
             _context = dataContext;
-            conn = new SqlConnection(_context.Database.GetConnectionString());
         }
 
         [Route("GetRequestStats")]
         [HttpGet]
-        public JsonResult GetRequestStats()
+        public async Task<IActionResult> GetRequestStats()
         {
 
-            DataTable dt = new DataTable();
-            string sqls = @"SELECT 
-                            MONTH(SubmissionDate) AS MonthNumber, 
-                            COUNT(*) AS RequestsCount
-                            FROM vw_SellRequests
-                            WHERE YEAR(SubmissionDate) = YEAR(GETDATE())
-                            GROUP BY MONTH(SubmissionDate)";
+            var currentYear = DateTime.Now.Year;
 
-            if (conn.State == ConnectionState.Closed) conn.Open();
-            SqlDataAdapter da = new SqlDataAdapter(sqls, conn);
-            da.Fill(dt);
-            if (conn.State == ConnectionState.Open) conn.Close();
-              var finalResult =Enumerable.Range(1, 12).Select(i => {
-              var row = dt.AsEnumerable().FirstOrDefault(r => Convert.ToInt32(r["MonthNumber"]) == i);
-
+            var stats = await _context.vw_SellRequests
+                .Where(r => r.SubmissionDate.HasValue && r.SubmissionDate.Value.Year == currentYear)
+                .GroupBy(r => r.SubmissionDate.Value.Month)
+                .Select(g => new
+                {
+                    MonthNumber = g.Key,
+                    RequestsCount = g.Count()
+                })
+                .ToListAsync();
+            var finalResult = Enumerable.Range(1, 12).Select(i => {
+                var monthData = stats.FirstOrDefault(s => s.MonthNumber == i);
                 return new
                 {
                     MonthName = CultureInfo.GetCultureInfo("en-US").DateTimeFormat.GetMonthName(i),
-                    RequestsCount = row != null ? Convert.ToInt32(row["RequestsCount"]) : 0,
+                    RequestsCount = monthData?.RequestsCount ?? 0,
                     MonthNumber = i
                 };
             }).ToList();
-            return new JsonResult(finalResult);
+
+            return Ok(finalResult);
         }
 
 
         [Route("GetUsersCount")]
         [HttpGet]
-        public IActionResult GetUsersCount()
+        public async Task<IActionResult> GetUsersCount()
         {
-            int count = 0;
-            DataTable dt = new DataTable();
-            string sqlu = "select * from Users";
-            SqlDataAdapter da = new SqlDataAdapter(sqlu, conn);
-            da.Fill(dt);
-            if(dt.Rows.Count > 0)
-            {
-                count = dt.Rows.Count;
-            }
-            else
-            {
-                count=0;
-            }
+            var count = await _context.Users.CountAsync();
             return Ok(count);
-
 
         }
 
         [Route("PendingOrdersCount")]
         [HttpGet]
-        public IActionResult PendingOrdersCount()
+        public async Task<IActionResult> PendingOrdersCount()
         {
-            int count = 0;
-            DataTable dt = new DataTable();
-            string sqlu = "select * from SellRequests where RequestStatus=0";
-            SqlDataAdapter da = new SqlDataAdapter(sqlu, conn);
-            da.Fill(dt);
-            if (dt.Rows.Count > 0)
-            {
-                count = dt.Rows.Count;
-            }
-            else
-            {
-                count = 0;
-            }
+            var count = await _context.SellRequests
+                .CountAsync(r => r.RequestStatus == 0);
             return Ok(count);
-
-
         } 
 
         [Route("GetTotalPoints")]
         [HttpGet]
-        public IActionResult GetTotalPoints()
+        public async Task<IActionResult> GetTotalPoints()
         {
-            int totalPoints = 0;
-            DataTable dt = new DataTable();
-            string sql = "select ISNULL(SUM(Points), 0) from Users";
-            using (SqlCommand cmd = new SqlCommand(sql, conn))
-            {
-                if (conn.State == ConnectionState.Closed) conn.Open();
-                var result = cmd.ExecuteScalar();
-                totalPoints = Convert.ToInt32(result);
-
-                if (conn.State == ConnectionState.Open) conn.Close();
-            }
+            var totalPoints = await _context.Users.SumAsync(u => u.Points ?? 0);
             return Ok(totalPoints);
-
         }
 
         [Route("AllOrdersCount")]
         [HttpGet]
-        public IActionResult AllOrdersCount()
+        public async Task<IActionResult> AllOrdersCount()
         {
-            int count = 0;
-            DataTable dt = new DataTable();
-            string sqlu = "select * from Orders";
-            SqlDataAdapter da = new SqlDataAdapter(sqlu, conn);
-            da.Fill(dt);
-            if (dt.Rows.Count > 0)
-            {
-                count = dt.Rows.Count;
-            }
-            else
-            {
-                count = 0;
-            }
+            var count = await _context.Orders.CountAsync();
             return Ok(count);
-
-
         }
 
         [Route("GetCategoryStats")]
         [HttpGet]
-        public IActionResult GetCategoryStats()
+        public async Task<IActionResult> GetCategoryStats()
         {
-            DataTable dt = new DataTable();
-            string sql = @"SELECT CategoryName, COUNT(CategoryID) AS CategoryCount FROM vw_cartproducts
-                           GROUP BY CategoryName";
+            var stats = await _context.vw_cartproducts
+                 .GroupBy(p => p.CategoryName)
+                 .Select(g => new
+                 {
+                     Name = g.Key,
+                     Count = g.Count()
+                 })
+                 .ToListAsync();
 
-            if (conn.State == ConnectionState.Closed) conn.Open();
-            SqlDataAdapter da = new SqlDataAdapter(sql, conn);
-            da.Fill(dt);
-            if (conn.State == ConnectionState.Open) conn.Close();
-
-            var result = dt.AsEnumerable().Select(row => new
-            {
-                Name = row["CategoryName"].ToString(),
-                Count = Convert.ToInt32(row["CategoryCount"])
-            }).ToList();
-
-            return Ok(result);
+            return Ok(stats);
         }
        
     }
