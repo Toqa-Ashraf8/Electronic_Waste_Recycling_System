@@ -22,7 +22,7 @@ namespace ElectronicWasteAPI.Controllers
         }
         [Route("UploadProductImage")]
         [HttpPost]
-        public IActionResult UploadProductImage([FromForm] ProductImage image)
+        public async Task<IActionResult> UploadProductImage([FromForm] ProductImage image)
         {
             if (image.pFile == null) return BadRequest("No file uploaded");
             var postedFile = image.pFile;
@@ -30,7 +30,7 @@ namespace ElectronicWasteAPI.Controllers
             var physicalPath = _env.ContentRootPath + "/Products_Images/" + fileName;
             using (var stream = new FileStream(physicalPath, FileMode.Create))
             {
-                postedFile.CopyTo(stream);
+               await postedFile.CopyToAsync(stream);
             }
             return Ok(fileName);
         }

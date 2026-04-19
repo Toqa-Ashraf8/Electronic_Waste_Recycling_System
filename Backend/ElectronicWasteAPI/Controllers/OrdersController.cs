@@ -4,9 +4,8 @@ using ElectronicWasteAPI.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Data;
-using System.Data.SqlClient;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 
 namespace ElectronicWasteAPI.Controllers
 {
@@ -16,315 +15,188 @@ namespace ElectronicWasteAPI.Controllers
     {
         private readonly DataContext _context;
         private readonly IWebHostEnvironment _env;
-        SqlConnection conn;
         public OrdersController(DataContext context, IWebHostEnvironment env)
         {
             _context = context;
             _env = env;
-            conn = new SqlConnection(_context.Database.GetConnectionString());
         }
         [Route("GetOrderRequests")]
         [HttpGet]
-        public IActionResult GetOrderRequests()
+        public async Task<IActionResult> GetOrderRequests()
         {
-            DataTable dt = new DataTable();
-            string sqlg = "select * from vw_SellRequests where RequestStatus=0";
-            SqlDataAdapter da = new SqlDataAdapter(sqlg, conn);
-            da.Fill(dt);
-            return Ok(dt);
+            var requests = await _context.vw_SellRequests
+                .Where(r => r.RequestStatus == 0)
+                .ToListAsync();
+            return Ok(requests);
         }
 
         [Route("SaveOrders")]
         [HttpPost]
-        public IActionResult SaveOrders([FromBody] Orders ord)
+        public async Task<IActionResult> SaveOrders([FromBody] Orders ord)
         {
-            bool saved = false;
-            if (conn.State == ConnectionState.Closed) conn.Open();
-            using (SqlTransaction transaction = conn.BeginTransaction())
-            {
+                bool saved = false; 
                 try
                 {
-
-                    string insertorder = @"insert into Orders 
-                                 (RequestID,UserID,CategoryID,ItemID,QualityID,Points,OrderStatus,CheckDate,Notes)
-                                  values(@RequestID,@UserID,@CategoryID,@ItemID,@QualityID,@Points,@OrderStatus,@CheckDate,@Notes)
-                                   select SCOPE_IDENTITY()";  
-                        using (SqlCommand cmd = new SqlCommand(insertorder, conn, transaction))
-                        {
-                            cmd.Parameters.Clear();
-                            cmd.Parameters.AddWithValue("@RequestID", ord.RequestID);
-                            cmd.Parameters.AddWithValue("@UserID", ord.UserID);
-                            cmd.Parameters.AddWithValue("@CategoryID", ord.CategoryID);
-                            cmd.Parameters.AddWithValue("@ItemID", ord.ItemID);
-                            cmd.Parameters.AddWithValue("@QualityID", ord.QualityID);
-                            cmd.Parameters.AddWithValue("@Points", ord.Points);
-                            cmd.Parameters.AddWithValue("@OrderStatus", ord.OrderStatus);
-                            cmd.Parameters.AddWithValue("@CheckDate", ord.CheckDate);
-                            cmd.Parameters.AddWithValue("@Notes", ord.Notes);
-                            cmd.ExecuteScalar();
-                        }
+                     _context.Orders.Add(ord);
+                     var sellRequest = await _context.SellRequests.FindAsync(ord.RequestID);
+                     if (sellRequest != null)
+                     {
+                    
                         if (ord.OrderStatus == 1)
                         {
-                            string updateRequests = @"update SellRequests set RequestStatus=1 
-                                                     where RequestID=@RequestID";
-                            using (SqlCommand cmd = new SqlCommand(updateRequests, conn, transaction))
-                            {
-                                cmd.Parameters.Clear();
-                                cmd.Parameters.AddWithValue("@RequestID", ord.RequestID);
-                                cmd.ExecuteNonQuery();
-                            }
+                            sellRequest.RequestStatus = 1; 
                         }
                         else if (ord.OrderStatus == 2)
                         {
-                            string updateR = @"update SellRequests set RequestStatus=2 where RequestID=@RequestID";
-                            using (SqlCommand cmd = new SqlCommand(updateR, conn, transaction))
-                            {
-                                cmd.Parameters.Clear();
-                                cmd.Parameters.AddWithValue("@RequestID", ord.RequestID);
-                                cmd.ExecuteNonQuery();
-                            }
+                            sellRequest.RequestStatus = 2;
                         }
-                        saved = true;
-                    
-                    transaction.Commit();
-                    var data = new { saved = saved };
-                    return Ok(data);
+                         saved = true;
+                     }
+                     await _context.SaveChangesAsync();
+                     var data = new { saved = saved };
+                     return Ok(data);
                 }
                 catch (Exception ex)
                 {
-                    transaction.Rollback();
-                    return BadRequest(new { error = ex.Message });
-
+                   return BadRequest(new { error = ex.Message });
                 }
-                finally
-                {
-                    if (conn.State == ConnectionState.Open) conn.Close();
-                }
-            }
         }
 
         [Route("GetOrders")]
         [HttpGet]
-        public IActionResult GetOrders()
+        public async Task<IActionResult> GetOrders()
         {
-            DataTable dt = new DataTable();
-            string sqlg = "select * from vw_Orders where OrderStatus != 2";
-            SqlDataAdapter da = new SqlDataAdapter(sqlg, conn);
-            da.Fill(dt);
-            return Ok(dt);
+            var orders = await _context.vw_Orders
+                 .Where(o => o.OrderStatus != 2)
+                 .ToListAsync();
+            return Ok(orders);
         }
         [Route("GetRejectedOrders")]
         [HttpGet]
-        public IActionResult GetRejectedOrders()
+        public async Task<IActionResult> GetRejectedOrders()
         {
-            DataTable dt = new DataTable();
-            string sqlg = "select * from vw_Orders where OrderStatus=2";
-            SqlDataAdapter da = new SqlDataAdapter(sqlg, conn);
-            da.Fill(dt);
-            return Ok(dt);
+            var rejected = await _context.vw_Orders
+                 .Where(o => o.OrderStatus == 2)
+                 .ToListAsync();
+            return Ok(rejected);
         }
 
         [Route("SaveDispatchInformation")]
         [HttpPost]
-        public IActionResult SaveDispatchInformation([FromBody] OrderDispatches dis)
+        public async Task<IActionResult> SaveDispatchInformation([FromBody] OrderDispatches dis)
         {
-            bool saved = false;
-            if (conn.State == ConnectionState.Closed) conn.Open();
-            using (SqlTransaction transaction = conn.BeginTransaction())
-            {
+                bool saved = false;          
                 try
                 {
-                    string insertorder = @"insert into OrderDispatches 
-                                         (OrderID,ShippingAddress,CourierName,CourierPhone,ArrivalTime,CreatedAt)
-                                         values(@OrderID,@ShippingAddress,@CourierName,@CourierPhone,@ArrivalTime,@CreatedAt)
-                                         select SCOPE_IDENTITY()";
-                    using (SqlCommand cmd = new SqlCommand(insertorder, conn, transaction))
+                    _context.OrderDispatches.Add(dis);
+                    var order = await _context.Orders.FindAsync(dis.OrderID);
+                    if (order != null)
                     {
-                        cmd.Parameters.Clear();
-                        cmd.Parameters.AddWithValue("@OrderID", dis.OrderID);
-                        cmd.Parameters.AddWithValue("@ShippingAddress", dis.ShippingAddress);
-                        cmd.Parameters.AddWithValue("@CourierName", dis.CourierName);
-                        cmd.Parameters.AddWithValue("@CourierPhone", dis.CourierPhone);
-                        cmd.Parameters.AddWithValue("@ArrivalTime", dis.ArrivalTime);
-                        cmd.Parameters.AddWithValue("@CreatedAt", dis.CreatedAt);
-                        cmd.ExecuteScalar();
-                    }   
-                    string updateorder= @"update Orders set OrderStatus=3 
-                                          where OrderID=@OrderID";
-                    using (SqlCommand cmd = new SqlCommand(updateorder, conn, transaction))
-                    {
-                        cmd.Parameters.Clear();
-                        cmd.Parameters.AddWithValue("@OrderID", dis.OrderID);
-                        cmd.ExecuteNonQuery();
+                      order.OrderStatus = 3;
+                      
                     }
-
-                    saved = true;
-                    transaction.Commit();
-                    var data = new { saved = saved };
-                    return Ok(data);
+                    await _context.SaveChangesAsync();  
+                    return Ok(new { saved = true });
                 }
                 catch (Exception ex)
                 {
-                    transaction.Rollback();
-                    return BadRequest(new { error = ex.Message });
-
+                    return BadRequest(new { error = ex.Message ,saved=false });
                 }
-                finally
-                {
-                    if (conn.State == ConnectionState.Open) conn.Close();
-                }
-            }
         }
 
         [Route("GetDispatchInformation")]
         [HttpPost]
-        public IActionResult GetDispatchInformation(int reqId)
+        public async Task<IActionResult> GetDispatchInformation(int reqId)
         {
-            DataTable dt = new DataTable();
-            string sqlg = "select * from vw_RequestsDetails where RequestID=@RequestID";
-            using(SqlCommand cmd=new SqlCommand(sqlg, conn))
-            {
-                cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("@RequestID", reqId);
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(dt);
-            }
-            return Ok(dt);
+            var details = await _context.vw_RequestsDetails
+                  .Where(r => r.RequestID == reqId)
+                  .ToListAsync();
+            return Ok(details);
 
         }
         [Route("RecieveOrder")]
         [HttpPost]
-        public IActionResult RecieveOrder([FromBody] orderDetail ord)
+        public async Task<IActionResult> RecieveOrder([FromBody] orderDetail ord)
         {
             bool done = false;
-            if (conn.State == ConnectionState.Closed) conn.Open();
-            using(SqlTransaction transaction = conn.BeginTransaction())
+            try
             {
-                try
+                if (ord.OrderID == 0)
                 {
-                    if (ord.OrderID != 0)
-                    {
+                    return BadRequest(new { done = false, error = "Invalid Order ID" });
+                }
 
-                        string sqlu = @"update Orders set OrderStatus=4 where OrderID=@OrderID";
-                        using (SqlCommand cmd = new SqlCommand(sqlu, conn,transaction))
-                        {
-                            cmd.Parameters.Clear();
-                            cmd.Parameters.AddWithValue("@OrderID", ord.OrderID);
-                            cmd.ExecuteNonQuery();
-                            done = true;
-                        }
-                        string updateR = @"update SellRequests set RequestStatus=3 where RequestID=@RequestID";
-                        using (SqlCommand cmd = new SqlCommand(updateR, conn, transaction))
-                        {
-                            cmd.Parameters.Clear();
-                            cmd.Parameters.AddWithValue("@RequestID", ord.RequestID);
-                            cmd.ExecuteNonQuery();
-                            done = true;
-                        }
-                    }
-                    transaction.Commit();
-                    return Ok(new { done = true });
-                }
-                catch (Exception ex)
+                var dbOrder = await _context.Orders.FindAsync(ord.OrderID);
+                var dbRequest = await _context.SellRequests.FindAsync(ord.RequestID);
+
+                if (dbOrder == null || dbRequest == null)
                 {
-                    transaction.Rollback();
-                    return BadRequest(new { error = ex.Message });
+                    return NotFound(new { done = false, error = "Order or Request not found" });
                 }
-                finally
-                {
-                    if (conn.State == ConnectionState.Open) conn.Close();
-                }
-            }   
+
+                dbOrder.OrderStatus = 4;
+                dbRequest.RequestStatus = 3;
+
+                await _context.SaveChangesAsync();
+
+                return Ok(new { done = true });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { done = false, error = ex.Message });
+            }
         }
 
         [Route("SendPoints")]
         [HttpPost]
-        public IActionResult SendPoints([FromBody] orderDetail ord)
+        public async Task<IActionResult> SendPoints([FromBody] orderDetail ord)
         {
             bool done = false;
-            if (conn.State == ConnectionState.Closed) conn.Open();
-            using (SqlTransaction transaction = conn.BeginTransaction())
-            {
                 try
                 {
-                    if (ord.OrderID != 0)
+                    if (ord.OrderID == 0)
                     {
-
-                        string sqlu = @"update Orders set OrderStatus=5 where OrderID=@OrderID";
-                        using (SqlCommand cmd = new SqlCommand(sqlu, conn, transaction))
-                        {
-                            cmd.Parameters.Clear();
-                            cmd.Parameters.AddWithValue("@OrderID", ord.OrderID);
-                            cmd.ExecuteNonQuery();
-                            done = true;
-                        }
-                        string updateR = @"update SellRequests set RequestStatus=4 where RequestID=@RequestID";
-                        using (SqlCommand cmd = new SqlCommand(updateR, conn, transaction))
-                        {
-                            cmd.Parameters.Clear();
-                            cmd.Parameters.AddWithValue("@RequestID", ord.RequestID);
-                            cmd.ExecuteNonQuery();
-                            done = true;
-                        }
-                        string updateU = @"UPDATE Users SET Points = Points + @NewPoints WHERE UserID = @UserID"; 
-                        using (SqlCommand cmd = new SqlCommand(updateU, conn, transaction))
-                        {
-                            cmd.Parameters.Clear();
-                            cmd.Parameters.AddWithValue("@UserID", ord.UserID);
-                            cmd.Parameters.AddWithValue("@NewPoints", ord.Points);
-                            cmd.ExecuteNonQuery();
-                            done = true;
-                        }
+                        return BadRequest(new { done = false, error = "Invalid Order ID" });
                     }
-                    transaction.Commit();
+                    var dbOrder = await _context.Orders.FindAsync(ord.OrderID);
+                    if (dbOrder != null) dbOrder.OrderStatus = 5;
+
+
+                    var dbRequest = await _context.SellRequests.FindAsync(ord.RequestID);
+                    if (dbRequest != null) dbRequest.RequestStatus = 4;
+
+                    var dbUser = await _context.Users.FindAsync(ord.UserID);
+                    if (dbUser != null)
+                    {
+                        dbUser.Points += ord.Points ?? 0;
+                    }
+                    await _context.SaveChangesAsync();
                     return Ok(new { done = true });
                 }
                 catch (Exception ex)
                 {
-                    transaction.Rollback();
-                    return BadRequest(new { error = ex.Message });
+                    return BadRequest(new { error = ex.Message ,done=false });
                 }
-                finally
-                {
-                    if (conn.State == ConnectionState.Open) conn.Close();
-                }
-            }
-
-
-
+              
         }
+
 
         [Route("SearchOrders")]
         [HttpPost]
-        public JsonResult SearchOrders([FromBody] Search term)
+        public async Task<IActionResult> SearchOrders([FromBody] Search term)
         {
-            DataTable dt = new DataTable();
-            List<string> conditions = new List<string>();
-            foreach (var field in term.Fields)
-            {
-                conditions.Add($"{field} LIKE @searchterm");
-            }
-            string whereClause = string.Join(" OR ", conditions);
-            string search = @"select * from vw_Orders where " + whereClause;
-            using (SqlCommand cmd = new SqlCommand(search, conn))
-            {
-                if (conn.State == ConnectionState.Closed) conn.Open();
-                cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("@searchterm", "%" + term.Term + "%");
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(dt);
-                if (conn.State == ConnectionState.Open) conn.Close();
+            var query = _context.vw_Orders.AsQueryable();
 
-            }
-            if (dt.Rows.Count > 0)
+            if (!string.IsNullOrEmpty(term.Term))
             {
+                query = query.Where(o =>
+                    o.UserName.Contains(term.Term) ||
+                    o.Notes.Contains(term.Term) ||
+                    o.DeviceItem.Contains(term.Term));
+            }
 
-                return new JsonResult(dt);
-            }
-            else
-            {
-                return new JsonResult(new DataTable());
-            }
+            var result = await query.ToListAsync();
+            return Ok(result);
         }
 
        

@@ -24,7 +24,7 @@ namespace ElectronicWasteAPI.Controllers
 
         [Route("GetRequestStats")]
         [HttpGet]
-        public IActionResult GetRequestStats()
+        public JsonResult GetRequestStats()
         {
 
             DataTable dt = new DataTable();
@@ -39,8 +39,8 @@ namespace ElectronicWasteAPI.Controllers
             SqlDataAdapter da = new SqlDataAdapter(sqls, conn);
             da.Fill(dt);
             if (conn.State == ConnectionState.Open) conn.Close();
-             var finalResult = Enumerable.Range(1, 12).Select(i => {
-                var row = dt.AsEnumerable().FirstOrDefault(r => Convert.ToInt32(r["MonthNumber"]) == i);
+              var finalResult =Enumerable.Range(1, 12).Select(i => {
+              var row = dt.AsEnumerable().FirstOrDefault(r => Convert.ToInt32(r["MonthNumber"]) == i);
 
                 return new
                 {

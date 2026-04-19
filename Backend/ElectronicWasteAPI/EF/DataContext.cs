@@ -1,4 +1,5 @@
 ﻿using ElectronicWasteAPI.Models;
+using ElectronicWasteAPI.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace ElectronicWasteAPI.EF
@@ -18,5 +19,32 @@ namespace ElectronicWasteAPI.EF
             public DbSet<ProductsCart> Products { get; set; }
             public DbSet<Branch> Branches { get; set; }
             public DbSet<Contact> Contacts { get; set; }
+            public DbSet<OrdersView> vw_Orders { get; set; } 
+            public DbSet<CartProductsView> vw_cartproducts { get; set; }
+            public DbSet<DispatchesView> vw_RequestsDetails { get; set; }
+            public DbSet<RequestsView> vw_SellRequests { get; set; }
+             protected override void OnModelCreating(ModelBuilder modelBuilder)
+             {
+                modelBuilder.Entity<OrdersView>(eb =>
+                {
+                    eb.HasNoKey();
+                    eb.ToView("vw_Orders");
+                });
+                modelBuilder.Entity<CartProductsView>(eb =>
+                {
+                    eb.HasNoKey();
+                    eb.ToView("vw_cartproducts");
+                });
+                modelBuilder.Entity<DispatchesView>(eb => {
+
+                    eb.HasNoKey();
+                    eb.ToView("vw_RequestsDetails");
+                });
+                modelBuilder.Entity<RequestsView>(eb => {
+
+                    eb.HasNoKey();
+                    eb.ToView("vw_SellRequests");
+                });
+             }
     }
 }

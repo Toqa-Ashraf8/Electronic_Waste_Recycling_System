@@ -3,8 +3,8 @@ using ElectronicWasteAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Data;
-using System.Data.SqlClient;
+using System.Threading.Tasks;
+
 
 namespace ElectronicWasteAPI.Controllers
 {
@@ -13,63 +13,33 @@ namespace ElectronicWasteAPI.Controllers
     public class CompanyProfileController : ControllerBase
     {
         private readonly DataContext _context;
-        SqlConnection conn;
         public CompanyProfileController(DataContext context)
         {
             _context = context;
-            conn = new SqlConnection(_context.Database.GetConnectionString());
         }
 
         //Branches -- start
         [Route("UpsertBranches")]
         [HttpPost]
-        public IActionResult UpsertBranches([FromBody]Branch branch)
+        public async Task<IActionResult> UpsertBranches([FromBody]Branch branch)
         {
             bool saved = false;
             bool updated = false;
-            int id = Convert.ToInt32(branch.BranchID);
             try
             {
-                if (id == 0)
+                if (branch.BranchID == 0)
                 {
-                    string sqli = @"insert into Branches (BranchName,Location,BranchPhone,WorkingHours,MapLink)
-                               values (@BranchName,@Location,@BranchPhone,@WorkingHours,@MapLink)select SCOPE_IDENTITY()";
-                    if (conn.State == ConnectionState.Closed) conn.Open();
-                    using (SqlCommand cmd = new SqlCommand(sqli, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@BranchName", branch.BranchName);
-                        cmd.Parameters.AddWithValue("@Location", branch.Location);
-                        cmd.Parameters.AddWithValue("@BranchPhone", branch.BranchPhone);
-                        cmd.Parameters.AddWithValue("@WorkingHours", branch.WorkingHours);
-                        cmd.Parameters.AddWithValue("@MapLink", branch.MapLink);
-                        id = Convert.ToInt32(cmd.ExecuteScalar());
+                        _context.Branches.Add(branch);
+                        await _context.SaveChangesAsync();
                         saved = true;
-                    }
-
-                    if (conn.State == ConnectionState.Open) conn.Close();
                 }
                 else
                 {
-                    string sqlu = @"update Branches set BranchName=@BranchName,Location=@Location,
-                                    BranchPhone=@BranchPhone,WorkingHours=@WorkingHours,MapLink=@MapLink
-                                    where BranchID=@BranchID";
-                    if (conn.State == ConnectionState.Closed) conn.Open();
-                    using (SqlCommand cmd = new SqlCommand(sqlu, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@BranchName", branch.BranchName);
-                        cmd.Parameters.AddWithValue("@Location", branch.Location);
-                        cmd.Parameters.AddWithValue("@BranchPhone", branch.BranchPhone);
-                        cmd.Parameters.AddWithValue("@WorkingHours", branch.WorkingHours);
-                        cmd.Parameters.AddWithValue("@MapLink", branch.MapLink);
-                        cmd.Parameters.AddWithValue("@BranchID", id);
-                        cmd.ExecuteNonQuery();
-                        updated = true;
-                    }
-
-                    if (conn.State == ConnectionState.Open) conn.Close();
-
+                    _context.Branches.Update(branch);
+                    await _context.SaveChangesAsync();
+                    updated = true;
                 }
-                var data = new { id = id, saved = saved, updated = updated };
+                var data = new { id = branch.BranchID, saved = saved, updated = updated };
                 return Ok(data);
             }
             catch (Exception ex)
@@ -81,43 +51,39 @@ namespace ElectronicWasteAPI.Controllers
 
         [Route("DeleteBranch")]
         [HttpDelete]
-        public IActionResult DeleteBranch(int branchId)
+        public async Task<IActionResult> DeleteBranch(int branchId)
         {
             bool deleted = false;
             try
             {
-                if (branchId > 0)
+                if (branchId <= 0)
                 {
-                    string sqld = @"Delete Branches where BranchID=@BranchID";
-                    if (conn.State == ConnectionState.Closed) conn.Open();
-                    using(SqlCommand cmd=new SqlCommand(sqld, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@BranchID", branchId);
-                        cmd.ExecuteNonQuery();
-                        deleted = true;
-                    }
-                   
+                    return BadRequest(new { message = "Invalid Branch ID", deleted = false });
                 }
-                if (conn.State == ConnectionState.Open) conn.Close();
-                return Ok(new { deleted = true });
+                var branch = await _context.Branches.FindAsync(branchId);
+                if (branch !=null)
+                {
+                    _context.Branches.Remove(branch);
+                    await _context.SaveChangesAsync();
+                    return Ok(new { deleted = true });
+                }
+                else
+                { 
+                    return NotFound(new { message = "Branch not found", deleted = false });
+                }           
             }
             catch (Exception ex)
             {
-                return BadRequest(new { error = ex.Message, deleted = false });
-                
+                return BadRequest(new { error = ex.Message, deleted = false });           
             }
-            
         }
 
         [Route("GetBranches")]
         [HttpGet]
-        public IActionResult GetBranches()
+        public async Task<IActionResult> GetBranches()
         {
-            DataTable dt = new DataTable();
-            string sql = "select * from Branches";
-            SqlDataAdapter da = new SqlDataAdapter(sql, conn);
-            da.Fill(dt);
-            return Ok(dt);
+            var branches = await _context.Branches.ToListAsync();
+            return Ok(branches);
         }
 
         //Branches -- end
@@ -126,101 +92,69 @@ namespace ElectronicWasteAPI.Controllers
         //Contact -- start
         [Route("UpsertContacts")]
         [HttpPost]
-        public IActionResult UpsertContacts([FromBody] Contact contact)
+        public async Task<IActionResult> UpsertContacts([FromBody] Contact contact)
         {
             bool saved = false;
             bool updated = false;
-            int id = Convert.ToInt32(contact.ContactID);
             try
             {
-                if (id == 0)
+                if (contact.ContactID == 0)
                 {
-                    string sqli = @"insert into Contacts (PhoneSupport,StartHour,EndHour,Email,WhatsAppNumber)
-                               values (@PhoneSupport,@StartHour,@EndHour,@Email,@WhatsAppNumber)select SCOPE_IDENTITY()";
-                    if (conn.State == ConnectionState.Closed) conn.Open();
-                    using (SqlCommand cmd = new SqlCommand(sqli, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@PhoneSupport", contact.PhoneSupport);
-                        cmd.Parameters.AddWithValue("@StartHour", contact.StartHour);
-                        cmd.Parameters.AddWithValue("@EndHour", contact.EndHour);
-                        cmd.Parameters.AddWithValue("@Email", contact.Email);
-                        cmd.Parameters.AddWithValue("@WhatsAppNumber", contact.WhatsAppNumber);
-                        id = Convert.ToInt32(cmd.ExecuteScalar());
-                        saved = true;
-                    }
-
-                    if (conn.State == ConnectionState.Open) conn.Close();
+                    _context.Contacts.Add(contact);
+                    await _context.SaveChangesAsync();
+                    saved = true;
                 }
                 else
                 {
-                    string sqlu = @"update Contacts set PhoneSupport=@PhoneSupport,StartHour=@StartHour,
-                                    EndHour=@EndHour,Email=@Email,WhatsAppNumber=@WhatsAppNumber
-                                    where ContactID=@ContactID";
-                    if (conn.State == ConnectionState.Closed) conn.Open();
-                    using (SqlCommand cmd = new SqlCommand(sqlu, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@PhoneSupport", contact.PhoneSupport);
-                        cmd.Parameters.AddWithValue("@StartHour", contact.StartHour);
-                        cmd.Parameters.AddWithValue("@EndHour", contact.EndHour);
-                        cmd.Parameters.AddWithValue("@Email", contact.Email);
-                        cmd.Parameters.AddWithValue("@WhatsAppNumber", contact.WhatsAppNumber);
-                        cmd.Parameters.AddWithValue("@ContactID", id);
-                        cmd.ExecuteNonQuery();
-                        updated = true;
-                    }
-
-                    if (conn.State == ConnectionState.Open) conn.Close();
-
+                    _context.Contacts.Update(contact);
+                    await _context.SaveChangesAsync();
+                    updated = true;
                 }
-                var data = new { id = id, saved = saved, updated = updated };
+                var data = new { id = contact.ContactID, saved = saved, updated = updated };
                 return Ok(data);
             }
             catch (Exception ex)
             {
                 return BadRequest(new { error = ex.Message, saved = false, updated = false });
             }
-
         }
 
         [Route("DeleteContacts")]
         [HttpDelete]
-        public IActionResult DeleteContacts(int contactId)
+        public async Task<IActionResult> DeleteContacts(int contactId)
         {
             bool deleted = false;
             try
             {
-                if (contactId > 0)
+                if(contactId <= 0)
                 {
-                    string sqld = @"Delete Contacts where ContactID=@ContactID";
-                    if (conn.State == ConnectionState.Closed) conn.Open();
-                    using (SqlCommand cmd = new SqlCommand(sqld, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@ContactID", contactId);
-                        cmd.ExecuteNonQuery();
-                        deleted = true;
-                    }
+                    return BadRequest(new { message = "Invalid Contact ID", deleted = false });
+                }
+                var contact = await _context.Contacts.FindAsync(contactId);
+                if (contact != null)
+                {
+                    _context.Contacts.Remove(contact);
+                    await _context.SaveChangesAsync();
+                    return Ok(new { deleted = true });
 
                 }
-                if (conn.State == ConnectionState.Open) conn.Close();
-                return Ok(new { deleted = true });
+                else
+                {
+                    return NotFound(new { message = "Contact not found", deleted = false });
+                }
             }
             catch (Exception ex)
             {
                 return BadRequest(new { error = ex.Message, deleted = false });
-
             }
-
         }
 
         [Route("GetContacts")]
         [HttpGet]
-        public IActionResult GetContacts()
+        public async Task<IActionResult> GetContacts()
         {
-            DataTable dt = new DataTable();
-            string sql = "select * from Contacts";
-            SqlDataAdapter da = new SqlDataAdapter(sql, conn);
-            da.Fill(dt);
-            return Ok(dt);
+            var contacts = await _context.Contacts.ToListAsync();
+            return Ok(contacts);
         }
 
         //Contact -- end 

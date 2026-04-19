@@ -7,8 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System.Data;
-using System.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -31,7 +29,7 @@ namespace ElectronicWasteAPI.Controllers
         }
         [Route("UploadUserImage")]
         [HttpPost]
-        public IActionResult UploadUserImage([FromForm] UserImages image)
+        public async Task<IActionResult> UploadUserImage([FromForm] UserImages image)
         {
             if (image.file == null) return BadRequest("No file uploaded");
             var postedFile = image.file;
@@ -39,10 +37,11 @@ namespace ElectronicWasteAPI.Controllers
             var physicalPath = _env.ContentRootPath + "/user_Images/" + fileName;
             using (var stream = new FileStream(physicalPath, FileMode.Create))
             {
-               postedFile.CopyTo(stream);
+               await postedFile.CopyToAsync(stream);
             }
             return Ok (fileName);
         }
+
         [Route("Register")]
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] User user)
@@ -60,9 +59,8 @@ namespace ElectronicWasteAPI.Controllers
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-
             var claims = new[]
-           {
+            {
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(ClaimTypes.Role, user.Role),
             };
@@ -82,7 +80,6 @@ namespace ElectronicWasteAPI.Controllers
                 userData=user
             };
             return Ok(data);    
-            
         }
 
         [Route("Login")]
