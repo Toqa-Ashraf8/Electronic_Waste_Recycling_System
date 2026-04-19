@@ -1,9 +1,7 @@
 ﻿using ElectronicWasteAPI.EF;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Data;
-using System.Data.SqlClient;
+
 
 namespace ElectronicWasteAPI.Controllers
 {
@@ -12,60 +10,35 @@ namespace ElectronicWasteAPI.Controllers
     public class StoreController : ControllerBase
     {
         private readonly DataContext _context;
-        SqlConnection conn;
         public StoreController (DataContext context)
         {
             _context = context;
-            conn = new SqlConnection(_context.Database.GetConnectionString());
         }
         [Route("GetProducts")]
         [HttpGet]
-        public IActionResult GetProducts()
+        public async Task<IActionResult> GetProducts()
         {
-            DataTable dt = new DataTable();
-            string sqlg = "select * from Products";
-            SqlDataAdapter da=new SqlDataAdapter(sqlg, conn);
-            da.Fill(dt);
-            return Ok(dt);
+            var products = await _context.Products.ToListAsync();
+            return Ok(products); 
 
         }
         [Route("GetCategories")]
         [HttpGet]
-        public IActionResult GetCategories()
+        public async Task<IActionResult> GetCategories()
         {
-            DataTable dt = new DataTable();
-            string sqlg = "select * from CartCategories";
-            SqlDataAdapter da = new SqlDataAdapter(sqlg, conn);
-            da.Fill(dt);
-            return Ok(dt);
+            var categories = await _context.CartCategories.ToListAsync();
+            return Ok(categories);
         }
         [Route("FilterProductsByCat")]
         [HttpPost]
-        public IActionResult FilterProductsByCat(int catId)
+        public async Task<IActionResult> FilterProductsByCat(int catId)
         {
-             
-            DataTable dt = new DataTable();
-            if (catId == 0)
-            {
-                string getAll = @"select * from Products";
-                SqlDataAdapter da = new SqlDataAdapter(getAll, conn);
-                da.Fill(dt);
 
-            }
-            else
-            {
-                string getP = @"select * from Products where CategoryID=@CategoryID";
-                using (SqlCommand cmd = new SqlCommand(getP, conn))
-                {
-                    cmd.Parameters.Clear();
-                    cmd.Parameters.AddWithValue("@CategoryID", catId);
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    da.Fill(dt);
+            var products = await _context.Products
+                 .Where(p => catId == 0 || p.CategoryID == catId)
+                 .ToListAsync();
 
-                }
-            }
-           
-            return Ok(dt);
+            return Ok(products);
 
         }
     }
