@@ -15,10 +15,11 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddSignalR();
 //Enable CORS 
 builder.Services.AddCors(c=>
-c.AddPolicy("AllowOrigin",options=>options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
+c.AddPolicy("AllowOrigin",options=> options.WithOrigins("http://localhost:5174")
+            .AllowAnyHeader().AllowAnyMethod().AllowCredentials()));
 
 //Enable JSON Serialization
 builder.Services.AddControllers()
@@ -64,7 +65,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+app.UseCors("AllowOrigin");
 
 app.UseStaticFiles(new StaticFileOptions
 {
@@ -91,5 +92,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.MapHub<OrderHub>("/orderHub");
 app.Run();

@@ -25,6 +25,7 @@ import { PendingOrdersTable } from "./PendingOrdersTable";
 import DeliveryDetailsModal from "./modals/DeliveryDetailsModal";
 import ConfirmRecievingModal from "./modals/ConfirmRecievingModal";
 import SendPointsModal from "./modals/SendPointsModal";
+import connection from "../../SignalR/SignalRService";
 const Orders = () => {
     const [view, setView] = useState("pending");
     const {
@@ -39,7 +40,35 @@ const Orders = () => {
       isSendPointsModalOpen,
 }=useSelector((state)=>state.orders);
     const dispatch=useDispatch();
-   
+
+useEffect(() => {
+
+    const startConnection = async () => {
+        if (connection.state === "Disconnected") {
+            try {
+                await connection.start();
+                console.log("SignalR Connected!");
+            } catch (err) {
+                console.error("SignalR Connection Error: ", err);
+            }
+        }
+    };
+
+    startConnection();
+    connection.on("UpdateOrders", () => {
+        console.log("Real-time update received!");
+         setTimeout(() => {
+        dispatch(fetchRequests());
+        dispatch(fetchOrders());
+        dispatch(fetchRejectedOrders());
+    }, 500);
+    });
+
+    return () => {
+        connection.off("UpdateOrders");
+    };
+}, [dispatch]);
+
 const zoomDeviceImage=(index,status)=>{
   dispatch(setImageRowIndex({ index: index, status: status }));
   dispatch(toggleOrdersImgModal(true));

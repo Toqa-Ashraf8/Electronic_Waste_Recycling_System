@@ -45,7 +45,8 @@ const sendPoints=(order)=>{
           </tr>
         </thead>
         <tbody>
-          {ordersList && ordersList.map((order, index) => (
+         {ordersList.length > 0 ? (
+             ordersList.map((order, index) => (
             <tr key={order.RequestID || index}>
               <td>{order.RequestID}</td>
               <td><strong>{order.UserName}</strong></td>
@@ -63,7 +64,7 @@ const sendPoints=(order)=>{
                 </div>
               </td>
               <td>
-                <div className="img-container" onClick={() => zoomDeviceImage(index,"inprocess")}>
+                <div className="img-container" onClick={() => zoomDeviceImage(index, "inprocess")}>
                   <img src={variables.DEVICEIMG_API + order.DeviceImagePath} alt="" className="dev-img" />
                 </div>
               </td>
@@ -75,43 +76,37 @@ const sendPoints=(order)=>{
                 {order.OrderStatus === 5 && <StatusBadge text="Completed" color="#1b4332" bg="#dcfce7" dot="#2d6a4f" border="#bbf7d0" />}
               </td>
               <td>
-            
                 {order.OrderStatus === 1 && (
-                  <button 
-                  className="btn-workflow btn-dispatch" 
-                  title="Dispatch Courier"
-                  onClick={()=>handleDispatch(index)}
-                  >
+                  <button className="btn-workflow btn-dispatch" title="Dispatch Courier" onClick={() => handleDispatch(index)}>
                     <FaTruck /> <span>Dispatch Courier</span>
                   </button>
                 )}
                 {order.OrderStatus === 3 && (
-                  <button 
-                  className="btn-workflow btn-received" 
-                  title="Mark as Received"
-                  onClick={()=>handleRecieve(order.RequestID)}
-                  >
+                  <button className="btn-workflow btn-received" title="Mark as Received" onClick={() => handleRecieve(order.RequestID)}>
                     <FaBoxOpen /> <span>Mark as Received</span>
                   </button>
                 )}
                 {order.OrderStatus === 4 && (
-                  <button 
-                  className="btn-workflow btn-points" 
-                  title="Send Points"
-                  onClick={()=>sendPoints(order)}
-                  >
+                  <button className="btn-workflow btn-points" title="Send Points" onClick={() => sendPoints(order)}>
                     <FaCoins /> <span>Send Points</span>
                   </button>
                 )}
-               {order.OrderStatus === 5 && (
-                <div className="rewarded-pill">
+                {order.OrderStatus === 5 && (
+                  <div className="rewarded-pill">
                     <FaStar className="rewarded-icon" color="#fbff03" />
                     <span className="rewarded-text">Points Sent</span>
-                </div>
-            )}
+                  </div>
+                )}
+              </td>
+             </tr>
+             )) 
+            ) : (
+                <tr>
+              <td colSpan={9} className="empty-msg">
+                No Orders
               </td>
             </tr>
-          ))}
+            )}
         </tbody>
       </table>
     </div>

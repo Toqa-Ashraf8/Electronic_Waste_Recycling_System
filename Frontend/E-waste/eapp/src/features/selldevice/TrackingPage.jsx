@@ -3,7 +3,8 @@ import { FiClock, FiCheckCircle, FiXCircle, FiTruck, FiInfo } from 'react-icons/
 import './TrackingPage.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { getRequestWithDispatches } from '../../services/ordersService';
-
+import { fetchRequests } from '../../services/sellingService';
+import connection from "../../SignalR/SignalRService";
 
 const TrackingPage = () => {
     const dispatch = useDispatch();
@@ -15,7 +16,37 @@ const TrackingPage = () => {
        dispatch(getRequestWithDispatches(userid));
        setShowModal(true);
     };
- 
+useEffect(() => {
+        const startConnection = async () => {
+            if (connection.state === "Disconnected") {
+                try {
+                    await connection.start();
+                    console.log("SignalR Connected in Tracking Page!");
+                } catch (err) {
+                    console.error("SignalR Connection Error: ", err);
+                }
+            }
+        };
+
+        startConnection();
+
+        connection.on("UpdateOrders", () => {
+            console.log("User Data updating...");
+            if (userDetails?.UserID) {
+                dispatch(fetchRequests(userDetails.UserID));
+            }
+        });
+
+        return () => {
+            connection.off("UpdateOrders");
+        };
+    }, [dispatch, userDetails?.UserID]);
+
+    useEffect(() => {
+        if (userDetails?.UserID) {
+            dispatch(fetchRequests(userDetails.UserID));
+        }
+    }, [dispatch, userDetails?.UserID]);
     return (
         <div className="tracking-wrapper">
             <div className="tracking-header">

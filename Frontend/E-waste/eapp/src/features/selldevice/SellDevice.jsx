@@ -291,7 +291,6 @@ useEffect(() => {
               )}
             </div>
 
-           
          <div className="quality-condition-grid-hud">   
           <div className="form-group-hud" >
             <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>

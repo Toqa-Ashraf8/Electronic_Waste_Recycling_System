@@ -3,6 +3,7 @@ using ElectronicWasteAPI.Models;
 using ElectronicWasteAPI.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.SignalR;
 
 
 namespace ElectronicWasteAPI.Controllers
@@ -13,10 +14,12 @@ namespace ElectronicWasteAPI.Controllers
     {
         private readonly DataContext _context;
         private readonly IWebHostEnvironment _env;
-        public OrdersController(DataContext context, IWebHostEnvironment env)
+        private readonly IHubContext<OrderHub> _hubContext;
+        public OrdersController(DataContext context, IWebHostEnvironment env, IHubContext<OrderHub> hubContext)
         {
             _context = context;
             _env = env;
+            _hubContext = hubContext;
         }
         [Route("GetOrderRequests")]
         [HttpGet]
@@ -25,6 +28,7 @@ namespace ElectronicWasteAPI.Controllers
             var requests = await _context.vw_SellRequests
                 .Where(r => r.RequestStatus == 0)
                 .ToListAsync();
+            await _hubContext.Clients.All.SendAsync("UpdateOrders");
             return Ok(requests);
         }
 
@@ -50,8 +54,9 @@ namespace ElectronicWasteAPI.Controllers
                         }
                          saved = true;
                      }
-                     await _context.SaveChangesAsync();
-                     var data = new { saved = saved };
+                 await _context.SaveChangesAsync();
+                 await _hubContext.Clients.All.SendAsync("UpdateOrders");
+                var data = new { saved = saved };
                      return Ok(data);
                 }
                 catch (Exception ex)
@@ -93,8 +98,9 @@ namespace ElectronicWasteAPI.Controllers
                       order.OrderStatus = 3;
                       
                     }
-                    await _context.SaveChangesAsync();  
-                    return Ok(new { saved = true });
+                    await _context.SaveChangesAsync();
+                    await _hubContext.Clients.All.SendAsync("UpdateOrders");
+                return Ok(new { saved = true });
                 }
                 catch (Exception ex)
                 {
@@ -136,7 +142,7 @@ namespace ElectronicWasteAPI.Controllers
                 dbRequest.RequestStatus = 3;
 
                 await _context.SaveChangesAsync();
-
+                await _hubContext.Clients.All.SendAsync("UpdateOrders");
                 return Ok(new { done = true });
             }
             catch (Exception ex)
@@ -168,8 +174,9 @@ namespace ElectronicWasteAPI.Controllers
                     {
                         dbUser.Points += ord.Points ?? 0;
                     }
-                    await _context.SaveChangesAsync();
-                    return Ok(new { done = true });
+                await _context.SaveChangesAsync();
+                await _hubContext.Clients.All.SendAsync("UpdateOrders");
+                return Ok(new { done = true });
                 }
                 catch (Exception ex)
                 {

@@ -23,8 +23,8 @@ const initialState={
     requestDeviceImg:"",
     isRejectOrderModalOpen:false,
     rowReqID:-1,
-    ordersList:[],
-    rejectedList:[],
+    ordersList: [],
+    rejectedList: [],
     isCourierModalOpen:false,
     dispatchData:{
         CourierName:"-1",
