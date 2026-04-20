@@ -11,7 +11,12 @@
     display: flex;
     justify-content: center;
 }
-
+.no-img{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #d0d0d0;
+}
 .details-mdl {
     width: 500px !important; 
     height: 480px !important;

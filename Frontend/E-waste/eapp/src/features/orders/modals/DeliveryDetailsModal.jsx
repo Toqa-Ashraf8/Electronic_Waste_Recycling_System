@@ -27,8 +27,6 @@ const handleSave=async()=>{
         dispatch(toggleCourierModal(false));
     }
 }
-
-    console.log("dispatchData",dispatchData)
     return (
         <div className="dlv-modal-overlay">
             <div className="dlv-modal-container">

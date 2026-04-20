@@ -177,14 +177,17 @@ const handleClear=()=>{
    setActiveMethod('');
 }
 useEffect(() => {
-  const loadInitialData=async()=>{
-      await Promise.all([
-        dispatch(fetchCategories()).unwrap(),
-        dispatch(fetchRequests(userDetails.UserID)).unwrap()
-      ]);
+  const loadInitialData = async () => {
+    dispatch(resetRequestForm()); 
+    setActiveMethod('');
+
+    await Promise.all([
+      dispatch(fetchCategories()).unwrap(),
+      dispatch(fetchRequests(userDetails.UserID)).unwrap()
+    ]);
   }
   loadInitialData();
-}, [dispatch]);
+}, [dispatch, userDetails.UserID]); 
 
   return (
     <div>
@@ -311,9 +314,9 @@ useEffect(() => {
             </div>
 
            {priceEstimation?.Condition && request.DeviceQuality !== "-1" && (
-            <div className="animate__animated animate__fadeIn">
+            <div className="animate__animated animate__fadeIn" style={{ marginLeft: '260px' }}>
               <span className="badge-condition-hud">
-                Condition: <strong>{priceEstimation.Condition}</strong>
+                 <strong>{priceEstimation.Condition}</strong>
               </span>
             </div>
           )}

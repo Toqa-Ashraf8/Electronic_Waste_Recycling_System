@@ -1,11 +1,15 @@
-import React from 'react'
+import React ,{useEffect}from 'react'
 import logo from './logo3.png'
 import './Header.css'
 import{Link} from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector,useDispatch } from 'react-redux'
 import HeaderActions from './HeaderActions'
+import {useNavigate} from 'react-router-dom'
+
 const Header = () => {
    const {token ,userDetails}=useSelector((state)=>state.auth);
+   const dispatch=useDispatch();
+  const navigate=useNavigate();
     if (!token) return null;
   return (
     <div>
@@ -128,6 +132,7 @@ const Header = () => {
         </li>
         )}
       </ul>
+     
       <div className="ms-lg-auto">
           {token && <HeaderActions />}
         </div>

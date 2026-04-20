@@ -39,6 +39,7 @@ const Orders = () => {
       isConfirmRecieveModal,
       isSendPointsModalOpen,
 }=useSelector((state)=>state.orders);
+
     const dispatch=useDispatch();
 
 useEffect(() => {

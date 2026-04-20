@@ -48,11 +48,15 @@ export const PendingOrdersTable=({handleOrderApprove,handleOrderReject,variables
                     <td>
                         <div className="img-container" 
                         onClick={()=>zoomDeviceImage(index,"pending")}>
+                         {req.DeviceImagePath ? ( 
                         <img 
                         src={variables.DEVICEIMG_API+req.DeviceImagePath}
                         alt=""
                         className="dev-img"
-                        />
+                        />) :(
+                            <div className="empty-img">No image</div>
+                        )}
+                       
                         </div>
                     
                     </td>

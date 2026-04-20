@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FiClock, FiCheckCircle, FiXCircle, FiTruck, FiInfo } from 'react-icons/fi';
 import './TrackingPage.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { getRequestWithDispatches } from '../../services/ordersService';
+import { fetchOrders, getRequestWithDispatches } from '../../services/ordersService';
 import { fetchRequests } from '../../services/sellingService';
 import connection from "../../SignalR/SignalRService";
 
@@ -11,6 +11,7 @@ const TrackingPage = () => {
     const {userDetails}=useSelector((state)=>state.auth);
     const {requestsList}=useSelector((state)=>state.selldevice);
     const {selectedCourier}=useSelector((state)=>state.orders);
+    const { hasNotification } = useSelector((state) => state.ui);
     const [showModal, setShowModal] = useState(false);
     const handleViewCourier = (userid) => {
        dispatch(getRequestWithDispatches(userid));

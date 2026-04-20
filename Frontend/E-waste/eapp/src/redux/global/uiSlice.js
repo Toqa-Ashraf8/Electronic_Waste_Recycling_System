@@ -9,7 +9,10 @@ const uiSlice = createSlice({
     isLoading:false,
   },
   reducers: {
-    clearGlobalError: (state) => { state.globalError = false; }
+    clearGlobalError: (state) => { 
+      state.globalError = false; 
+    },
+   
   },
   // For API Errors
   extraReducers: (builder) => {
