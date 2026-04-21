@@ -48,7 +48,6 @@ const addNew=()=>{
 }
 const saveCategory = async () => { 
   const params = { ...category, items: itemsList };
-  console.log("params",params);
    try {
     const result = await dispatch(saveAllData(params)).unwrap(); 
     if (result.saved) {
@@ -66,6 +65,9 @@ const saveCategory = async () => {
   } catch (error) {} 
 };
 useEffect(()=>{
+  if(category.CategoryID===0){
+    clearForm();
+  }
   catNameRef.current.focus();
 },[])
 

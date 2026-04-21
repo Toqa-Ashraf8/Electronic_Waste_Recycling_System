@@ -9,7 +9,7 @@ import {useNavigate} from 'react-router-dom'
 const Header = () => {
    const {token ,userDetails}=useSelector((state)=>state.auth);
    const dispatch=useDispatch();
-  const navigate=useNavigate();
+   const navigate=useNavigate();
     if (!token) return null;
   return (
     <div>

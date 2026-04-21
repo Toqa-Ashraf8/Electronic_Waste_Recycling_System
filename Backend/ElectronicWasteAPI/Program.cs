@@ -18,7 +18,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR();
 //Enable CORS 
 builder.Services.AddCors(c=>
-c.AddPolicy("AllowOrigin",options=> options.WithOrigins("http://localhost:5174")
+c.AddPolicy("AllowOrigin",options=> options.WithOrigins("http://localhost:5173", "http://localhost:5174")
             .AllowAnyHeader().AllowAnyMethod().AllowCredentials()));
 
 //Enable JSON Serialization

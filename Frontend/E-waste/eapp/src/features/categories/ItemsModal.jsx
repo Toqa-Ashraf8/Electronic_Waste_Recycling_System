@@ -127,7 +127,10 @@ const ItemsModal = () => {
                      style={{color:'#fff',backgroundColor:'#03071e'}}
                      onClick={()=>addToTable()}
                      >Add</button>
-                     <button className='btn btn-danger'>Close</button>  
+                     <button 
+                     className='btn btn-danger'
+                     onClick={()=>dispatch(toggleCategoryModal(false))}
+                     >Close</button>  
                 </div>
             </div>
         </div>
