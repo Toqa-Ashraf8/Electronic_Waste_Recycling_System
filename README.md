@@ -14,7 +14,7 @@ Want to see the system in action? Check out this full technical demonstration:
 
 [![Watch the Demo](https://img.shields.io/badge/Watch-Full%20Demo%20on%20Loom-34ad82?style=for-the-badge&logo=loom&logoColor=white)](https://www.loom.com/share/e1691465c3ea431e8b69d68db3c4a3ee)
 
-> **In this video:** I walk through the full circular cycle—from a customer submitting a device for valuation to the admin managing the request and the marketplace points redemption.
+> **In this video:** I walk through the full circular cycle from a customer submitting a device for valuation to the admin managing the request and the marketplace points redemption.
 
 ##  Core Features
 ### 1. Secure Authentication & RBAC
